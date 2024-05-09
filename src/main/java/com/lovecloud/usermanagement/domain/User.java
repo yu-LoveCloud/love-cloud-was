@@ -38,7 +38,7 @@ public abstract class User extends CommonRootEntity<Long> {
     @Column(name = "user_role", nullable = false, length = 100)
     private UserRole userRole;
 
-    @Builder
+//    @Builder
     public User(String email, String name, UserRole userRole) {
         this.email = email;
         this.name = name;

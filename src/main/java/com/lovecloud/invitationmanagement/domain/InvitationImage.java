@@ -30,4 +30,5 @@ public class InvitationImage extends CommonRootEntity<Long> {
     public InvitationImage(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }
