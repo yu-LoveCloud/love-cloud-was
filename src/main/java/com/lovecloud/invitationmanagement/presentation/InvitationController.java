@@ -1,11 +1,11 @@
 package com.lovecloud.invitationmanagement.presentation;
 
-import com.lovecloud.invitationmanagement.presentation.request.CreateInvitationRequest;
 import com.lovecloud.invitationmanagement.application.InvitationService;
+import com.lovecloud.invitationmanagement.presentation.request.CreateInvitationRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -17,10 +17,9 @@ public class InvitationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Long> invitationAdd(@AuthenticationPrincipal Long memberId,
-                                              @RequestBody CreateInvitationRequest request) {
+    public ResponseEntity<Long> invitationAdd(@Valid @RequestBody CreateInvitationRequest request) {
 
-        Long id = invitationService.addInvitation(memberId, request);
+        final Long id = invitationService.addInvitation(request);
 
         return ResponseEntity.ok(id);
     }
