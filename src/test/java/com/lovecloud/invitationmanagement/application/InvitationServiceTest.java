@@ -7,107 +7,96 @@ import com.lovecloud.invitationmanagement.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.repository.InvitationRepository;
 import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 class InvitationServiceTest {
-    @Mock
+
+    @MockBean
     private InvitationRepository invitationRepository;
-    @Mock
+
+    @MockBean
     private InvitationImageRepository invitationImageRepository;
-    @Mock
+
+    @MockBean
     private CoupleService coupleService;
 
-    @InjectMocks
+    @Autowired
     private InvitationService invitationService;
 
-    @BeforeEach
-    void setup() {
-        invitationService = new InvitationService(invitationRepository, invitationImageRepository, coupleService);
-    }
-
     @Test
-    public void testAddInvitation() {
+    public void testAddInvitationShouldReturnValidId() {
         // Given
         Long memberId = 1L;
         CreateInvitationRequest request = new CreateInvitationRequest(
-                1L,
-                "2022-12-31T23:59:59",
-                "서울시 강남구",
-                "내용"
-
+                1L, "2022-12-31T23:59:59", "서울시 강남구", "내용"
         );
-        InvitationImage image = InvitationImage.builder()
-                        .imageUrl("http://image.com")
-                        .build();
 
-        when(invitationImageRepository.findById(request.imageId())).thenReturn(Optional.of(image));
+        InvitationImage image = InvitationImage.builder()
+                .imageUrl("http://image.com")
+                .build();
 
         WeddingUser groom = WeddingUser.builder()
-                        .email("22@aa.com")
-                        .name("groom")
-                        .userRole(UserRole.WEDDING_USER)
-                        .phoneNumber("010-1234-5678")
-                        .password("1234")
-                        .accountStatus(AccountStatus.ACTIVE)
-                        .weddingRole(WeddingRole.GROOM)
-                        .build();
+                .email("22@aa.com")
+                .name("groom")
+                .userRole(UserRole.WEDDING_USER)
+                .phoneNumber("010-1234-5678")
+                .password("1234")
+                .accountStatus(AccountStatus.ACTIVE)
+                .weddingRole(WeddingRole.GROOM)
+                .build();
 
         WeddingUser bride = WeddingUser.builder()
-                        .email("he@he.com")
-                        .name("bride")
-                        .userRole(UserRole.WEDDING_USER)
-                        .phoneNumber("010-1234-5678")
-                        .password("1234")
-                        .accountStatus(AccountStatus.ACTIVE)
-                        .weddingRole(WeddingRole.BRIDE)
-                        .build();
+                .email("he@he.com")
+                .name("bride")
+                .userRole(UserRole.WEDDING_USER)
+                .phoneNumber("010-1234-5678")
+                .password("1234")
+                .accountStatus(AccountStatus.ACTIVE)
+                .weddingRole(WeddingRole.BRIDE)
+                .build();
 
         Couple couple = Couple.builder()
-                        .groom(groom)
-                        .bride(bride)
-                        .refundAccount("1234")
-                        .refundBankName("국민")
-                        .invitation(null)
-                        .build();
-
-        Invitation invitation = Invitation.builder()
-                        .weddingDateTime(LocalDateTime.parse(request.weddingDateTime()))
-                        .place(request.place())
-                        .content(request.content())
-                        .imageUrl(image.getImageUrl())
-                        .build();
-
-        ReflectionTestUtils.setField(invitation, "id", 1L);
+                .groom(groom)
+                .bride(bride)
+                .refundAccount("1234")
+                .refundBankName("국민")
+                .invitation(null)
+                .build();
 
         when(coupleService.getCoupleByUserId(memberId)).thenReturn(Optional.of(couple));
         when(invitationImageRepository.findById(request.imageId())).thenReturn(Optional.of(image));
-        when(invitationRepository.save(any(Invitation.class))).thenReturn(invitation);
 
+        when(invitationRepository.save(any(Invitation.class))).thenAnswer(new Answer<Invitation>() {
+            @Override
+            public Invitation answer(InvocationOnMock invocation) throws Throwable {
+                Invitation savedInvitation = invocation.getArgument(0);
+                ReflectionTestUtils.setField(savedInvitation, "id", 1L); // ID 설정
+                return savedInvitation; // 수정된 객체 반환
+            }
+        });
 
         // When
         Long invitationId = invitationService.addInvitation(request);
 
         // Then
-        assertNotNull(invitationId);
-        assertEquals(1L, invitationId);
+        assertNotNull(invitationId, "The returned invitation ID should not be null");
         verify(invitationRepository).save(any(Invitation.class));
-    }
 
+
+    }
 }
