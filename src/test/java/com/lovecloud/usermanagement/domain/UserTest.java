@@ -55,4 +55,21 @@ class UserTest {
         assertEquals("oauth", weddingUser.getOauth());
         assertEquals("invitationCode", weddingUser.getInvitationCode());
     }
+
+    @Test
+    @DisplayName("관리자 생성 테스트")
+    void createAdminTest() {
+        Admin admin = Admin.builder()
+                .email("admin@example.com")
+                .name("admin")
+                .userRole(UserRole.ADMIN)
+                .password("password")
+                .build();
+
+        assertNotNull(admin);
+        assertEquals("admin@example.com", admin.getEmail());
+        assertEquals("admin", admin.getName());
+        assertEquals(UserRole.ADMIN, admin.getUserRole());
+        assertEquals("password", admin.getPassword());
+    }
 }
