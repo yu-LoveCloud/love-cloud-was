@@ -17,8 +17,8 @@ logging:
   level:
     org.hibernate.SQL: debug
 
-
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   token-expiration-time: 360000000
   issuer: ${JWT_ISSUER}
+
