@@ -1,15 +1,16 @@
 package com.lovecloud.global.crypto;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BCryptCustomPasswordEncoder implements CustomPasswordEncoder{
 
-    private final BCryptCustomPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
 
     public BCryptCustomPasswordEncoder() {
-        this.passwordEncoder = new BCryptCustomPasswordEncoder();
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override
