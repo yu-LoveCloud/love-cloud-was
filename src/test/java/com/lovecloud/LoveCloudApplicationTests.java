@@ -1,4 +1,4 @@
-package com.lovecloud.lovecloud;
+package com.lovecloud;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
