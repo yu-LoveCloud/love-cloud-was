@@ -25,7 +25,7 @@ public class ProductCreateService {
     private final DescriptionImageRepository descriptionImageRepository;
 
     public Long createProduct(CreateProductCommand command) {
-        Category category = categoryRepository.getById(command.categoryId());
+        Category category = categoryRepository.findByIdOrThrow(command.categoryId());
         Product product = command.toProduct(category);
         product = productRepository.save(product);
         createAndSaveImages(command, product);

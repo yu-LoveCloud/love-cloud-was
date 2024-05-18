@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    default Category getById(Long id) {
+    default Category findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(NotFoundCategoryException::new);
     }
 }
