@@ -2,7 +2,7 @@ package com.lovecloud.productmanagement.presentation;
 
 import com.lovecloud.productmanagement.application.ProductCreateService;
 import com.lovecloud.productmanagement.application.ProductOptionsCreateService;
-import com.lovecloud.productmanagement.presentation.request.CreateProductOptionRequest;
+import com.lovecloud.productmanagement.presentation.request.CreateProductOptionsRequest;
 import com.lovecloud.productmanagement.presentation.request.CreateProductRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -33,7 +33,7 @@ public class ProductController {
     @PostMapping("/{productId}/options")
     public ResponseEntity<Void> addProductOptions(
             @PathVariable Long productId,
-            @Valid @RequestBody CreateProductOptionRequest request
+            @Valid @RequestBody CreateProductOptionsRequest request
     ) {
         final Long optionId = productOptionsCreateService.addProductOptions(request.toCommand(productId));
         return ResponseEntity.created(URI.create("/products/" + productId + "/options/" + optionId)).build();
