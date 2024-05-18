@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.lovecloud.productmanagement.application.command.CreateProductCommand;
 import com.lovecloud.productmanagement.domain.Category;
-import com.lovecloud.productmanagement.domain.repository.CategoryRepository;
 import com.lovecloud.productmanagement.domain.Product;
+import com.lovecloud.productmanagement.domain.repository.CategoryRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
 import com.lovecloud.productmanagement.exception.NotFoundCategoryException;
 import jakarta.transaction.Transactional;

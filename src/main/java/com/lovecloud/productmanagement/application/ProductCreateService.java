@@ -2,12 +2,12 @@ package com.lovecloud.productmanagement.application;
 
 import com.lovecloud.productmanagement.application.command.CreateProductCommand;
 import com.lovecloud.productmanagement.domain.Category;
-import com.lovecloud.productmanagement.domain.repository.CategoryRepository;
 import com.lovecloud.productmanagement.domain.DescriptionImage;
-import com.lovecloud.productmanagement.domain.repository.DescriptionImageRepository;
 import com.lovecloud.productmanagement.domain.MainImage;
-import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.productmanagement.domain.Product;
+import com.lovecloud.productmanagement.domain.repository.CategoryRepository;
+import com.lovecloud.productmanagement.domain.repository.DescriptionImageRepository;
+import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;

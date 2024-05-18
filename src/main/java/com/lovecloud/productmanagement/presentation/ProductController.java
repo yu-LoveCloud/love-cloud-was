@@ -35,7 +35,9 @@ public class ProductController {
             @PathVariable Long productId,
             @Valid @RequestBody CreateProductOptionsRequest request
     ) {
-        final Long optionId = productOptionsCreateService.addProductOptions(request.toCommand(productId));
-        return ResponseEntity.created(URI.create("/products/" + productId + "/options/" + optionId)).build();
+        final Long optionId = productOptionsCreateService.addProductOptions(
+                request.toCommand(productId));
+        return ResponseEntity.created(URI.create("/products/" + productId + "/options/" + optionId))
+                .build();
     }
 }

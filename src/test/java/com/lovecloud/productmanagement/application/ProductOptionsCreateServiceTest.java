@@ -1,6 +1,7 @@
 package com.lovecloud.productmanagement.application;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.lovecloud.productmanagement.application.command.CreateProductCommand;
 import com.lovecloud.productmanagement.application.command.CreateProductOptionsCommand;
@@ -102,7 +103,8 @@ class ProductOptionsCreateServiceTest {
                     .build();
 
             // when & then
-            assertThrows(NotFoundProductException.class, () -> productOptionsCreateService.addProductOptions(command));
+            assertThrows(NotFoundProductException.class,
+                    () -> productOptionsCreateService.addProductOptions(command));
         }
     }
 }
