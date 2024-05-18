@@ -5,9 +5,9 @@ import com.lovecloud.productmanagement.domain.Product;
 import com.lovecloud.productmanagement.domain.ProductOptions;
 import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional
