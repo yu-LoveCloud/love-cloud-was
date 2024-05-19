@@ -23,12 +23,12 @@ public class InvitationImage extends CommonRootEntity<Long> {
     @Column(name = "invitation_image_id")
     private Long id;
 
-    @Column(name = "image_url", nullable = false, length = 100)
-    private String imageUrl;
+    @Column(name = "image_name", nullable = false, length = 100)
+    private String imageName;
 
     @Builder
-    public InvitationImage(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public InvitationImage(String imageName) {
+        this.imageName = imageName;
     }
 
 }

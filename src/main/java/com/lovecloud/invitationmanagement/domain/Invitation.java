@@ -33,15 +33,15 @@ public class Invitation extends CommonRootEntity<Long> {
     @Column(name = "content", nullable = false, length = 300)
     private String content;
 
-    @Column(name = "image_url", nullable = false, length = 100)
-    private String imageUrl;
+    @Column(name = "image_name", nullable = false, length = 100)
+    private String imageName;
 
     @Builder
     public Invitation(String place, LocalDateTime weddingDateTime, String content,
-            String imageUrl) {
+            String imageName) {
         this.place = place;
         this.weddingDateTime = weddingDateTime;
         this.content = content;
-        this.imageUrl = imageUrl;
+        this.imageName = imageName;
     }
 }
