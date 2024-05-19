@@ -9,10 +9,10 @@ import com.lovecloud.productmanagement.domain.repository.CategoryRepository;
 import com.lovecloud.productmanagement.domain.repository.DescriptionImageRepository;
 import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional
