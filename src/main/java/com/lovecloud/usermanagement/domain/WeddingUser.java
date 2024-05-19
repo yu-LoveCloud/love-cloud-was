@@ -53,4 +53,6 @@ public class WeddingUser extends User {
         this.oauth = oauth;
         this.invitationCode = invitationCode;
     }
+
+
 }
