@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class LoveCloudException extends RuntimeException {
 
-private ErrorCode errorCode;
+    private final ErrorCode errorCode;
 
     public LoveCloudException(ErrorCode errorCode) {
         super(errorCode.message());
