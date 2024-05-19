@@ -1,12 +1,9 @@
 package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.auth.domain.PasswordConverter;
 import com.lovecloud.auth.domain.WeddingUserValidator;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WeddingUser extends User {
 
-    @Column(name = "phone_number", nullable = false, length = 100)
+    @Column(name = "phone_number", nullable = true, length = 100)
     private String phoneNumber;
 
+    @Convert(converter = PasswordConverter.class)
     @Column(name = "password", nullable = false, length = 100)
     private Password password;
 
@@ -59,5 +57,8 @@ public class WeddingUser extends User {
         validator.validateDuplicateEmail(this.getEmail());
     }
 
+    public String getPassword() {
+        return password.getEncryptedPassword();
+    }
 
 }
