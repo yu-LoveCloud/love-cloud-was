@@ -24,6 +24,7 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
+    //TODO: 보안 점검 후 구현 예정
     @Override
     public String getPassword() {
         return null;
@@ -34,6 +35,7 @@ public class SecurityUser implements UserDetails {
         return user.getEmail();
     }
 
+    //TODO: 이하 메서드 User 엔티티 메서드 구현 후 수정 예정
     /*
     계정의 만료 여부 리턴
    */

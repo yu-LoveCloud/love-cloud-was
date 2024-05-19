@@ -12,15 +12,32 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
     open-in-view: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 logging:
   level:
     org.hibernate.SQL: debug
 
-
-
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   token-expiration-time: 360000000
   issuer: ${JWT_ISSUER}
+
+
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET}
+      image-path: "images/"
+      presigned-url-expires-minutes: 10
+    region:
+      static: ${AWS_REGION}
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
 
