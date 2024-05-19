@@ -2,9 +2,11 @@ package com.lovecloud.invitationmanagement.application.command;
 
 import com.lovecloud.invitationmanagement.domain.Invitation;
 import com.lovecloud.invitationmanagement.domain.InvitationImage;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record CreateInvitationCommand(
         Long userId,
         Long invitationImageId,
