@@ -1,4 +1,4 @@
-package com.lovecloud.invitationmanagement.repository;
+package com.lovecloud.invitationmanagement.domain.repository;
 
 import com.lovecloud.invitationmanagement.domain.Invitation;
 import org.springframework.data.jpa.repository.JpaRepository;
