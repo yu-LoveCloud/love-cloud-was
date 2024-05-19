@@ -5,7 +5,6 @@ import com.lovecloud.invitationmanagement.domain.InvitationImage;
 import com.lovecloud.invitationmanagement.presentation.request.CreateInvitationRequest;
 import com.lovecloud.invitationmanagement.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.repository.InvitationRepository;
-import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;

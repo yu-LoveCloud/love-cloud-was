@@ -5,8 +5,8 @@ import com.lovecloud.invitationmanagement.domain.InvitationImage;
 import com.lovecloud.invitationmanagement.presentation.request.CreateInvitationRequest;
 import com.lovecloud.invitationmanagement.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.repository.InvitationRepository;
-import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.Couple;
+import com.lovecloud.usermanagement.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +19,14 @@ import java.time.LocalDateTime;
 public class InvitationCreateService {
     private final InvitationRepository invitationRepository;
     private final InvitationImageRepository invitationImageRepository;
-    private final CoupleService coupleService;
+    private final CoupleRepository coupleRepository;
 
     public Long addInvitation(final CreateInvitationRequest request) {
          verifyUserOrAdmin();
 
         Long userId = getCurrentUserId();
 
-        Couple couple = getCoupleByUserIdOrThrow(userId);
+        Couple couple = getCoupleByUserId(userId);
 
         InvitationImage image = getImageById(request.imageId());
 
@@ -39,7 +39,7 @@ public class InvitationCreateService {
 
         Invitation savedInvitation = invitationRepository.save(invitation);
 
-        coupleService.addInvitation(couple.getId(), savedInvitation.getId());
+        couple.setInvitation(savedInvitation);
 
         return savedInvitation.getId();
     }
@@ -58,10 +58,8 @@ public class InvitationCreateService {
         return;
     }
 
-    private Couple getCoupleByUserIdOrThrow(Long memberId) {
-        return coupleService.getCoupleByUserId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("커플을 찾을 수 없습니다."));
-        //TODO: 커플을 찾을 수 없을 때 예외 처리 코드 구현 필요
+    private Couple getCoupleByUserId(Long userId) {
+        return coupleRepository.findByUserIdOrThrow(userId);
 
     }
 
