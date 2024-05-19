@@ -1,4 +1,4 @@
 package com.lovecloud.auth.presentation.request;
 
-public record BasicLoginRequest() {
+public record WeddingLoginRequest() {
 }

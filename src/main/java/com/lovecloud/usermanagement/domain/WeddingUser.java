@@ -1,5 +1,6 @@
 package com.lovecloud.usermanagement.domain;
 
+import com.lovecloud.auth.domain.Password;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,7 +21,7 @@ public class WeddingUser extends User {
     private String phoneNumber;
 
     @Column(name = "password", nullable = false, length = 100)
-    private String password;
+    private Password password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false, length = 100)
@@ -41,7 +42,7 @@ public class WeddingUser extends User {
 
     @Builder
     public WeddingUser(String email, String name, UserRole userRole, String phoneNumber,
-            String password, AccountStatus accountStatus, WeddingRole weddingRole, String oauthId,
+            Password password, AccountStatus accountStatus, WeddingRole weddingRole, String oauthId,
             String oauth, String invitationCode) {
         super(email, name, userRole);
         this.phoneNumber = phoneNumber;
