@@ -42,7 +42,7 @@ public class Couple extends CommonRootEntity<Long> {
     private String refundBankName;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invitation_id", nullable = true)
+    @JoinColumn(name = "invitation_id")
     private Invitation invitation;
 
     @Builder
