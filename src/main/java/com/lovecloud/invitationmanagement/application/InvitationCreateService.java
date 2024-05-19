@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class InvitationService {
+public class InvitationCreateService {
     private final InvitationRepository invitationRepository;
     private final InvitationImageRepository invitationImageRepository;
     private final CoupleService coupleService;

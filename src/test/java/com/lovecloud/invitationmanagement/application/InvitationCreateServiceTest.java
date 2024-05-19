@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class InvitationServiceTest {
+class InvitationCreateServiceTest {
 
     @MockBean
     private InvitationRepository invitationRepository;
@@ -36,7 +35,7 @@ class InvitationServiceTest {
     private CoupleService coupleService;
 
     @Autowired
-    private InvitationService invitationService;
+    private InvitationCreateService invitationCreateService;
 
     @Test
     public void testAddInvitationShouldReturnValidId() {
@@ -91,7 +90,7 @@ class InvitationServiceTest {
         });
 
         // When
-        Long invitationId = invitationService.addInvitation(request);
+        Long invitationId = invitationCreateService.addInvitation(request);
 
         // Then
         assertNotNull(invitationId, "The returned invitation ID should not be null");
