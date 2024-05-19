@@ -8,10 +8,9 @@ import java.util.Optional;
 
 public interface InvitationImageRepository extends JpaRepository<InvitationImage, Long> {
 
-    Optional<InvitationImage> findByImageName(String imageName);
-
-    default InvitationImage findByImageNameOrThrow(String imageName) {
-        return findByImageName(imageName)
+    default InvitationImage findByIdOrThrow(Long id) {
+        return findById(id)
                 .orElseThrow(NotFoundInvitationImageException::new);
     }
+
 }

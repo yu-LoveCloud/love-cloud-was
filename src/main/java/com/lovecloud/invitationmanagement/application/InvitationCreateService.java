@@ -2,6 +2,7 @@ package com.lovecloud.invitationmanagement.application;
 
 import com.lovecloud.invitationmanagement.application.command.CreateInvitationCommand;
 import com.lovecloud.invitationmanagement.domain.Invitation;
+import com.lovecloud.invitationmanagement.domain.InvitationImage;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationRepository;
 import com.lovecloud.usermanagement.domain.Couple;
@@ -22,7 +23,8 @@ public class InvitationCreateService {
 
         Couple couple = getCoupleByUserId(command.userId());
 
-        Invitation invitation = command.toInvitation();
+        InvitationImage invitationImage = invitationImageRepository.findByIdOrThrow(command.invitationImageId());
+        Invitation invitation = command.toInvitation(invitationImage);
 
         Invitation savedInvitation = invitationRepository.save(invitation);
 
