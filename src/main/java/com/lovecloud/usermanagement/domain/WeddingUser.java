@@ -1,6 +1,7 @@
 package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.auth.domain.WeddingUserValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -52,6 +53,10 @@ public class WeddingUser extends User {
         this.oauthId = oauthId;
         this.oauth = oauth;
         this.invitationCode = invitationCode;
+    }
+
+    public void signup(WeddingUserValidator validator){
+        validator.validateDuplicateEmail(this.getEmail());
     }
 
 
