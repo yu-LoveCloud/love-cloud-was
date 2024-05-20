@@ -18,8 +18,7 @@ public class WeddingUser extends User {
     @Column(name = "phone_number", nullable = true, length = 100)
     private String phoneNumber;
 
-    @Convert(converter = PasswordConverter.class)
-    @Column(name = "password", nullable = false, length = 100)
+    @Embedded
     private Password password;
 
     @Enumerated(EnumType.STRING)
