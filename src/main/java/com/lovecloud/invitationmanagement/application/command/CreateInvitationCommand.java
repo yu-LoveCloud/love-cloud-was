@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Builder
 public record CreateInvitationCommand(
-        Long userId,
         Long invitationImageId,
         String weddingDateTime,
         String place,

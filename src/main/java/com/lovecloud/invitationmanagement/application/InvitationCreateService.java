@@ -21,14 +21,10 @@ public class InvitationCreateService {
 
     public Long addInvitation(final CreateInvitationCommand command) {
 
-        Couple couple = getCoupleByUserId(command.userId());
-
         InvitationImage invitationImage = invitationImageRepository.findByIdOrThrow(command.invitationImageId());
         Invitation invitation = command.toInvitation(invitationImage);
 
         Invitation savedInvitation = invitationRepository.save(invitation);
-
-        couple.setInvitation(savedInvitation);
 
         return savedInvitation.getId();
     }
