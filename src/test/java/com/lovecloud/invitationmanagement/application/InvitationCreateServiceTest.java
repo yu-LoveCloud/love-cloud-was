@@ -6,6 +6,7 @@ import com.lovecloud.invitationmanagement.domain.InvitationImage;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationRepository;
 import com.lovecloud.invitationmanagement.exeption.NotFoundInvitationImageException;
+import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
 import com.lovecloud.usermanagement.exeption.NotFoundCoupleException;
 import com.lovecloud.usermanagement.repository.CoupleRepository;
@@ -25,6 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class InvitationCreateServiceTest {
     @Autowired
     private InvitationCreateService invitationCreateService;
+
+    @Autowired
+    private CoupleService coupleService;
 
     @Autowired
     private InvitationRepository invitationRepository;
@@ -114,7 +118,6 @@ class InvitationCreateServiceTest {
 
             // given
             CreateInvitationCommand command = CreateInvitationCommand.builder()
-                    .userId(groom.getId())
                     .invitationImageId(invitationImage.getId())
                     .weddingDateTime("2022-10-10T10:10:10")
                     .place("서울")
@@ -123,6 +126,7 @@ class InvitationCreateServiceTest {
 
             // when
             Long invitationId = invitationCreateService.addInvitation(command);
+            coupleService.updateCoupleInvitation(groom.getId(),invitationId);
 
             // then
             Invitation invitation = invitationRepository.findById(invitationId).orElseThrow();
@@ -138,15 +142,17 @@ class InvitationCreateServiceTest {
         void 부부가_존재하지_않는_경우_예외를_발생시킨다() {
             // given
             CreateInvitationCommand command = CreateInvitationCommand.builder()
-                    .userId(solo_groom.getId()) // 존재하지 않는 부부 ID
                     .weddingDateTime("2022-10-10T10:10:10")
                     .place("서울")
                     .content("초대합니다")
                     .invitationImageId(invitationImage.getId())
                     .build();
 
+            //when
+            Long invitationId = invitationCreateService.addInvitation(command);
+
             // when & then
-            assertThatThrownBy(() -> invitationCreateService.addInvitation(command))
+            assertThatThrownBy(() -> coupleService.updateCoupleInvitation(solo_groom.getId(), invitationId))
                     .isInstanceOf(NotFoundCoupleException.class);
         }
 
@@ -154,7 +160,6 @@ class InvitationCreateServiceTest {
         void 이미지가_존재하지_않는_경우_예외를_발생시킨다() {
             // given
             CreateInvitationCommand command = CreateInvitationCommand.builder()
-                    .userId(groom.getId())
                     .invitationImageId(999L) // 존재하지 않는 이미지 ID
                     .weddingDateTime("2022-10-10T10:10:10")
                     .place("서울")
