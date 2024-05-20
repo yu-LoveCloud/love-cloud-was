@@ -22,7 +22,7 @@ public record WeddingSignupCommand(
                 .password(password)
                 .accountStatus(AccountStatus.ACTIVE)
                 .weddingRole(weddingRole)
-                .oauth(null)
+                .oauthId(null)
                 .oauth(null)
                 .invitationCode(null)
                 .build();
