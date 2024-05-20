@@ -1,7 +1,6 @@
 package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.Password;
-import com.lovecloud.auth.domain.PasswordConverter;
 import com.lovecloud.auth.domain.WeddingUserValidator;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
