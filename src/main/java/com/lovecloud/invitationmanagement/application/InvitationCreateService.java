@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class InvitationCreateService {
     private final InvitationRepository invitationRepository;
     private final InvitationImageRepository invitationImageRepository;
-    private final CoupleRepository coupleRepository;
 
     public Long addInvitation(final CreateInvitationCommand command) {
 
@@ -28,11 +27,5 @@ public class InvitationCreateService {
 
         return savedInvitation.getId();
     }
-
-    private Couple getCoupleByUserId(Long userId) {
-        return coupleRepository.findByUserIdOrThrow(userId);
-
-    }
-
 
 }
