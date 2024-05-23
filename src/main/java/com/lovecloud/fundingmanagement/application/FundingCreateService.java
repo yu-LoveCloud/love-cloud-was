@@ -21,7 +21,8 @@ public class FundingCreateService {
     private final CoupleRepository coupleRepository;
 
     public Long createFunding(CreateFundingCommand command) {
-        ProductOptions productOptions = productOptionsRepository.findByIdOrThrow(command.productOptionsId());
+        ProductOptions productOptions = productOptionsRepository.findByIdOrThrow(
+                command.productOptionsId());
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.memberId());
         Funding funding = command.toFunding(productOptions, couple);
         return fundingRepository.save(funding).getId();

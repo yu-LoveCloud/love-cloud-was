@@ -1,7 +1,6 @@
 package com.lovecloud.fundingmanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
-import com.lovecloud.productmanagement.domain.Product;
 import com.lovecloud.productmanagement.domain.ProductOptions;
 import com.lovecloud.usermanagement.domain.Couple;
 import jakarta.persistence.Column;
