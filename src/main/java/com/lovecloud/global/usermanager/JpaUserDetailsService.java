@@ -1,7 +1,7 @@
 package com.lovecloud.global.usermanager;
 
 import com.lovecloud.usermanagement.domain.User;
-import com.lovecloud.usermanagement.repository.UserRepository;
+import com.lovecloud.usermanagement.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
