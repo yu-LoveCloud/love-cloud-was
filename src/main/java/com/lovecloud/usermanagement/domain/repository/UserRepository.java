@@ -1,4 +1,4 @@
-package com.lovecloud.usermanagement.repository;
+package com.lovecloud.usermanagement.domain.repository;
 
 import com.lovecloud.usermanagement.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
