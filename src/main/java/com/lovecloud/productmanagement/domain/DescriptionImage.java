@@ -30,12 +30,12 @@ public class DescriptionImage extends CommonRootEntity<Long> {
     private String descriptionImageName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_options_id", nullable = false)
+    private ProductOptions productOptions;
 
     @Builder
-    public DescriptionImage(String descriptionImageName, Product product) {
+    public DescriptionImage(String descriptionImageName, ProductOptions productOptions) {
         this.descriptionImageName = descriptionImageName;
-        this.product = product;
+        this.productOptions = productOptions;
     }
 }
