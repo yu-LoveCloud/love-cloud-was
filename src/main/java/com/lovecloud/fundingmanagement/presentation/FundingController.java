@@ -40,4 +40,11 @@ public class FundingController {
         return ResponseEntity.ok(fundings);
     }
 
+/*    @GetMapping("/fundings/{fundingId}")
+    public ResponseEntity<FundingDetailResponse> detailFunding(
+            @PathVariable Long fundingId
+    ) {
+        final FundingDetailResponse funding = fundingQueryService.findById(fundingId);
+        return ResponseEntity.ok(funding);
+    }*/
 }
