@@ -1,7 +1,7 @@
 package com.lovecloud.productmanagement.presentation;
 
-import com.lovecloud.productmanagement.application.ProductCreateService;
-import com.lovecloud.productmanagement.application.ProductOptionsCreateService;
+import com.lovecloud.productmanagement.application.ProductCreationService;
+import com.lovecloud.productmanagement.application.ProductOptionsCreationService;
 import com.lovecloud.productmanagement.presentation.request.CreateProductOptionsRequest;
 import com.lovecloud.productmanagement.presentation.request.CreateProductRequest;
 import jakarta.validation.Valid;
@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/admin/products")
 @RestController
-public class ProductCreateController {
+public class ProductCreationController {
 
-    private final ProductCreateService productCreateService;
-    private final ProductOptionsCreateService productOptionsCreateService;
+    private final ProductCreationService productCreationService;
+    private final ProductOptionsCreationService productOptionsCreationService;
 
     @PostMapping
     public ResponseEntity<Long> createProduct(
             @Valid @RequestBody CreateProductRequest request
     ) {
-        final Long productId = productCreateService.createProduct(request.toCommand());
+        final Long productId = productCreationService.createProduct(request.toCommand());
         return ResponseEntity.created(URI.create("/admin/products/" + productId)).build();
     }
 
@@ -35,7 +35,7 @@ public class ProductCreateController {
             @PathVariable Long productId,
             @Valid @RequestBody CreateProductOptionsRequest request
     ) {
-        final Long optionId = productOptionsCreateService.addProductOptions(
+        final Long optionId = productOptionsCreationService.addProductOptions(
                 request.toCommand(productId));
         return ResponseEntity.created(
                         URI.create("/admin/products/" + productId + "/options/" + optionId))
