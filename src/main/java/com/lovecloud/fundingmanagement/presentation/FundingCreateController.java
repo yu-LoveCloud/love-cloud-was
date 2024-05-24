@@ -13,15 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class FundingController {
+public class FundingCreateController {
 
     private final FundingCreateService fundingCreateService;
-    private final FundingQueryService fundingQueryService;
 
     @PostMapping("/fundings")
     public ResponseEntity<Long> createFunding(
@@ -31,20 +29,4 @@ public class FundingController {
         final Long fundingId = fundingCreateService.createFunding(request.toCommand(memberId));
         return ResponseEntity.created(URI.create("/fundings/" + fundingId)).build();
     }
-
-    @GetMapping("/couples/{coupleId}/fundings")
-    public ResponseEntity<List<FundingListResponse>> listFundings(
-            @PathVariable Long coupleId
-    ) {
-        final List<FundingListResponse> fundings = fundingQueryService.findAllByCoupleId(coupleId);
-        return ResponseEntity.ok(fundings);
-    }
-
-/*    @GetMapping("/fundings/{fundingId}")
-    public ResponseEntity<FundingDetailResponse> detailFunding(
-            @PathVariable Long fundingId
-    ) {
-        final FundingDetailResponse funding = fundingQueryService.findById(fundingId);
-        return ResponseEntity.ok(funding);
-    }*/
 }
