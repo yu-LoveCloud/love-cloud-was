@@ -1,6 +1,7 @@
 package com.lovecloud.auth.presentation;
 
-import com.lovecloud.auth.application.WeddingAuthService;
+
+import com.lovecloud.auth.application.WeddingUserAuthService;
 import com.lovecloud.auth.presentation.request.WeddingSignUpRequest;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import jakarta.validation.Valid;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/wedding-user")
 @RequiredArgsConstructor
-public class AuthController {
+public class WeddingUserAuthController {
 
-    private final WeddingAuthService weddingAuthService;
+    private final WeddingUserAuthService weddingUserAuthService;
 
     /**
      * 회원 가입을 처리하는 메서드
@@ -28,7 +29,7 @@ public class AuthController {
      */
     @PostMapping("/sign-up")
     public ResponseEntity<JwtTokenDto> signUp(@Valid @RequestBody WeddingSignUpRequest request){
-        JwtTokenDto jwtTokenDto = weddingAuthService.signUp(request.toCommand());
+        JwtTokenDto jwtTokenDto = weddingUserAuthService.signUp(request.toCommand());
 
         log.info("유저가 생성되었습니다. {}", request.email());
         return ResponseEntity.ok(jwtTokenDto);

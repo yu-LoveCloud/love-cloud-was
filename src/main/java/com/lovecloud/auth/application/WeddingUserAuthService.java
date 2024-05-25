@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class WeddingAuthService {
+public class WeddingUserAuthService {
 
     private final WeddingUserRepository weddingUserRepository;
     private final WeddingUserValidator validator;
