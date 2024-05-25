@@ -2,6 +2,7 @@ package com.lovecloud.auth.presentation;
 
 
 import com.lovecloud.auth.application.WeddingUserAuthService;
+import com.lovecloud.auth.presentation.request.WeddingSignInRequest;
 import com.lovecloud.auth.presentation.request.WeddingSignUpRequest;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import jakarta.validation.Valid;
@@ -21,6 +22,8 @@ public class WeddingUserAuthController {
 
     private final WeddingUserAuthService weddingUserAuthService;
 
+    //TODO: return 값 다시 체크
+
     /**
      * 회원 가입을 처리하는 메서드
      *
@@ -35,4 +38,23 @@ public class WeddingUserAuthController {
         return ResponseEntity.ok(jwtTokenDto);
     }
 
+
+    /**
+     * 로그인을 처리하는 메서드
+     *
+     * @param request 로그인에 필요한 정보를 담은 WeddingSignInRequest 객체
+     * @return 로그인 결과에 대한 JwtTokenDto 객체
+     */
+    @PostMapping("/sign-in")
+    public ResponseEntity<JwtTokenDto> signIn(@Valid @RequestBody WeddingSignInRequest request){
+        JwtTokenDto jwtTokenDto = weddingUserAuthService.signIn(request);
+
+        log.info("유저가 로그인 되었습니다. {}", request.email());
+        return ResponseEntity.ok(jwtTokenDto);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> test(){
+        return ResponseEntity.ok("test");
+    }
 }

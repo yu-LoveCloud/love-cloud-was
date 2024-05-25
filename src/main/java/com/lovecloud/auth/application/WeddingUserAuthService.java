@@ -49,14 +49,14 @@ public class WeddingUserAuthService {
     /**
      * 로그인을 처리하고, 토큰을 발급하는 메서드
      *
-     * @param command 로그인에 필요한 정보를 담은 WeddingSignInCommand 객체
+     * @param request 로그인에 필요한 정보를 담은 WeddingSignInRequest 객체
      * @return 토큰에 대한 JwtTokenDto 객체
      * @throws
      */
     @Transactional
-    public JwtTokenDto signIn(WeddingSignInRequest command){
-        WeddingUser user = weddingUserRepository.getByEmail(command.email());
-        user.signIn(command.password(), passwordEncoder);
+    public JwtTokenDto signIn(WeddingSignInRequest request){
+        WeddingUser user = weddingUserRepository.getByEmail(request.email());
+        user.signIn(request.password(), passwordEncoder);
 
         JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
@@ -65,7 +65,7 @@ public class WeddingUserAuthService {
     }
 
     /**
-     * Member username으로 JwtTokenDto를 생성하는 메서드
+     * User email로 JwtTokenDto를 생성하는 메서드
      *
      * @param user
      * @return JwtTokenDto
