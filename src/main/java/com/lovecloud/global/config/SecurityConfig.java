@@ -2,15 +2,21 @@ package com.lovecloud.global.config;
 
 import com.lovecloud.global.crypto.BCryptCustomPasswordEncoder;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
+import com.lovecloud.global.jwt.JwtAuthenticationFilter;
+import com.lovecloud.global.jwt.JwtAuthenticationProvider;
+import com.lovecloud.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -19,6 +25,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 //    private static final String[] PUBLIC_ENDPOINTS = {
 //            "/**",
 //    };
@@ -54,8 +62,24 @@ public class SecurityConfig {
 //                        .anyRequest().authenticated());
 
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll());  // 모든 요청을 허용
+                        .anyRequest().permitAll())  // 모든 요청을 허용
 
+                .addFilterBefore(jwtAuthenticationFilter(authenticationManager(httpSecurity)),
+                    UsernamePasswordAuthenticationFilter.class);
+
+
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
+                .authenticationProvider(jwtAuthenticationProvider)
+                .build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new JwtAuthenticationFilter(jwtTokenProvider, authenticationManager);
     }
 
 }

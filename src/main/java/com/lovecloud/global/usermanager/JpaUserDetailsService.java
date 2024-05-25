@@ -16,7 +16,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public SecurityUser loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Optional<User> user = userRepository.findByEmail(email);
 
