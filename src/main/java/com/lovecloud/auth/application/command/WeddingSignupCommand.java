@@ -7,6 +7,7 @@ public record WeddingSignupCommand(
     String email,
     String password,
     String name,
+    String phoneNumber,
     WeddingRole weddingRole
 ) {
 
@@ -18,7 +19,7 @@ public record WeddingSignupCommand(
                 .email(email)
                 .name(name)
                 .userRole(userRole)
-                .phoneNumber(null)
+                .phoneNumber(phoneNumber)
                 .password(password)
                 .accountStatus(AccountStatus.ACTIVE)
                 .weddingRole(weddingRole)

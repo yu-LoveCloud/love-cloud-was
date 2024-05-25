@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WeddingUser extends User {
 
-    @Column(name = "phone_number", nullable = true, length = 100)
+    @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
 
     @Embedded
