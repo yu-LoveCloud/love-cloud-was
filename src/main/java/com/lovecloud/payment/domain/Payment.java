@@ -1,16 +1,15 @@
 package com.lovecloud.payment.domain;
 
+import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.global.domain.CommonRootEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.lovecloud.usermanagement.domain.Guest;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -23,24 +22,27 @@ public class Payment extends CommonRootEntity<Long> {
     @Column(name = "payment_id")
     private Long id;
 
-    @Column(name = "payment_number", nullable = false, length = 100)
-    private String paymentNumber;
+    @Column(name = "imp_uid", nullable = false, length = 100)
+    private String impUid;
 
-    @Column(name = "payment_method", nullable = false, length = 100)
-    private String paymentMethod;
+    @Column(name = "amount", nullable = false, length = 100)
+    private String amount;
 
-    @Column(name = "payment_info", nullable = false, length = 100)
-    private String paymentInfo;
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
 
-    @Column(name = "payment_status", nullable = false, length = 100)
-    private String paymentStatus;
+    @Column(name = "status", nullable = false, length = 100)
+    private String status;
+
+    @Column(name = "paid_at", nullable = false)
+    private LocalDateTime paidAt;
 
     @Builder
-    public Payment(String paymentNumber, String paymentMethod, String paymentInfo,
-            String paymentStatus) {
-        this.paymentNumber = paymentNumber;
-        this.paymentMethod = paymentMethod;
-        this.paymentInfo = paymentInfo;
-        this.paymentStatus = paymentStatus;
+    public Payment(String impUid, String amount, String name, String status, LocalDateTime paidAt) {
+        this.impUid = impUid;
+        this.amount = amount;
+        this.name = name;
+        this.status = status;
+        this.paidAt = paidAt;
     }
 }

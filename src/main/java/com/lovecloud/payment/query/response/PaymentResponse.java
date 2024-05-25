@@ -1,4 +1,12 @@
 package com.lovecloud.payment.query.response;
 
-public record PaymentResponse() {
+import lombok.Builder;
+
+@Builder
+public record PaymentResponse(
+        String impUid,
+        Long amount,
+        String name,
+        String status
+) {
 }
