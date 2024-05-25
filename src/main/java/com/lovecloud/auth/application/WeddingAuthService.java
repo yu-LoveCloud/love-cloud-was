@@ -45,6 +45,10 @@ public class WeddingAuthService {
         return jwtTokenDto;
     }
 
+    public JwtTokenDto signIn(WeddingSignupCommand command){
+        WeddingUser user = weddingUserRepository.getByEmail(command.email());
+        return null;
+    }
 
     /**
      * Member username으로 JwtTokenDto를 생성하는 메서드
