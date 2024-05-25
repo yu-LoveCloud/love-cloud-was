@@ -1,7 +1,7 @@
 package com.lovecloud.auth.presentation;
 
 import com.lovecloud.auth.application.WeddingAuthService;
-import com.lovecloud.auth.presentation.request.WeddingSignupRequest;
+import com.lovecloud.auth.presentation.request.WeddingSignUpRequest;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AuthController {
      * @return 회원 가입 결과에 대한 JwtTokenDto 객체
      */
     @PostMapping("/sign-up")
-    public ResponseEntity<JwtTokenDto> signUp(@Valid @RequestBody WeddingSignupRequest request){
+    public ResponseEntity<JwtTokenDto> signUp(@Valid @RequestBody WeddingSignUpRequest request){
         JwtTokenDto jwtTokenDto = weddingAuthService.signUp(request.toCommand());
 
         log.info("유저가 생성되었습니다. {}", request.email());
