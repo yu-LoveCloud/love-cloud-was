@@ -22,8 +22,13 @@ public class Payment extends CommonRootEntity<Long> {
     @Column(name = "payment_id")
     private Long id;
 
+    //아임포트 고유번호
     @Column(name = "imp_uid", nullable = false, length = 100)
     private String impUid;
+
+    //주문번호
+    @Column(name = "merchant_uid", nullable = false, length = 100)
+    private String merchantUid;
 
     @Column(name = "amount", nullable = false, length = 100)
     private Long amount;
@@ -31,8 +36,9 @@ public class Payment extends CommonRootEntity<Long> {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "status", nullable = false, length = 100)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status", nullable = false, length = 100)
+    private PaymentStatus paymentStatus;
 
     @Column(name = "paid_at", nullable = false)
     private LocalDateTime paidAt;
@@ -41,11 +47,12 @@ public class Payment extends CommonRootEntity<Long> {
     private String payMethod;
 
     @Builder
-    public Payment(String impUid, Long amount, String name, String status, LocalDateTime paidAt, String payMethod) {
+    public Payment(String impUid, String merchantUid, Long amount, String name, PaymentStatus paymentStatus, LocalDateTime paidAt, String payMethod) {
         this.impUid = impUid;
+        this.merchantUid = merchantUid;
         this.amount = amount;
         this.name = name;
-        this.status = status;
+        this.paymentStatus = paymentStatus;
         this.paidAt = paidAt;
         this.payMethod = payMethod;
     }
