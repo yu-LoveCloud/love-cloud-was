@@ -26,7 +26,7 @@ public class Payment extends CommonRootEntity<Long> {
     private String impUid;
 
     @Column(name = "amount", nullable = false, length = 100)
-    private String amount;
+    private Long amount;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -37,12 +37,16 @@ public class Payment extends CommonRootEntity<Long> {
     @Column(name = "paid_at", nullable = false)
     private LocalDateTime paidAt;
 
+    @Column(name = "pay_method", nullable = false, length = 100)
+    private String payMethod;
+
     @Builder
-    public Payment(String impUid, String amount, String name, String status, LocalDateTime paidAt) {
+    public Payment(String impUid, Long amount, String name, String status, LocalDateTime paidAt, String payMethod) {
         this.impUid = impUid;
         this.amount = amount;
         this.name = name;
         this.status = status;
         this.paidAt = paidAt;
+        this.payMethod = payMethod;
     }
 }
