@@ -1,6 +1,8 @@
 package com.lovecloud.usermanagement.domain;
 
+import com.lovecloud.auth.domain.Password;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -17,12 +19,12 @@ public class Guest extends User {
     @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Builder
     public Guest(String email, String name, UserRole userRole, String phoneNumber,
-            String password) {
+            Password password) {
         super(email, name, userRole);
         this.phoneNumber = phoneNumber;
         this.password = password;
