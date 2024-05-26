@@ -56,7 +56,7 @@ public class PaymentService {
 
         //중복 결제 및 결제 완료 여부 확인
         checkDuplicatePayment(impUid);
-        checkPayStatus(status);
+        validatePaymentCompleted(status);
 
         //결제 정보 저장
         com.lovecloud.payment.domain.Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
@@ -101,7 +101,7 @@ public class PaymentService {
                 .build();
     }
 
-    private void checkPayStatus(String status) {
+    private void validatePaymentCompleted(String status) {
         if (!status.equals("paid")) {
             throw new PaymentNotCompletedException();
         }
