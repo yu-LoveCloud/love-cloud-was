@@ -71,9 +71,13 @@ public class PaymentService {
         //결제 내역을 가져옴
         com.lovecloud.payment.domain.Payment payment = paymentRepository.findByImpUidOrThrow(impUid);
 
+        //PaymentStatus가 PAID가 아니면 결제 취소 불가
+        validatePaymentIsPaid(payment.getPaymentStatus());
+
         //iamport 결제 취소
         IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(new CancelData(impUid, true));
 
+        //결제 취소 응답 검증
         validateCancellationResponse(iamportResponse);
 
         // 결제 정보 업데이트
@@ -99,6 +103,11 @@ public class PaymentService {
                 .paidAt(paidAt)
                 .payMethod(payMethod)
                 .build();
+    }
+    private void validatePaymentIsPaid(PaymentStatus status) {
+        if (status != PaymentStatus.PAID) {
+            throw new PaymentCancellationFailedException();
+        }
     }
 
     private void validatePaymentCompleted(String status) {
