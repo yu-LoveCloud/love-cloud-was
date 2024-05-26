@@ -21,6 +21,12 @@ public class GuestAuthController {
 
     private final GuestAuthService guestAuthService;
 
+    /**
+     * 회원 가입을 처리하는 메서드
+     *
+     * @param request 회원 가입에 필요한 정보를 담은 GuestSignUpRequest 객체
+     * @return 회원 가입 결과에 대한 JwtTokenDto 객체
+     */
     @PostMapping("/sign-up")
     public ResponseEntity<JwtTokenDto> signUp(@Valid @RequestBody GuestSignUpRequest request){
         JwtTokenDto jwtTokenDto = guestAuthService.signUp(request.toCommand());
