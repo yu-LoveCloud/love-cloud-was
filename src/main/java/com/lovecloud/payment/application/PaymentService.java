@@ -62,7 +62,6 @@ public class PaymentService {
         com.lovecloud.payment.domain.Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
         com.lovecloud.payment.domain.Payment savedPayment = paymentRepository.save(payment);
 
-        cancelPayment(impUid);
         return savedPayment.getId();
 
     }
