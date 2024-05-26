@@ -3,14 +3,16 @@ package com.lovecloud.payment.application;
 import com.lovecloud.payment.domain.PaymentStatus;
 import com.lovecloud.payment.domain.repository.PaymentRepository;
 import com.lovecloud.payment.exception.DuplicatePaymentException;
+import com.lovecloud.payment.exception.PaymentCancellationFailedException;
 import com.lovecloud.payment.exception.PaymentNotCompletedException;
-import com.lovecloud.payment.query.response.PaymentResponse;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentService {
 
     @Value("${imp.api.key}")
@@ -58,8 +61,32 @@ public class PaymentService {
         //결제 정보 저장
         com.lovecloud.payment.domain.Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
         com.lovecloud.payment.domain.Payment savedPayment = paymentRepository.save(payment);
+
+        cancelPayment(impUid);
         return savedPayment.getId();
 
+    }
+
+    public Long cancelPayment(String impUid) throws IamportResponseException, IOException {
+        //결제 내역을 가져옴
+        com.lovecloud.payment.domain.Payment payment = paymentRepository.findByImpUidOrThrow(impUid);
+
+        //iamport 결제 취소
+        IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(new CancelData(impUid, true));
+
+        validateCancellationResponse(iamportResponse);
+
+        // 결제 정보 업데이트
+        payment.cancel();
+
+        return payment.getId();
+    }
+
+    private static void validateCancellationResponse(IamportResponse<Payment> iamportResponse) {
+        //code가 0이 아니면 결제 취소 실패
+        if(iamportResponse.getCode() != 0) {
+            throw new PaymentCancellationFailedException();
+        }
     }
 
     private static com.lovecloud.payment.domain.Payment createPayment(String impUid, String merchantUid, Long amount, String name, String status, LocalDateTime paidAt, String payMethod) {
