@@ -10,7 +10,7 @@ public record WeddingSignUpRequest(
         String email,
 
         @NotBlank
-        @Size(min = 2, max = 5, message = "이름은 2자리 이상, 5자리 이하여야 합니다.")
+        @Pattern(regexp = "^[가-힣]{2,5}$", message = "이름은 한국어로 2~5자리여야 합니다.")
         String name,
 
         @NotBlank
