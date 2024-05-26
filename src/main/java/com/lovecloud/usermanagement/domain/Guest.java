@@ -1,5 +1,6 @@
 package com.lovecloud.usermanagement.domain;
 
+import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -28,5 +29,13 @@ public class Guest extends User {
         super(email, name, userRole);
         this.phoneNumber = phoneNumber;
         this.password = password;
+    }
+
+    public void signup(GuestValidator validator){
+        validator.validateDuplicateEmail(this.getEmail());
+    }
+
+    public String getPassword() {
+        return password.getEncryptedPassword();
     }
 }

@@ -12,7 +12,7 @@ public record GuestSignUpCommand(
         String phoneNumber
 ) {
 
-    public Guest toGuestUser(Password password) {
+    public Guest toGuest(Password password) {
 
         final var userRole = UserRole.GUEST;
 
