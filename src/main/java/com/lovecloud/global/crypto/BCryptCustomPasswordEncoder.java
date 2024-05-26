@@ -1,5 +1,6 @@
 package com.lovecloud.global.crypto;
 
+import com.lovecloud.auth.domain.Password;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,9 @@ public class BCryptCustomPasswordEncoder implements CustomPasswordEncoder{
     }
 
     @Override
-    public String encode(CharSequence rawPassword) {
-        return passwordEncoder.encode(rawPassword);
+    public Password encode(CharSequence rawPassword)  {
+        String encoded = passwordEncoder.encode(rawPassword);
+        return new Password(encoded);
     }
 
     @Override
