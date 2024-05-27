@@ -42,7 +42,7 @@ public class Couple extends CommonRootEntity<Long> {
     private String refundBankName;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invitation_id", nullable = false)
+    @JoinColumn(name = "invitation_id")
     private Invitation invitation;
 
     @Builder
@@ -52,6 +52,10 @@ public class Couple extends CommonRootEntity<Long> {
         this.bride = bride;
         this.refundAccount = refundAccount;
         this.refundBankName = refundBankName;
+        this.invitation = invitation;
+    }
+
+    public void setInvitation(Invitation invitation) {
         this.invitation = invitation;
     }
 }

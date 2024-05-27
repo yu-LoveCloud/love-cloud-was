@@ -1,12 +1,8 @@
 package com.lovecloud.invitationmanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,15 +29,16 @@ public class Invitation extends CommonRootEntity<Long> {
     @Column(name = "content", nullable = false, length = 300)
     private String content;
 
-    @Column(name = "image_url", nullable = false, length = 100)
-    private String imageUrl;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invitation_image_id", nullable = false)
+    private InvitationImage invitationImage;
 
     @Builder
     public Invitation(String place, LocalDateTime weddingDateTime, String content,
-            String imageUrl) {
+                      InvitationImage invitationImage) {
         this.place = place;
         this.weddingDateTime = weddingDateTime;
         this.content = content;
-        this.imageUrl = imageUrl;
+        this.invitationImage = invitationImage;
     }
 }
