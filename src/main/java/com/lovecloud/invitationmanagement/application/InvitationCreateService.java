@@ -5,8 +5,6 @@ import com.lovecloud.invitationmanagement.domain.Invitation;
 import com.lovecloud.invitationmanagement.domain.InvitationImage;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationImageRepository;
 import com.lovecloud.invitationmanagement.domain.repository.InvitationRepository;
-import com.lovecloud.usermanagement.domain.Couple;
-import com.lovecloud.usermanagement.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
