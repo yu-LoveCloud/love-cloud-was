@@ -87,7 +87,7 @@ public class PaymentService {
 
     private static void validateCancellationResponse(IamportResponse<Payment> iamportResponse) {
         //code가 0이 아니면 결제 취소 실패
-        if(iamportResponse.getCode() != 0) {
+        if(iamportResponse==null || iamportResponse.getCode() != 0) {
             throw new PaymentCancellationFailedException();
         }
     }
