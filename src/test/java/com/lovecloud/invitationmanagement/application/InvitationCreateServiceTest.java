@@ -1,5 +1,7 @@
 package com.lovecloud.invitationmanagement.application;
 
+import com.lovecloud.auth.domain.Password;
+import com.lovecloud.auth.domain.WeddingUserRepository;
 import com.lovecloud.invitationmanagement.application.command.CreateInvitationCommand;
 import com.lovecloud.invitationmanagement.domain.Invitation;
 import com.lovecloud.invitationmanagement.domain.InvitationImage;
@@ -8,8 +10,9 @@ import com.lovecloud.invitationmanagement.domain.repository.InvitationRepository
 import com.lovecloud.invitationmanagement.exeption.NotFoundInvitationImageException;
 import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
+import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import com.lovecloud.usermanagement.exeption.NotFoundCoupleException;
-import com.lovecloud.usermanagement.repository.CoupleRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,7 +56,7 @@ class InvitationCreateServiceTest {
                 .name("John Doe")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-1234-5678")
-                .password("securePassword1!") // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.GROOM) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
@@ -68,7 +71,7 @@ class InvitationCreateServiceTest {
                 .name("Jane Smith")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-8765-4321")
-                .password("securePassword2!") // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.BRIDE) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
@@ -96,7 +99,7 @@ class InvitationCreateServiceTest {
                 .name("John Doe2")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-2234-5678")
-                .password("securePassword1!") // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.GROOM) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
