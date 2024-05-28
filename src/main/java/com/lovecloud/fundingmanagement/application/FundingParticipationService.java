@@ -21,10 +21,10 @@ public class FundingParticipationService {
     private final FundingRepository fundingRepository;
     private final GuestFundingRepository guestFundingRepository;
 
-    public void participateInFunding(ParticipateFundingCommand command) {
+    public Long participateInFunding(ParticipateFundingCommand command) {
         Guest guest = guestRepository.findByIdOrThrow(command.memberId());
         Funding funding = fundingRepository.findByIdOrThrow(command.fundingId());
         GuestFunding guestFunding = command.toGuestFunding(guest, funding);
-        guestFundingRepository.save(guestFunding);
+        return guestFundingRepository.save(guestFunding).getId();
     }
 }
