@@ -55,7 +55,7 @@ class InvitationCreateServiceTest {
                 .name("John Doe")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-1234-5678")
-                .password(new Password("123456")) // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.GROOM) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
@@ -70,7 +70,7 @@ class InvitationCreateServiceTest {
                 .name("Jane Smith")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-8765-4321")
-                .password(new Password("123456")) // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.BRIDE) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
@@ -98,7 +98,7 @@ class InvitationCreateServiceTest {
                 .name("John Doe2")
                 .userRole(UserRole.WEDDING_USER) // UserRole은 enum 또는 적절한 값으로 설정
                 .phoneNumber("010-2234-5678")
-                .password(new Password("123456")) // 보통 해시된 비밀번호를 사용
+                .password(new Password("12345")) // 보통 해시된 비밀번호를 사용
                 .accountStatus(AccountStatus.ACTIVE) // AccountStatus는 enum 또는 적절한 값으로 설정
                 .weddingRole(WeddingRole.GROOM) // WeddingRole은 enum 또는 적절한 값으로 설정
                 .oauthId(null) // OAuth ID가 없으면 null
