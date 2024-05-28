@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/admin/products")
 @RestController
-public class ProductController {
+public class ProductCreateController {
 
     private final ProductCreateService productCreateService;
     private final ProductOptionsCreateService productOptionsCreateService;
 
     @PostMapping
-    public ResponseEntity<Long> creatProduct(
+    public ResponseEntity<Long> createProduct(
             @Valid @RequestBody CreateProductRequest request
     ) {
         final Long productId = productCreateService.createProduct(request.toCommand());
-        return ResponseEntity.created(URI.create("/products/" + productId)).build();
+        return ResponseEntity.created(URI.create("/admin/products/" + productId)).build();
     }
 
     @PostMapping("/{productId}/options")
@@ -37,7 +37,8 @@ public class ProductController {
     ) {
         final Long optionId = productOptionsCreateService.addProductOptions(
                 request.toCommand(productId));
-        return ResponseEntity.created(URI.create("/products/" + productId + "/options/" + optionId))
+        return ResponseEntity.created(
+                        URI.create("/admin/products/" + productId + "/options/" + optionId))
                 .build();
     }
 }

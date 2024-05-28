@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DescriptionImageRepository extends JpaRepository<DescriptionImage, Long> {
 
-    List<DescriptionImage> findByProductId(Long productId);
+    List<DescriptionImage> findByProductOptionsId(Long productOptionsId);
 }
