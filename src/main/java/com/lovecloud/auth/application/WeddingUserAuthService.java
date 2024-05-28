@@ -27,7 +27,7 @@ public class WeddingUserAuthService {
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
-    private final RedisTemplate<String, Object> redisTemplate;
+
 
     /**
      * WeddingSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
@@ -69,18 +69,6 @@ public class WeddingUserAuthService {
         return jwtTokenDto;
     }
 
-    /**
-     * 로그아웃을 처리하는 메서드
-     *  - AccessToken을 Redis에 저장하여 블랙리스트 처리
-     *  - AccessToken의 만료시간까지만 저장
-     * @param token 로그아웃할 AccessToken
-     */
-    @Transactional
-    public void signOut(String token){
-        Date expirationDate = jwtTokenProvider.getExpirationDate(token);
-
-        redisTemplate.opsForValue().set(token, "blacklisted", expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-    }
 
 
     /**

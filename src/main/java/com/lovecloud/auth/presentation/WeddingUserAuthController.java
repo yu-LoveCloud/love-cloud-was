@@ -50,18 +50,5 @@ public class WeddingUserAuthController {
         return ResponseEntity.ok(jwtTokenDto);
     }
 
-    /**
-     * 로그아웃을 처리하는 메서드
-     *
-     * @param tokenHeader Authorization 헤더에서 전달받은 AccessToken
-     * @return 로그아웃 성공 여부
-     */
-    @PostMapping("/sign-out")
-    public ResponseEntity<Void> signOut(@RequestHeader("Authorization") String tokenHeader) {
-        String token = tokenHeader.substring(7).trim();
-        weddingUserAuthService.signOut(token);
 
-        log.info("유저가 로그아웃 되었습니다. 토큰: {}", token);
-        return ResponseEntity.ok().build();
-    }
 }

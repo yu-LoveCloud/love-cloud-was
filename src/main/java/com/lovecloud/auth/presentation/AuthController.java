@@ -1,5 +1,6 @@
 package com.lovecloud.auth.presentation;
 
+import com.lovecloud.auth.application.AuthService;
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import com.lovecloud.global.jwt.refresh.RefreshTokenService;
@@ -19,6 +20,7 @@ public class AuthController {
 
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
     /**
      * RefreshToken을 사용하여 새로운 AccessToken과 RefreshToken을 발급하는 메서드
@@ -44,5 +46,22 @@ public class AuthController {
 
         log.info("토큰이 재생성 되었습니다. {}", jwtTokenProvider.getUsername(refreshToken));
         return ResponseEntity.ok(jwtTokenDto);
+    }
+
+    /**
+     * 로그아웃을 처리하는 메서드
+     *
+     * @param token Authorization 헤더에서 전달받은 AccessToken
+     * @return 로그아웃 성공 여부
+     */
+    @PostMapping("/sign-out")
+    public ResponseEntity<Void> signOut(
+            @RequestHeader("Authorization") String token) {
+
+
+        authService.signOut(token);
+
+        log.info("유저가 로그아웃 되었습니다. 토큰: {}", token);
+        return ResponseEntity.ok().build();
     }
 }
