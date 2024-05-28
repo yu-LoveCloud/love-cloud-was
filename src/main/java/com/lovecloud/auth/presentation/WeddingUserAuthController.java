@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -53,8 +50,18 @@ public class WeddingUserAuthController {
         return ResponseEntity.ok(jwtTokenDto);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> test(){
-        return ResponseEntity.ok("test");
+    /**
+     * 로그아웃을 처리하는 메서드
+     *
+     * @param tokenHeader Authorization 헤더에서 전달받은 AccessToken
+     * @return 로그아웃 성공 여부
+     */
+    @PostMapping("/sign-out")
+    public ResponseEntity<Void> signOut(@RequestHeader("Authorization") String tokenHeader) {
+        String token = tokenHeader.substring(7).trim();
+        weddingUserAuthService.signOut(token);
+
+        log.info("유저가 로그아웃 되었습니다. 토큰: {}", token);
+        return ResponseEntity.ok().build();
     }
 }
