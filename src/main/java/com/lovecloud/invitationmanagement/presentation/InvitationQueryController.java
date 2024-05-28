@@ -1,5 +1,6 @@
 package com.lovecloud.invitationmanagement.presentation;
 
+import com.lovecloud.invitationmanagement.application.InvitationQueryService;
 import com.lovecloud.invitationmanagement.query.response.InvitationDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
