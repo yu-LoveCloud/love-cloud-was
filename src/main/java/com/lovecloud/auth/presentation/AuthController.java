@@ -58,7 +58,6 @@ public class AuthController {
     public ResponseEntity<Void> signOut(
             @RequestHeader("Authorization") String token) {
 
-
         authService.signOut(token);
 
         log.info("유저가 로그아웃 되었습니다. 토큰: {}", token);

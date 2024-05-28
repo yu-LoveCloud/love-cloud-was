@@ -1,6 +1,8 @@
 package com.lovecloud.auth.application;
 
 import com.lovecloud.global.jwt.JwtTokenProvider;
+import com.lovecloud.global.jwt.dto.JwtTokenDto;
+import com.lovecloud.usermanagement.domain.WeddingUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +30,23 @@ public class AuthService {
         Date expirationDate = jwtTokenProvider.getExpirationDate(token);
 
         redisTemplate.opsForValue().set(token, "blacklisted", expirationDate.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * User email로 JwtTokenDto를 생성하는 메서드
+     *
+     * @param email User email
+     * @return JwtTokenDto
+     */
+    public JwtTokenDto createJwtTokenDto(String email){
+
+        String accessToken = jwtTokenProvider.createAccessToken(email);
+        String refreshToken = jwtTokenProvider.createRefreshToken(email);
+
+        return JwtTokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
 }

@@ -25,8 +25,8 @@ public class WeddingUserAuthService {
     private final WeddingUserRepository weddingUserRepository;
     private final WeddingUserValidator validator;
     private final CustomPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
+    private final AuthService authService;
 
 
     /**
@@ -45,7 +45,7 @@ public class WeddingUserAuthService {
 
         weddingUserRepository.save(user);
 
-        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
 
         return jwtTokenDto;
@@ -63,30 +63,13 @@ public class WeddingUserAuthService {
         WeddingUser user = weddingUserRepository.getByEmail(request.email());
         user.signIn(request.password(), passwordEncoder);
 
-        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
 
         return jwtTokenDto;
     }
 
 
-
-    /**
-     * User email로 JwtTokenDto를 생성하는 메서드
-     *
-     * @param user
-     * @return JwtTokenDto
-     */
-    public JwtTokenDto createJwtTokenDto(WeddingUser user){
-
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-
-        return JwtTokenDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }
 
 
