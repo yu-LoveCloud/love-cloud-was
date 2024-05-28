@@ -13,6 +13,9 @@ import com.lovecloud.usermanagement.domain.WeddingUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class WeddingUserAuthService {
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * WeddingSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
@@ -36,7 +40,7 @@ public class WeddingUserAuthService {
 
         Password password = passwordEncoder.encode(command.password());
         WeddingUser user = command.toWeddingUser(password);
-        user.signup(validator);
+        user.signUp(validator);
 
         weddingUserRepository.save(user);
 
@@ -63,6 +67,8 @@ public class WeddingUserAuthService {
 
         return jwtTokenDto;
     }
+
+
 
     /**
      * User email로 JwtTokenDto를 생성하는 메서드

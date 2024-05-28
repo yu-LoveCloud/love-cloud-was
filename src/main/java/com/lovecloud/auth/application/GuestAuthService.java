@@ -35,7 +35,7 @@ public class GuestAuthService {
 
         Password password = passwordEncoder.encode(command.password());
         Guest user = command.toGuest(password);
-        user.signup(validator);
+        user.signUp(validator);
 
         guestRepository.save(user);
 
