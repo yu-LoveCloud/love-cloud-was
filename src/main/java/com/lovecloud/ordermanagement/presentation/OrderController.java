@@ -1,7 +1,7 @@
 package com.lovecloud.ordermanagement.presentation;
 
 import com.lovecloud.ordermanagement.application.OrderCreateService;
-import com.lovecloud.ordermanagement.presentation.request.OrderCreateRequest;
+import com.lovecloud.ordermanagement.presentation.request.CreateOrderRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class OrderController {
     private final OrderCreateService orderCreateService;
 
     @PostMapping
-    public ResponseEntity<Long> createOrder(@Valid @RequestBody OrderCreateRequest request,
+    public ResponseEntity<Long> createOrder(@Valid @RequestBody CreateOrderRequest request,
                                             Long userId) {
         final Long orderId = orderCreateService.createOrder(request.toCommand(userId));
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();

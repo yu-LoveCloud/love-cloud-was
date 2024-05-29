@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record OrderCreateRequest(
+public record CreateOrderRequest(
         @NotNull
         Long userId,
         @NotNull
