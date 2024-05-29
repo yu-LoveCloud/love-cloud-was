@@ -8,6 +8,9 @@ import com.lovecloud.ordermanagement.domain.Delivery;
 import com.lovecloud.ordermanagement.domain.DeliveryStatus;
 import com.lovecloud.ordermanagement.domain.Order;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
+import com.lovecloud.ordermanagement.exception.FundingNotCompletedException;
+import com.lovecloud.ordermanagement.exception.MismatchedCoupleException;
+import com.lovecloud.ordermanagement.exception.NoAvailableFundingsException;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +30,26 @@ public class OrderCreateService {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
         List<Funding> fundings = fundingRepository.findAllById(command.fundingIds());
 
-        //각 펀딩에 대하여 모금이 완료된 상태인지 확인
-        fundings.forEach(funding -> {
-            if (!funding.getStatus().equals(FundingStatus.COMPLETED)) {
-                throw new IllegalArgumentException("Funding is not complete");
-            }
-            //펀딩의 주인과 주문자가 같은 커플인지 확인
-            if (!funding.getCouple().equals(couple)) {
-                throw new IllegalArgumentException("Funding owner and orderer are not the same couple");
-            }
-        });
+        validateFundings(fundings, couple);
 
-        //Delivery 생성
-        Delivery delivery = Delivery.builder()
+        Delivery delivery = createDelivery(command);
+        Order order = createOrder(command, couple, delivery);
+
+        return orderRepository.save(order).getId();
+    }
+
+    private static Order createOrder(CreateOrderCommand command, Couple couple, Delivery delivery) {
+        return Order.builder()
+                .couple(couple)
+                .ordererName(command.ordererName())
+                .ordererPhoneNumber(command.ordererPhoneNumber())
+                .ordererMemo(command.ordererMemo())
+                .delivery(delivery)
+                .build();
+    }
+
+    private static Delivery createDelivery(CreateOrderCommand command) {
+        return Delivery.builder()
                 .deliveryName(command.deliveryName())
                 .receiverName(command.receiverName())
                 .receiverPhoneNumber(command.receiverPhoneNumber())
@@ -49,16 +59,27 @@ public class OrderCreateService {
                 .deliveryMemo(command.deliveryMemo())
                 .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
-
-        //Order 생성
-        Order order = Order.builder()
-                .couple(couple)
-                .ordererName(command.ordererName())
-                .ordererPhoneNumber(command.ordererPhoneNumber())
-                .ordererMemo(command.ordererMemo())
-                .delivery(delivery)
-                .build();
-
-        return orderRepository.save(order).getId();
     }
+
+    private static void validateFundings(List<Funding> fundings, Couple couple) {
+        if(fundings.isEmpty()){
+            throw new NoAvailableFundingsException();
+        }
+        for (Funding funding : fundings) {
+            validateFundingStatus(funding);
+            validateFundingCouple(funding, couple);
+        }
+
+    }
+
+    private static void validateFundingStatus(Funding funding) {
+        if (!funding.getStatus().equals(FundingStatus.COMPLETED)) {
+            throw new FundingNotCompletedException();
+        }
+    }
+
+    private static void validateFundingCouple(Funding funding, Couple couple) {
+        if (!funding.getCouple().equals(couple)) {
+            throw new MismatchedCoupleException();
+        }
 }
