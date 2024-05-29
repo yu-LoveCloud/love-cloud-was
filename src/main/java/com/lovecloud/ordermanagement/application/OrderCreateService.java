@@ -1,5 +1,6 @@
 package com.lovecloud.ordermanagement.application;
 
+import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
