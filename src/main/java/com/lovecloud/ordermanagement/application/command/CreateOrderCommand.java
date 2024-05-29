@@ -10,9 +10,10 @@ public record CreateOrderCommand(
         String ordererMemo,
         String receiverName,
         String receiverPhoneNumber,
-        String receiverZipCode,
-        String receiverAddress,
-        String receiverAddressDetail,
+        String deliveryName,
+        String zipCode,
+        String address,
+        String detailAddress,
         String deliveryMemo
 ) {
 }

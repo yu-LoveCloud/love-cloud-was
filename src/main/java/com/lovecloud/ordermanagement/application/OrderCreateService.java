@@ -43,9 +43,9 @@ public class OrderCreateService {
                 .deliveryName(command.deliveryName())
                 .receiverName(command.receiverName())
                 .receiverPhoneNumber(command.receiverPhoneNumber())
-                .zipCode(command.receiverZipCode())
-                .address(command.receiverAddress())
-                .detailAddress(command.receiverAddressDetail())
+                .zipCode(command.zipCode())
+                .address(command.address())
+                .detailAddress(command.detailAddress())
                 .deliveryMemo(command.deliveryMemo())
                 .deliveryStatus(DeliveryStatus.PENDING)
                 .build();

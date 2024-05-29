@@ -24,6 +24,8 @@ public record CreateOrderRequest(
         String receiverPhoneNumber,
 
         @NotBlank
+        String deliveryName,
+        @NotBlank
         String receiverZipCode,
         @NotBlank
         String receiverAddress,
@@ -38,6 +40,7 @@ public record CreateOrderRequest(
                 ordererName,
                 ordererPhoneNumber,
                 ordererMemo,
+                deliveryName,
                 receiverName,
                 receiverPhoneNumber,
                 receiverZipCode,
