@@ -1,5 +1,6 @@
 package com.lovecloud.ordermanagement.presentation.request;
 
+import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -30,4 +31,19 @@ public record OrderCreateRequest(
         String deliveryMemo
 
 ) {
+    public CreateOrderCommand toCommand(Long userId) {
+        return new CreateOrderCommand(
+                userId,
+                fundingIds,
+                ordererName,
+                ordererPhoneNumber,
+                ordererMemo,
+                receiverName,
+                receiverPhoneNumber,
+                receiverZipCode,
+                receiverAddress,
+                receiverAddressDetail,
+                deliveryMemo
+        );
+    }
 }
