@@ -51,12 +51,14 @@ public class AuthController {
     /**
      * 로그아웃을 처리하는 메서드
      *
-     * @param token Authorization 헤더에서 전달받은 AccessToken
+     * @param tokenHeader Authorization 헤더에서 전달받은 AccessToken
      * @return 로그아웃 성공 여부
      */
     @PostMapping("/sign-out")
     public ResponseEntity<Void> signOut(
-            @RequestHeader("Authorization") String token) {
+            @RequestHeader("Authorization") String tokenHeader) {
+
+        String token = tokenHeader.substring(7).trim();
 
         authService.signOut(token);
 
