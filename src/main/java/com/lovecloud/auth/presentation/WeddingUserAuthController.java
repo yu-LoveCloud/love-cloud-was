@@ -53,8 +53,4 @@ public class WeddingUserAuthController {
         return ResponseEntity.ok(jwtTokenDto);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> test(){
-        return ResponseEntity.ok("test");
-    }
 }
