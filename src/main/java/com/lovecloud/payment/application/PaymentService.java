@@ -1,14 +1,13 @@
 package com.lovecloud.payment.application;
 
+import com.lovecloud.payment.domain.Payment;
 import com.lovecloud.payment.domain.PaymentStatus;
 import com.lovecloud.payment.domain.repository.PaymentRepository;
 import com.lovecloud.payment.exception.DuplicatePaymentException;
 import com.lovecloud.payment.exception.PaymentNotCompletedException;
-import com.lovecloud.payment.query.response.PaymentResponse;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +37,7 @@ public class PaymentService {
 
     public Long completePayment(String impUid) throws IamportResponseException, IOException {
         // 아임포트 API를 사용하여 결제 정보를 가져옴
-        IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
 
         //결제 정보를 가져옴
         String merchantUid = iamportResponse.getResponse().getMerchantUid();
@@ -56,8 +55,8 @@ public class PaymentService {
         checkPayStatus(status);
 
         //결제 정보 저장
-        com.lovecloud.payment.domain.Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
-        com.lovecloud.payment.domain.Payment savedPayment = paymentRepository.save(payment);
+        Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
+        Payment savedPayment = paymentRepository.save(payment);
         return savedPayment.getId();
 
     }
