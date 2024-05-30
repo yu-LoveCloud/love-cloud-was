@@ -8,6 +8,6 @@ import com.lovecloud.global.exception.LoveCloudException;
 public class NotFoundPaymentException extends LoveCloudException {
 
     public NotFoundPaymentException() {
-        super(new ErrorCode(NOT_FOUND, "존재하지 않는 결제입니다."));
+        super(new ErrorCode(NOT_FOUND, "결제 정보를 찾을 수 없습니다."));
     }
 }

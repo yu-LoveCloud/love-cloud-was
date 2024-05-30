@@ -1,10 +1,9 @@
 package com.lovecloud.usermanagement.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import com.lovecloud.auth.domain.Password;
+import com.lovecloud.auth.domain.WeddingUserValidator;
+import com.lovecloud.global.crypto.CustomPasswordEncoder;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +18,8 @@ public class WeddingUser extends User {
     @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
 
-    @Column(name = "password", nullable = false, length = 100)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_status", nullable = false, length = 100)
@@ -41,7 +40,7 @@ public class WeddingUser extends User {
 
     @Builder
     public WeddingUser(String email, String name, UserRole userRole, String phoneNumber,
-            String password, AccountStatus accountStatus, WeddingRole weddingRole, String oauthId,
+            Password password, AccountStatus accountStatus, WeddingRole weddingRole, String oauthId,
             String oauth, String invitationCode) {
         super(email, name, userRole);
         this.phoneNumber = phoneNumber;
@@ -51,5 +50,17 @@ public class WeddingUser extends User {
         this.oauthId = oauthId;
         this.oauth = oauth;
         this.invitationCode = invitationCode;
+    }
+
+    public void signup(WeddingUserValidator validator){
+        validator.validateDuplicateEmail(this.getEmail());
+    }
+
+    public String getPassword() {
+        return password.getEncryptedPassword();
+    }
+
+    public void signIn(String rawPassword, CustomPasswordEncoder passwordEncoder){
+        this.password.validatePassword(rawPassword, passwordEncoder);
     }
 }

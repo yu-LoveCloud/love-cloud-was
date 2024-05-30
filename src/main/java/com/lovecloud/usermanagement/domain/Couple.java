@@ -54,4 +54,8 @@ public class Couple extends CommonRootEntity<Long> {
         this.refundBankName = refundBankName;
         this.invitation = invitation;
     }
+
+    public void setInvitation(Invitation invitation) {
+        this.invitation = invitation;
+    }
 }
