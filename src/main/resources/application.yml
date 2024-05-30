@@ -36,7 +36,14 @@ cloud:
       accessKey: ${AWS_ACCESS_KEY}
       secretKey: ${AWS_SECRET_KEY}
 
+
+imp:
+  api:
+    key: ${IMP_API_KEY}
+    secret: ${IMP_API_SECRET}
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   token-expiration-time: 360000000
   issuer: ${JWT_ISSUER}
+
