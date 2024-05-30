@@ -91,7 +91,7 @@ public class PaymentService {
         }
     }
 
-    private static com.lovecloud.payment.domain.Payment createPayment(String impUid, String merchantUid, Long amount, String name, String status, LocalDateTime paidAt, String payMethod) {
+    private static Payment createPayment(String impUid, String merchantUid, Long amount, String name, String status, LocalDateTime paidAt, String payMethod) {
         return com.lovecloud.payment.domain.Payment.builder()
                 .impUid(impUid)
                 .merchantUid(merchantUid)
