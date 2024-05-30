@@ -17,4 +17,8 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     default Couple findByMemberIdOrThrow(Long memberId) {
         return findByMemberId(memberId).orElseThrow(NotFoundCoupleException::new);
     }
+
+    default Couple findByIdOrThrow(Long coupleId) {
+        return findById(coupleId).orElseThrow(NotFoundCoupleException::new);
+    }
 }

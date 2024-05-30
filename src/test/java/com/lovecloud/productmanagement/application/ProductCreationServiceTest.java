@@ -25,10 +25,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @DisplayName("상품 생성 서비스 (ProductCreateService) 은(는)")
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-class ProductCreateServiceTest {
+class ProductCreationServiceTest {
 
     @Autowired
-    private ProductCreateService productCreateService;
+    private ProductCreationService productCreationService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -58,7 +58,7 @@ class ProductCreateServiceTest {
                     .build();
 
             // when
-            Long productId = productCreateService.createProduct(command);
+            Long productId = productCreationService.createProduct(command);
 
             // then
             Product product = productRepository.findById(productId).orElseThrow();
@@ -77,14 +77,14 @@ class ProductCreateServiceTest {
                     .build();
 
             // when & then
-            assertThatThrownBy(() -> productCreateService.createProduct(command))
+            assertThatThrownBy(() -> productCreationService.createProduct(command))
                     .isInstanceOf(NotFoundCategoryException.class);
         }
 
         @Test
         void 제품명이_중복되어도_생성된다() {
             // given
-            productCreateService.createProduct(CreateProductCommand.builder()
+            productCreationService.createProduct(CreateProductCommand.builder()
                     .productName("BESPOKE 무풍에어컨 갤러리 청정")
                     .categoryId(category.getId())
                     .mainImageNames(List.of("image1.jpg"))
@@ -99,7 +99,7 @@ class ProductCreateServiceTest {
                     .build();
 
             // when
-            Long secondProductId = productCreateService.createProduct(secondCommand);
+            Long secondProductId = productCreationService.createProduct(secondCommand);
 
             // then
             Product secondProduct = productRepository.findById(secondProductId).orElseThrow();
