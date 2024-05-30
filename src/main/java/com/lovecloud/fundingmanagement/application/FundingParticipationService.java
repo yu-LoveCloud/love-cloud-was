@@ -40,7 +40,8 @@ public class FundingParticipationService {
     }
 
     public void completeParticipation(CompleteParticipationCommand command) {
-        GuestFunding guestFunding = guestFundingRepository.findByIdOrThrow(command.guestFundingId());
+        GuestFunding guestFunding = guestFundingRepository.findByIdOrThrow(
+                command.guestFundingId());
         Payment payment = paymentRepository.findByIdOrThrow(command.paymentId());
 
         fundingValidator.validatePaymentStatus(payment);
