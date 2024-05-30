@@ -16,10 +16,11 @@ public record ParticipateFundingCommand(
         String message
 ) {
 
-    public GuestFunding toGuestFunding(Guest guest, Funding funding) {
+    public GuestFunding toGuestFunding(Guest guest, Funding funding, String merchantUid) {
         return GuestFunding.builder()
                 .guest(guest)
                 .funding(funding)
+                .merchantUid(merchantUid)
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .email(email)

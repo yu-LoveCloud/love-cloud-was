@@ -31,6 +31,9 @@ public class GuestFunding extends CommonRootEntity<Long> {
     @Column(name = "guest_funding_id")
     private Long id;
 
+    @Column(name = "merchant_uid", nullable = false, unique = true)
+    private String merchantUid;
+
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
@@ -63,8 +66,9 @@ public class GuestFunding extends CommonRootEntity<Long> {
     private Payment payment;
 
     @Builder
-    public GuestFunding(String name, String phoneNumber, String email, Long fundingAmount,
-            String message, Guest guest, Funding funding) {
+    public GuestFunding(String merchantUid, String name, String phoneNumber, String email,
+            Long fundingAmount, String message, Guest guest, Funding funding) {
+        this.merchantUid = merchantUid;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
@@ -72,5 +76,13 @@ public class GuestFunding extends CommonRootEntity<Long> {
         this.message = message;
         this.guest = guest;
         this.funding = funding;
+    }
+
+    public void linkPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public void updateStatus(ParticipationStatus participationStatus) {
+        this.participationStatus = participationStatus;
     }
 }
