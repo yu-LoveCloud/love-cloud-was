@@ -8,7 +8,7 @@ public interface RefreshTokenService {
 
     void deleteRefreshToken(JwtTokenDto jwtTokenDto, String username);
 
-    String reCreateAccessTokenByRefreshToken(String refreshToken) throws IllegalAccessException;
+    String reCreateAccessTokenByRefreshToken(String refreshToken);
 
     String reCreateRefreshTokenByRefreshToken(String refreshToken);
 }

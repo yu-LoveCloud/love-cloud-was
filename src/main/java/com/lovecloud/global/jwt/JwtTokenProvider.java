@@ -165,11 +165,6 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            if (token == null || !token.startsWith(BEARER_PREFIX)) {
-                return false;
-            }
-
-            token = token.substring(BEARER_PREFIX.length()).trim();
 
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(key)
