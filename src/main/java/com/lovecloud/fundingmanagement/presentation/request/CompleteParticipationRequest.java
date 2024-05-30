@@ -7,9 +7,9 @@ public record CompleteParticipationRequest(
         @NotNull Long paymentId
 ) {
 
-    public CompleteParticipationCommand toCommand(Long participationId, Long memberId) {
+    public CompleteParticipationCommand toCommand(Long guestFundingId, Long memberId) {
         return CompleteParticipationCommand.builder()
-                .participationId(participationId)
+                .guestFundingId(guestFundingId)
                 .memberId(memberId)
                 .paymentId(paymentId)
                 .build();

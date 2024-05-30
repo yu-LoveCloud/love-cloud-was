@@ -34,12 +34,12 @@ public class FundingParticipationController {
 
     @PatchMapping("/participations/{guestFundingId}/complete")
     public ResponseEntity<Void> completeParticipation(
-            @PathVariable Long participationId,
+            @PathVariable Long guestFundingId,
             @Valid @RequestBody CompleteParticipationRequest request
     ) {
         Long memberId = 3L; // TODO: memberId는 @Auth로 받는다고 가정
         fundingParticipationService.completeParticipation(
-                request.toCommand(participationId, memberId));
+                request.toCommand(guestFundingId, memberId));
         return ResponseEntity.ok().build();
     }
 }

@@ -3,6 +3,7 @@ package com.lovecloud.fundingmanagement.application.validator;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.exception.FundingTargetExceededException;
 import com.lovecloud.payment.domain.Payment;
+import com.lovecloud.payment.domain.PaymentStatus;
 import com.lovecloud.payment.exception.InvalidPaymentStatusException;
 import org.springframework.stereotype.Component;
 

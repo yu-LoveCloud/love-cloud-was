@@ -5,7 +5,7 @@ import lombok.Builder;
 @Builder
 public record CompleteParticipationCommand(
         Long memberId,
-        Long participationId,
+        Long guestFundingId,
         Long paymentId
 ) {
 

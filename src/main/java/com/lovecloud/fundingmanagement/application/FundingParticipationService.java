@@ -1,5 +1,6 @@
 package com.lovecloud.fundingmanagement.application;
 
+import com.lovecloud.auth.domain.GuestRepository;
 import com.lovecloud.fundingmanagement.application.command.CompleteParticipationCommand;
 import com.lovecloud.fundingmanagement.application.command.ParticipateFundingCommand;
 import com.lovecloud.fundingmanagement.application.validator.FundingValidator;
@@ -12,9 +13,7 @@ import com.lovecloud.fundingmanagement.query.response.ParticipateFundingResponse
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.payment.domain.Payment;
 import com.lovecloud.payment.domain.repository.PaymentRepository;
-import com.lovecloud.payment.exception.InvalidPaymentStatusException;
 import com.lovecloud.usermanagement.domain.Guest;
-import com.lovecloud.usermanagement.domain.repository.GuestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +40,7 @@ public class FundingParticipationService {
     }
 
     public void completeParticipation(CompleteParticipationCommand command) {
-        GuestFunding guestFunding = guestFundingRepository.findByIdOrThrow(command.participationId());
+        GuestFunding guestFunding = guestFundingRepository.findByIdOrThrow(command.guestFundingId());
         Payment payment = paymentRepository.findByIdOrThrow(command.paymentId());
 
         fundingValidator.validatePaymentStatus(payment);
