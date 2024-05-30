@@ -1,5 +1,6 @@
 package com.lovecloud.payment.application;
 
+import com.lovecloud.payment.domain.Payment;
 import com.lovecloud.payment.domain.PaymentStatus;
 import com.lovecloud.payment.domain.repository.PaymentRepository;
 import com.lovecloud.payment.exception.DuplicatePaymentException;
@@ -9,7 +10,6 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
-import com.siot.IamportRestClient.response.Payment;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class PaymentService {
 
     public Long completePayment(String impUid) throws IamportResponseException, IOException {
         // 아임포트 API를 사용하여 결제 정보를 가져옴
-        IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.paymentByImpUid(impUid);
 
         //결제 정보를 가져옴
         String merchantUid = iamportResponse.getResponse().getMerchantUid();
@@ -59,22 +59,21 @@ public class PaymentService {
         validatePaymentCompleted(status);
 
         //결제 정보 저장
-        com.lovecloud.payment.domain.Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
-        com.lovecloud.payment.domain.Payment savedPayment = paymentRepository.save(payment);
-
+        Payment payment = createPayment(impUid, merchantUid, amount, name, status, paidAt, payMethod);
+        Payment savedPayment = paymentRepository.save(payment);
         return savedPayment.getId();
 
     }
 
     public Long cancelPayment(String impUid) throws IamportResponseException, IOException {
         //결제 내역을 가져옴
-        com.lovecloud.payment.domain.Payment payment = paymentRepository.findByImpUidOrThrow(impUid);
+        Payment payment = paymentRepository.findByImpUidOrThrow(impUid);
 
         //PaymentStatus가 PAID가 아니면 결제 취소 불가
         validatePaymentIsPaid(payment.getPaymentStatus());
 
         //iamport 결제 취소
-        IamportResponse<Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(new CancelData(impUid, true));
+        IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse = iamportClient.cancelPaymentByImpUid(new CancelData(impUid, true));
 
         //결제 취소 응답 검증
         validateCancellationResponse(iamportResponse);
@@ -85,7 +84,7 @@ public class PaymentService {
         return payment.getId();
     }
 
-    private static void validateCancellationResponse(IamportResponse<Payment> iamportResponse) {
+    private static void validateCancellationResponse(IamportResponse<com.siot.IamportRestClient.response.Payment> iamportResponse) {
         //code가 0이 아니면 결제 취소 실패
         if(iamportResponse==null || iamportResponse.getCode() != 0) {
             throw new PaymentCancellationFailedException();

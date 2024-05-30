@@ -8,8 +8,11 @@ import com.lovecloud.productmanagement.domain.repository.DescriptionImageReposit
 import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
-import com.lovecloud.productmanagement.query.response.ProductResponse;
-import com.lovecloud.productmanagement.query.response.ProductResponseAdapter;
+import com.lovecloud.productmanagement.query.response.ProductDetailResponse;
+import com.lovecloud.productmanagement.query.response.ProductDetailResponseMapper;
+import com.lovecloud.productmanagement.query.response.ProductListResponse;
+import com.lovecloud.productmanagement.query.response.ProductListResponseMapper;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -26,32 +29,43 @@ public class ProductQueryService {
     private final MainImageRepository mainImageRepository;
     private final DescriptionImageRepository descriptionImageRepository;
 
-    public List<ProductResponse> findAllByCategoryId(Long categoryId) {
+
+    public List<ProductListResponse> findAllByCategoryId(Long categoryId) {
         List<Product> products = categoryId == null
                 ? productRepository.findAll()
                 : productRepository.findByCategoryId(categoryId);
         return products.stream()
-                .map(this::mapProductToProductResponse)
+                .map(this::mapProductToProductListResponse)
                 .collect(Collectors.toList());
     }
 
-    public ProductResponse findById(Long productId) {
-        Product product = productRepository.findByIdOrThrow(productId);
-        return mapProductToProductResponse(product);
+    public ProductDetailResponse findById(Long productOptionsId) {
+        ProductOptions selectedOption = productOptionsRepository.findByIdAndIsDeletedOrThrow(
+                productOptionsId, false);
+        List<MainImage> mainImages = mainImageRepository.findByProductOptionsId(
+                selectedOption.getId());
+        List<DescriptionImage> descriptionImages = descriptionImageRepository.findByProductOptionsId(
+                selectedOption.getId());
+        List<ProductOptions> otherOptions = productOptionsRepository.findOthersByProductId(
+                selectedOption.getProduct().getId(), selectedOption.getId());
+        return ProductDetailResponseMapper.mapProductOptionsToProductDetailResponse(selectedOption,
+                mainImages, descriptionImages, otherOptions);
     }
 
-    private ProductResponse mapProductToProductResponse(Product product) {
-        List<MainImage> mainImages = mainImageRepository.findByProductId(product.getId());
-        List<DescriptionImage> descriptionImages = descriptionImageRepository.findByProductId(
-                product.getId());
-        List<ProductOptions> productOptions = productOptionsRepository.findByProductId(
-                product.getId());
-
-        return ProductResponseAdapter.fromProduct(
-                product,
-                mainImages,
-                descriptionImages,
-                productOptions
-        );
+    private ProductListResponse mapProductToProductListResponse(Product product) {
+        List<ProductOptions> validOptions = productOptionsRepository
+                .findByProductIdAndIsDeleted(product.getId(), false);
+        if (validOptions.isEmpty()) {
+            return null;
+        }
+        ProductOptions selectedOption = validOptions.get(0);
+        List<MainImage> selectedOptionMainImages = mainImageRepository.findByProductOptionsId(
+                selectedOption.getId());
+        List<ProductOptions> otherOptions = validOptions.size() > 1
+                ? validOptions.subList(1, validOptions.size())
+                : Collections.emptyList();
+        return ProductListResponseMapper
+                .mapProductToProductListResponse(product, selectedOption, selectedOptionMainImages,
+                        otherOptions);
     }
 }

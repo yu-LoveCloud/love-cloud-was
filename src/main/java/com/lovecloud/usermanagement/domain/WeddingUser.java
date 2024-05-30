@@ -2,6 +2,7 @@ package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.Password;
 import com.lovecloud.auth.domain.WeddingUserValidator;
+import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,4 +60,7 @@ public class WeddingUser extends User {
         return password.getEncryptedPassword();
     }
 
+    public void signIn(String rawPassword, CustomPasswordEncoder passwordEncoder){
+        this.password.validatePassword(rawPassword, passwordEncoder);
+    }
 }
