@@ -1,0 +1,63 @@
+package com.lovecloud.auth.application;
+
+import com.lovecloud.auth.application.command.GuestSignUpCommand;
+import com.lovecloud.auth.domain.GuestRepository;
+import com.lovecloud.auth.domain.GuestValidator;
+import com.lovecloud.auth.domain.Password;
+import com.lovecloud.global.crypto.CustomPasswordEncoder;
+import com.lovecloud.global.jwt.JwtTokenProvider;
+import com.lovecloud.global.jwt.dto.JwtTokenDto;
+import com.lovecloud.global.jwt.refresh.RefreshTokenServiceImpl;
+import com.lovecloud.usermanagement.domain.Guest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class GuestAuthService {
+
+    private final GuestRepository guestRepository;
+    private final GuestValidator validator;
+    private final CustomPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenServiceImpl refreshTokenService;
+
+    /**
+     * GuestSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
+     *
+     * @param command 회원 가입에 필요한 정보를 담은  GuestSignupCommand 객체
+     * @return 토큰에 대한 JwtTokenDto 객체
+     * @throws
+     */
+    @Transactional
+    public JwtTokenDto signUp(GuestSignUpCommand command) {
+
+        Password password = passwordEncoder.encode(command.password());
+        Guest user = command.toGuest(password);
+        user.signup(validator);
+
+        guestRepository.save(user);
+
+        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
+
+        return jwtTokenDto;
+    }
+
+    /**
+     * User email로 JwtTokenDto를 생성하는 메서드
+     *
+     * @param user
+     * @return JwtTokenDto
+     */
+    public JwtTokenDto createJwtTokenDto(Guest user) {
+       String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
+       String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+
+       return JwtTokenDto.builder()
+               .accessToken(accessToken)
+               .refreshToken(refreshToken)
+               .build();
+    }
+}

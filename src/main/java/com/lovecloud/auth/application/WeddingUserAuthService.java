@@ -55,7 +55,7 @@ public class WeddingUserAuthService {
      */
     @Transactional
     public JwtTokenDto signIn(WeddingSignInRequest request){
-        WeddingUser user = weddingUserRepository.getByEmail(request.email());
+        WeddingUser user = weddingUserRepository.getByEmailOrThrow(request.email());
         user.signIn(request.password(), passwordEncoder);
 
         JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
