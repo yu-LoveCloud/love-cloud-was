@@ -56,4 +56,8 @@ public class Payment extends CommonRootEntity<Long> {
         this.paidAt = paidAt;
         this.payMethod = payMethod;
     }
+
+    public void cancel() {
+        this.paymentStatus = PaymentStatus.CANCELED;
+    }
 }

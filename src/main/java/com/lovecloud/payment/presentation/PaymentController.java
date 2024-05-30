@@ -21,4 +21,9 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.completePayment(imp_uid));
     }
 
+    @RequestMapping("/cancel/{imp_uid}") //https://URL/payments/cancel/{거래고유번호}
+    public ResponseEntity<Long> cancelPayment(@PathVariable("imp_uid") String imp_uid) throws IamportResponseException, IOException {
+        return ResponseEntity.ok(paymentService.cancelPayment(imp_uid));
+    }
+
 }
