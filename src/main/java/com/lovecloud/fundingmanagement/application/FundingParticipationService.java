@@ -32,6 +32,8 @@ public class FundingParticipationService {
     public ParticipateFundingResponse participateInFunding(ParticipateFundingCommand command) {
         Guest guest = guestRepository.findByIdOrThrow(command.memberId());
         Funding funding = fundingRepository.findByIdOrThrow(command.fundingId());
+        fundingValidator.validateFundingStatus(funding);
+        fundingValidator.validateTargetAmountNotExceeded(funding, command.fundingAmount());
         String merchantUid = DateUuidGenerator.generateDateUuid();
         GuestFunding guestFunding = command.toGuestFunding(guest, funding, merchantUid);
         GuestFunding savedGuestFunding = guestFundingRepository.save(guestFunding);
@@ -46,7 +48,12 @@ public class FundingParticipationService {
 
         fundingValidator.validatePaymentStatus(payment);
         Funding funding = guestFunding.getFunding();
-        fundingValidator.validateFundingAmount(funding, payment.getAmount());
+        fundingValidator.validateFundingStatus(funding);
+        fundingValidator.validateTargetAmountNotExceeded(funding, payment.getAmount());
+        fundingValidator.validateMatchingMerchantUids(guestFunding.getMerchantUid(),
+                payment.getMerchantUid());
+        fundingValidator.validateMatchingAmounts(guestFunding.getFundingAmount(),
+                payment.getAmount());
 
         guestFunding.linkPayment(payment);
         guestFunding.updateStatus(ParticipationStatus.PAID);
