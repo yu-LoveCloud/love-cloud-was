@@ -13,9 +13,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +39,7 @@ public class JwtTokenProvider {
 
     private final JpaUserDetailsService userDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
     private Key key;
@@ -48,7 +49,8 @@ public class JwtTokenProvider {
             @Value("${jwt.token-expiration-time}") long tokenExpirationTime,
             @Value("${jwt.issuer}") String issuer,
             JpaUserDetailsService userDetailsService,
-            RefreshTokenRepository refreshTokenRepository
+            RefreshTokenRepository refreshTokenRepository,
+            RedisTemplate<String, Object> redisTemplate
         ) {
 
         this.secretKey = secretKey;
@@ -56,6 +58,7 @@ public class JwtTokenProvider {
         this.issuer = issuer;
         this.userDetailsService = userDetailsService;
         this.refreshTokenRepository = refreshTokenRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @PostConstruct
@@ -165,11 +168,10 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            if (token == null || !token.startsWith(BEARER_PREFIX)) {
-                return false;
-            }
 
-            token = token.substring(BEARER_PREFIX.length()).trim();
+            if(Boolean.TRUE.equals(redisTemplate.hasKey(token))) {
+                throw new BlacklistedTokenException();
+            }
 
             Jws<Claims> claims = Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -193,6 +195,14 @@ public class JwtTokenProvider {
         }
     }
 
+    public Date getExpirationDate(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+    }
 
 
 }

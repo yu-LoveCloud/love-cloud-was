@@ -27,13 +27,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Transactional
 @DisplayName("상품 옵션 생성 서비스 (ProductOptionsCreateService) 은(는)")
 @DisplayNameGeneration(ReplaceUnderscores.class)
-class ProductOptionsCreateServiceTest {
+class ProductOptionsCreationServiceTest {
 
     @Autowired
-    private ProductOptionsCreateService productOptionsCreateService;
+    private ProductOptionsCreationService productOptionsCreationService;
 
     @Autowired
-    private ProductCreateService productCreateService;
+    private ProductCreationService productCreationService;
 
     @Autowired
     private ProductRepository productRepository;
@@ -59,7 +59,7 @@ class ProductOptionsCreateServiceTest {
                 .mainImageNames(List.of("image1.jpg"))
                 .descriptionImageNames(List.of("detail1.jpg", "detail2.jpg"))
                 .build();
-        Long productId = productCreateService.createProduct(command);
+        Long productId = productCreationService.createProduct(command);
         product = productRepository.findByIdOrThrow(productId);
     }
 
@@ -78,7 +78,7 @@ class ProductOptionsCreateServiceTest {
                     .build();
 
             // when
-            Long optionId = productOptionsCreateService.addProductOptions(command);
+            Long optionId = productOptionsCreationService.addProductOptions(command);
 
             // then
             ProductOptions options = productOptionsRepository.getById(optionId);
@@ -104,7 +104,7 @@ class ProductOptionsCreateServiceTest {
 
             // when & then
             assertThrows(NotFoundProductException.class,
-                    () -> productOptionsCreateService.addProductOptions(command));
+                    () -> productOptionsCreationService.addProductOptions(command));
         }
     }
 }

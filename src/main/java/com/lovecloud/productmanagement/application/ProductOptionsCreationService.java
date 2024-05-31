@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class ProductOptionsCreateService {
+public class ProductOptionsCreationService {
 
     private final ProductRepository productRepository;
     private final ProductOptionsRepository productOptionsRepository;
