@@ -10,7 +10,7 @@ public interface GuestRepository extends JpaRepository<Guest, Long>{
 
     boolean existsByEmail(String email);
 
-    default Guest getByEmail(String email) {
+    default Guest getByEmailOrThrow(String email) {
         return findByEmail(email)
                 .orElseThrow(NotFoundUserException::new);
     }
