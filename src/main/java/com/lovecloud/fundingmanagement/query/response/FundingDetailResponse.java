@@ -1,12 +1,14 @@
 package com.lovecloud.fundingmanagement.query.response;
 
 import com.lovecloud.fundingmanagement.domain.FundingStatus;
+import com.lovecloud.usermanagement.domain.WeddingRole;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record FundingListResponse(
+public record FundingDetailResponse(
         Long fundingId,
         String title,
+        String message,
         long targetAmount,
         long currentAmount,
         FundingStatus status,
@@ -29,8 +31,16 @@ public record FundingListResponse(
     }
 
     public static record CoupleSummary(
-            Long coupleId
+            Long coupleId,
+            List<Person> people
     ) {
 
+        public static record Person(
+                String phoneNumber,
+                WeddingRole weddingRole,
+                String name
+        ) {
+
+        }
     }
 }

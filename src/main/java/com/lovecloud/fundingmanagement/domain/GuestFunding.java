@@ -5,6 +5,8 @@ import com.lovecloud.payment.domain.Payment;
 import com.lovecloud.usermanagement.domain.Guest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,28 @@ public class GuestFunding extends CommonRootEntity<Long> {
     @Column(name = "guest_funding_id")
     private Long id;
 
+    @Column(name = "merchant_uid", nullable = false, unique = true)
+    private String merchantUid;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
+    @Column(name = "phone_number", nullable = false, length = 20)
+    private String phoneNumber;
+
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
+    @Column(name = "funding_amount", nullable = false)
+    private Long fundingAmount;
+
+    @Column(name = "message", nullable = false, length = 300)
+    private String message;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "participation_status", nullable = false)
+    private ParticipationStatus participationStatus = ParticipationStatus.PENDING;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", nullable = false)
     private Guest guest;
@@ -38,17 +62,27 @@ public class GuestFunding extends CommonRootEntity<Long> {
     private Funding funding;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", nullable = false)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @Column(name = "message", nullable = false, length = 300)
-    private String message;
-
     @Builder
-    public GuestFunding(Guest guest, Funding funding, Payment payment, String message) {
+    public GuestFunding(String merchantUid, String name, String phoneNumber, String email,
+            Long fundingAmount, String message, Guest guest, Funding funding) {
+        this.merchantUid = merchantUid;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.fundingAmount = fundingAmount;
+        this.message = message;
         this.guest = guest;
         this.funding = funding;
+    }
+
+    public void linkPayment(Payment payment) {
         this.payment = payment;
-        this.message = message;
+    }
+
+    public void updateStatus(ParticipationStatus participationStatus) {
+        this.participationStatus = participationStatus;
     }
 }
