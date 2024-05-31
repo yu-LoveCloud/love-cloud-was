@@ -13,6 +13,10 @@ import com.lovecloud.usermanagement.domain.WeddingUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +25,9 @@ public class WeddingUserAuthService {
     private final WeddingUserRepository weddingUserRepository;
     private final WeddingUserValidator validator;
     private final CustomPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
+    private final AuthService authService;
+
 
     /**
      * WeddingSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
@@ -36,11 +41,11 @@ public class WeddingUserAuthService {
 
         Password password = passwordEncoder.encode(command.password());
         WeddingUser user = command.toWeddingUser(password);
-        user.signup(validator);
+        user.signUp(validator);
 
         weddingUserRepository.save(user);
 
-        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
 
         return jwtTokenDto;
@@ -58,28 +63,13 @@ public class WeddingUserAuthService {
         WeddingUser user = weddingUserRepository.getByEmailOrThrow(request.email());
         user.signIn(request.password(), passwordEncoder);
 
-        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
 
         return jwtTokenDto;
     }
 
-    /**
-     * User email로 JwtTokenDto를 생성하는 메서드
-     *
-     * @param user
-     * @return JwtTokenDto
-     */
-    public JwtTokenDto createJwtTokenDto(WeddingUser user){
 
-        String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-
-        return JwtTokenDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }
 
 

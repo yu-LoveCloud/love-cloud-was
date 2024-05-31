@@ -12,6 +12,7 @@ import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import com.lovecloud.usermanagement.exeption.NotFoundCoupleException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

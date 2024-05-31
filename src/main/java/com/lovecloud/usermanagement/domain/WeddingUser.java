@@ -52,7 +52,7 @@ public class WeddingUser extends User {
         this.invitationCode = invitationCode;
     }
 
-    public void signup(WeddingUserValidator validator){
+    public void signUp(WeddingUserValidator validator){
         validator.validateDuplicateEmail(this.getEmail());
     }
 

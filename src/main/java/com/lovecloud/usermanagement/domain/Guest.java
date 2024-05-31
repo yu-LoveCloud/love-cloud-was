@@ -31,7 +31,7 @@ public class Guest extends User {
         this.password = password;
     }
 
-    public void signup(GuestValidator validator){
+    public void signUp(GuestValidator validator){
         validator.validateDuplicateEmail(this.getEmail());
     }
 

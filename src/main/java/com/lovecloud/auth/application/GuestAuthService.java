@@ -20,8 +20,8 @@ public class GuestAuthService {
     private final GuestRepository guestRepository;
     private final GuestValidator validator;
     private final CustomPasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
+    private final AuthService authService;
 
     /**
      * GuestSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
@@ -35,29 +35,15 @@ public class GuestAuthService {
 
         Password password = passwordEncoder.encode(command.password());
         Guest user = command.toGuest(password);
-        user.signup(validator);
+        user.signUp(validator);
 
         guestRepository.save(user);
 
-        JwtTokenDto jwtTokenDto = createJwtTokenDto(user);
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
         refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
 
         return jwtTokenDto;
     }
 
-    /**
-     * User email로 JwtTokenDto를 생성하는 메서드
-     *
-     * @param user
-     * @return JwtTokenDto
-     */
-    public JwtTokenDto createJwtTokenDto(Guest user) {
-       String accessToken = jwtTokenProvider.createAccessToken(user.getEmail());
-       String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
 
-       return JwtTokenDto.builder()
-               .accessToken(accessToken)
-               .refreshToken(refreshToken)
-               .build();
-    }
 }
