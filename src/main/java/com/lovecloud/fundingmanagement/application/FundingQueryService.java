@@ -2,6 +2,8 @@ package com.lovecloud.fundingmanagement.application;
 
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
+import com.lovecloud.fundingmanagement.query.response.FundingDetailResponse;
+import com.lovecloud.fundingmanagement.query.response.FundingDetailResponseMapper;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponseMapper;
 import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
@@ -34,5 +36,13 @@ public class FundingQueryService {
                                 funding.getProductOptions().getId())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public FundingDetailResponse findById(Long fundingId) {
+        Funding funding = fundingRepository.findByIdOrThrow(fundingId);
+        return FundingDetailResponseMapper.mapFundingToFundingDetailResponse(
+                funding,
+                mainImageRepository.findByProductOptionsId(funding.getProductOptions().getId())
+        );
     }
 }
