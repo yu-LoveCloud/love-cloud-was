@@ -3,6 +3,7 @@ package com.lovecloud.fundingmanagement.presentation;
 import com.lovecloud.fundingmanagement.application.FundingQueryService;
 import com.lovecloud.fundingmanagement.query.response.FundingDetailResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponse;
+import com.lovecloud.fundingmanagement.query.response.GuestFundingListResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,14 @@ public class FundingQueryController {
     ) {
         final FundingDetailResponse funding = fundingQueryService.findById(fundingId);
         return ResponseEntity.ok(funding);
+    }
+
+    @GetMapping("/fundings/{fundingId}/guest-fundings")
+    public ResponseEntity<List<GuestFundingListResponse>> listGuestFundings(
+            @PathVariable Long fundingId
+    ) {
+        final List<GuestFundingListResponse> guestFundings =
+                fundingQueryService.findAllGuestFundingsByFundingId(fundingId);
+        return ResponseEntity.ok(guestFundings);
     }
 }

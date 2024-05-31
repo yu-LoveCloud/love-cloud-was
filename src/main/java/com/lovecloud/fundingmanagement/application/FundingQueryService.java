@@ -1,11 +1,15 @@
 package com.lovecloud.fundingmanagement.application;
 
 import com.lovecloud.fundingmanagement.domain.Funding;
+import com.lovecloud.fundingmanagement.domain.ParticipationStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
+import com.lovecloud.fundingmanagement.domain.repository.GuestFundingRepository;
 import com.lovecloud.fundingmanagement.query.response.FundingDetailResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingDetailResponseMapper;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponseMapper;
+import com.lovecloud.fundingmanagement.query.response.GuestFundingListResponse;
+import com.lovecloud.fundingmanagement.query.response.GuestFundingListResponseMapper;
 import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import java.util.List;
@@ -22,6 +26,7 @@ public class FundingQueryService {
     private final MainImageRepository mainImageRepository;
     private final FundingRepository fundingRepository;
     private final CoupleRepository coupleRepository;
+    private final GuestFundingRepository guestFundingRepository;
 
     public List<FundingListResponse> findAllByCoupleId(Long coupleId) {
         coupleRepository.findByIdOrThrow(coupleId);
@@ -44,5 +49,13 @@ public class FundingQueryService {
                 funding,
                 mainImageRepository.findByProductOptionsId(funding.getProductOptions().getId())
         );
+    }
+
+    public List<GuestFundingListResponse> findAllGuestFundingsByFundingId(Long fundingId) {
+        Funding funding = fundingRepository.findByIdOrThrow(fundingId);
+        return guestFundingRepository.findByFundingIdAndParticipationStatus(fundingId,
+                        ParticipationStatus.PAID).stream()
+                .map(GuestFundingListResponseMapper::mapGuestFundingToGuestFundingListResponse)
+                .collect(Collectors.toList());
     }
 }
