@@ -18,7 +18,14 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
         return findByMemberId(memberId).orElseThrow(NotFoundCoupleException::new);
     }
 
+    Optional<Couple> findByInvitationId(Long invitationId);
+
+    default Couple findByInvitationIdOrThrow(Long invitationId) {
+        return findByInvitationId(invitationId).orElseThrow(NotFoundCoupleException::new);
+    }
+
     default Couple findByIdOrThrow(Long coupleId) {
         return findById(coupleId).orElseThrow(NotFoundCoupleException::new);
     }
+
 }
