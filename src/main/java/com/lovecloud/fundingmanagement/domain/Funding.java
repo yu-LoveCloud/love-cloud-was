@@ -71,5 +71,9 @@ public class Funding extends CommonRootEntity<Long> {
 
     public void increaseCurrentAmount(Long amount) {
         this.currentAmount += amount;
+        if (this.currentAmount >= this.targetAmount && this.status == FundingStatus.IN_PROGRESS) {
+            this.status = FundingStatus.COMPLETED;
+            registerEvent(new FundingCompletedEvent(this.id));
+        }
     }
 }
