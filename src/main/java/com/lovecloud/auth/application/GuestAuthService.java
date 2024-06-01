@@ -47,6 +47,13 @@ public class GuestAuthService {
     }
 
 
+    /**
+     * 로그인을 처리하고, 토큰을 발급하는 메서드
+     *
+     * @param request 로그인에 필요한 정보를 담은 GuestSignInRequest 객체
+     * @return 토큰에 대한 JwtTokenDto 객체
+     * @throws
+     */
     @Transactional
     public JwtTokenDto signIn(GuestSignInRequest request){
         Guest user = guestRepository.getByEmailOrThrow(request.email());
