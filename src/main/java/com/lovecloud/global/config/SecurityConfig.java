@@ -2,9 +2,11 @@ package com.lovecloud.global.config;
 
 import com.lovecloud.global.crypto.BCryptCustomPasswordEncoder;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
+import com.lovecloud.global.jwt.handler.JwtAccessDeniedHandler;
 import com.lovecloud.global.jwt.JwtAuthenticationFilter;
 import com.lovecloud.global.jwt.JwtAuthenticationProvider;
 import com.lovecloud.global.jwt.JwtTokenProvider;
+import com.lovecloud.global.jwt.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,9 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     private static final String[] PUBLIC_ENDPOINTS = {
             "/auth/wedding-user/sign-up",
             "/auth/wedding-user/sign-in",
@@ -67,8 +72,13 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
 
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(jwtAccessDeniedHandler) //권한 문제 발생
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)) //인증 문제 발생
+
+
 //                .authorizeHttpRequests(auth -> auth
-//                        .anyRequest().permitAll())  // 모든 요청을 허용
+//                        .anyRequest().permitAll())  // 모든 요청을  허용
 
                 .addFilterBefore(jwtAuthenticationFilter(authenticationManager(httpSecurity)),
                     UsernamePasswordAuthenticationFilter.class);
