@@ -2,6 +2,7 @@ package com.lovecloud.global.jwt;
 
 import com.lovecloud.global.usermanager.JpaUserDetailsService;
 import com.lovecloud.global.usermanager.SecurityUser;
+import com.lovecloud.usermanagement.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,8 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String token = (String) authentication.getCredentials();
         if (jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsername(token);
-            SecurityUser userDetails = userDetailsService.loadUserByUsername(username);
+            UserRole userRole = jwtTokenProvider.getUserRole(token);
+            SecurityUser userDetails = userDetailsService.loadUserByUsernameAndRole(username, userRole);
             return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
         }
         return null;
