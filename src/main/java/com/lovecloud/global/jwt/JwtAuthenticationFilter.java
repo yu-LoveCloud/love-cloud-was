@@ -46,6 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            log.debug("Authenticated: {}", authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         log.debug("Token is invalid");
