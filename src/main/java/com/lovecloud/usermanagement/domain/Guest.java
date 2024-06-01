@@ -2,6 +2,7 @@ package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -37,5 +38,9 @@ public class Guest extends User {
 
     public String getPassword() {
         return password.getEncryptedPassword();
+    }
+
+    public void signIn(String rawPassword, CustomPasswordEncoder passwordEncoder){
+        this.password.validatePassword(rawPassword, passwordEncoder);
     }
 }

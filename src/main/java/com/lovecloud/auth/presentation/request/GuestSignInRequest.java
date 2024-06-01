@@ -1,4 +1,9 @@
 package com.lovecloud.auth.presentation.request;
 
-public record GuestSignInRequest() {
+import jakarta.validation.constraints.NotBlank;
+
+public record GuestSignInRequest(
+        @NotBlank String email,
+        @NotBlank String password
+) {
 }

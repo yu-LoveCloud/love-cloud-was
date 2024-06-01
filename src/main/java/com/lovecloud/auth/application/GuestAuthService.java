@@ -4,6 +4,7 @@ import com.lovecloud.auth.application.command.GuestSignUpCommand;
 import com.lovecloud.auth.domain.GuestRepository;
 import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.auth.presentation.request.GuestSignInRequest;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
@@ -44,6 +45,8 @@ public class GuestAuthService {
 
         return jwtTokenDto;
     }
+
+
 
 
 }
