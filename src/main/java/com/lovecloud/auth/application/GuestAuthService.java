@@ -47,6 +47,15 @@ public class GuestAuthService {
     }
 
 
+    @Transactional
+    public JwtTokenDto signIn(GuestSignInRequest request){
+        Guest user = guestRepository.getByEmailOrThrow(request.email());
+        user.signIn(request.password(), passwordEncoder);
 
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
+        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
+
+        return jwtTokenDto;
+    }
 
 }
