@@ -2,6 +2,7 @@ package com.lovecloud.auth.application;
 
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
+import com.lovecloud.usermanagement.domain.UserRole;
 import com.lovecloud.usermanagement.domain.WeddingUser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,15 +34,16 @@ public class AuthService {
     }
 
     /**
-     * User email로 JwtTokenDto를 생성하는 메서드
+     * User email, userRole으로 JwtTokenDto를 생성하는 메서드
      *
      * @param email User email
+     * @param userRole User userRole
      * @return JwtTokenDto
      */
-    public JwtTokenDto createJwtTokenDto(String email){
+    public JwtTokenDto createJwtTokenDto(String email, UserRole userRole){
 
-        String accessToken = jwtTokenProvider.createAccessToken(email);
-        String refreshToken = jwtTokenProvider.createRefreshToken(email);
+        String accessToken = jwtTokenProvider.createAccessToken(email, userRole);
+        String refreshToken = jwtTokenProvider.createRefreshToken(email, userRole);
 
         return JwtTokenDto.builder()
                 .accessToken(accessToken)

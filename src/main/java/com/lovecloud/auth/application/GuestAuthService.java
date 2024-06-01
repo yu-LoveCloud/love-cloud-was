@@ -40,8 +40,8 @@ public class GuestAuthService {
 
         guestRepository.save(user);
 
-        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
-        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail(), user.getUserRole());
+        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail(), user.getUserRole());
 
         return jwtTokenDto;
     }
@@ -59,8 +59,8 @@ public class GuestAuthService {
         Guest user = guestRepository.getByEmailOrThrow(request.email());
         user.signIn(request.password(), passwordEncoder);
 
-        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail());
-        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail());
+        JwtTokenDto jwtTokenDto = authService.createJwtTokenDto(user.getEmail(), user.getUserRole());
+        refreshTokenService.createRefreshToken(jwtTokenDto, user.getEmail(), user.getUserRole());
 
         return jwtTokenDto;
     }

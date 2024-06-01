@@ -35,7 +35,7 @@ public class AuthController {
 
         String refreshToken = refreshTokenHeader.substring(7).trim();
         String username = jwtTokenProvider.getUsername(refreshToken);
-        UserRole userType = jwtTokenProvider.getUserRole(refreshToken);
+        UserRole userRole = jwtTokenProvider.getUserRole(refreshToken);
 
         String newAccessToken = refreshTokenService.reCreateAccessTokenByRefreshToken(refreshToken);
         String newRefreshToken = refreshTokenService.reCreateRefreshTokenByRefreshToken(refreshToken);
@@ -45,7 +45,7 @@ public class AuthController {
                 .refreshToken(newRefreshToken)
                 .build();
 
-        refreshTokenService.createRefreshToken(jwtTokenDto, username, userType);
+        refreshTokenService.createRefreshToken(jwtTokenDto, username, userRole);
 
         log.info("토큰이 재생성 되었습니다. {} , {}", jwtTokenProvider.getUsername(refreshToken), jwtTokenProvider.getUserRole(refreshToken));
         return ResponseEntity.ok(jwtTokenDto);
