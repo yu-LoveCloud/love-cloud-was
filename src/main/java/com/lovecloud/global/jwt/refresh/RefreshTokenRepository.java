@@ -1,5 +1,6 @@
 package com.lovecloud.global.jwt.refresh;
 
+import com.lovecloud.usermanagement.domain.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
 
 
-    Optional<RefreshToken> findByUsername(String email);
+    Optional<RefreshToken> findByUsernameAndUserRole(String email, UserRole userRole);
 
-    void deleteByUsername(String email);
+    void deleteByUsernameAndUserRole(String email, UserRole userRole);
 }

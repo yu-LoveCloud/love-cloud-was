@@ -4,6 +4,7 @@ package com.lovecloud.global.jwt.refresh;
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import com.lovecloud.global.jwt.exception.RefreshTokenNotFoundException;
+import com.lovecloud.usermanagement.domain.UserRole;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +27,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
      */
     @Transactional
     @Override
-    public void createRefreshToken(JwtTokenDto jwtTokenDto, String username) {
+    public void createRefreshToken(JwtTokenDto jwtTokenDto, String username, UserRole userRole) {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .refreshToken(jwtTokenDto.getRefreshToken())
                 .username(username)
+                .userRole(userRole)
                 .build();
 
-        if (refreshTokenRepository.findByUsername(username).isPresent()) {
-            refreshTokenRepository.deleteByUsername(username);
+        if (refreshTokenRepository.findByUsernameAndUserRole(username, userRole).isPresent()) {
+            refreshTokenRepository.deleteByUsernameAndUserRole(username, userRole);
         }
         refreshTokenRepository.save(refreshToken);
-        log.info("create new refresh token. username : {}", username);
+        log.info("create new refresh token. username : {}, userRole : {}", username, userRole);
     }
 
     /**
@@ -48,13 +50,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
      */
     @Transactional
     @Override
-    public void deleteRefreshToken(JwtTokenDto jwtTokenDto, String username) {
+    public void deleteRefreshToken(JwtTokenDto jwtTokenDto, String username, UserRole userRole) {
 
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsername(username);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByUsernameAndUserRole(username, userRole);
 
         if (refreshToken.isPresent()) {
             refreshTokenRepository.delete(refreshToken.get());
-            log.info("delete refresh token. username : {}", username);
+            log.info("delete refresh token. username : {}, userRole : {}", username, userRole);
         } else {
             throw new RefreshTokenNotFoundException();
         }
@@ -86,7 +88,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     public String reCreateRefreshTokenByRefreshToken(String refreshToken) {
         if (jwtTokenProvider.validateToken(refreshToken)) {
-            return jwtTokenProvider.createRefreshToken(jwtTokenProvider.getUsername(refreshToken));
+            String username = jwtTokenProvider.getUsername(refreshToken);
+            UserRole userRole = jwtTokenProvider.getUserRole(refreshToken);
+            return jwtTokenProvider.createRefreshToken(username, userRole);
         }
         return null;
     }

@@ -180,7 +180,7 @@ public class JwtTokenProvider {
         String username = getUsername(refreshToken);
         UserRole userRole = getUserRole(refreshToken);
 
-        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUsername(username, userRole);
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUsernameAndUserRole(username, userRole);
 
         if (existingToken.isPresent()) {
             String existRefreshToken = existingToken.get().getRefreshToken();
