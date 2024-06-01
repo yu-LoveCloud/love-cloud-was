@@ -21,7 +21,7 @@ public record ProductListResponse(
             Long productOptionsId,
             String color,
             String modelName,
-            int price,
+            long price,
             int stockQuantity,
             List<ImageData> mainImages
     ) {

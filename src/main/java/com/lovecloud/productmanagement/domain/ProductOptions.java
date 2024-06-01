@@ -33,7 +33,7 @@ public class ProductOptions extends CommonRootEntity<Long> {
     private String modelName;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Long price;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;
@@ -46,7 +46,7 @@ public class ProductOptions extends CommonRootEntity<Long> {
     private Product product;
 
     @Builder
-    public ProductOptions(String color, String modelName, Integer price, Integer stockQuantity,
+    public ProductOptions(String color, String modelName, Long price, Integer stockQuantity,
             Product product) {
         this.color = color;
         this.modelName = modelName;

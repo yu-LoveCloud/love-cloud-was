@@ -7,8 +7,8 @@ import java.util.List;
 public record FundingListResponse(
         Long fundingId,
         String title,
-        int targetAmount,
-        int currentAmount,
+        long targetAmount,
+        long currentAmount,
         FundingStatus status,
         LocalDateTime endDate,
         ProductOptionsSummary productOptions,

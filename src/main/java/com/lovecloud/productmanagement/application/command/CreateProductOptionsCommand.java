@@ -12,7 +12,7 @@ public record CreateProductOptionsCommand(
         Long productId,
         String color,
         String modelName,
-        Integer price,
+        Long price,
         Integer stockQuantity,
         List<String> mainImageNames,
         List<String> descriptionImageNames
