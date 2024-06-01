@@ -5,6 +5,7 @@ import com.lovecloud.global.jwt.exception.*;
 import com.lovecloud.global.jwt.refresh.RefreshToken;
 import com.lovecloud.global.jwt.refresh.RefreshTokenRepository;
 import com.lovecloud.global.usermanager.JpaUserDetailsService;
+import com.lovecloud.usermanagement.domain.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -67,16 +68,20 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+
     /**
      * AccessToken을 발급하는 메서드
      *
-     * @param username AccessToken을 발급받을 사용자의 ID
+     * @param username AccessToken을 발급받을 사용자의 email
+     * @param userRole AccessToken을 발급받을 사용자의 역할 (UserRole)
      * @return 생성된 AccessToken 문자열
      */
-    public String createAccessToken(String username) {
+    public String createAccessToken(String username, UserRole userRole) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("userRole", userRole);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setClaims(claims)
                 .setIssuer(issuer)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenExpirationTime))
@@ -128,14 +133,18 @@ public class JwtTokenProvider {
     }
 
     /**
-     * 주어진 사용자 이름을 기반으로 RefreshToken을 생성하는 메서드
+     * 주어진 email과 UserRole 기반으로 RefreshToken을 생성하는 메서드
      *
-     * @param username RefreshToken을 발급받을 사용자의 이름
+     * @param username RefreshToken을 발급받을 사용자의 email
+     * @param userRole RefreshToken을 발급받을 사용자의 역할 (UserRole)
      * @return 생성된 Refresh Token 문자열
      */
-    public String createRefreshToken(String username) {
+    public String createRefreshToken(String username, UserRole userRole) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("userRole", userRole);
+
         return Jwts.builder()
-                .setSubject(username)
+                .setClaims(claims)
                 .setIssuer(issuer)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(14, ChronoUnit.DAYS)))
