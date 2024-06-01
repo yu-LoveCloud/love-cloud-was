@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,15 +23,19 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
-//    private static final String[] PUBLIC_ENDPOINTS = {
-//            "/auth/wedding-user/sign-up",
-//            "/auth/wedding-user/sign-in",
-//    };
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/auth/wedding-user/sign-up",
+            "/auth/wedding-user/sign-in",
+            "/auth/guest/sign-up",
+            "/auth/guest/sign-in",
+
+    };
 
 
     @Bean
@@ -58,12 +63,12 @@ public class SecurityConfig {
 
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-//                        .anyRequest().authenticated())
-
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll())  // 모든 요청을 허용
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
+
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll())  // 모든 요청을 허용
 
                 .addFilterBefore(jwtAuthenticationFilter(authenticationManager(httpSecurity)),
                     UsernamePasswordAuthenticationFilter.class);
