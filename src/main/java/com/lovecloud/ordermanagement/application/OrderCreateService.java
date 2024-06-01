@@ -3,6 +3,7 @@ package com.lovecloud.ordermanagement.application;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
+import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
 import com.lovecloud.ordermanagement.domain.Delivery;
 import com.lovecloud.ordermanagement.domain.DeliveryStatus;
@@ -40,6 +41,7 @@ public class OrderCreateService {
 
     private static Order createOrder(CreateOrderCommand command, Couple couple, Delivery delivery) {
         return Order.builder()
+                .orderNumber(DateUuidGenerator.generateDateUuid())
                 .couple(couple)
                 .ordererName(command.ordererName())
                 .ordererPhoneNumber(command.ordererPhoneNumber())
@@ -82,4 +84,5 @@ public class OrderCreateService {
         if (!funding.getCouple().equals(couple)) {
             throw new MismatchedCoupleException();
         }
+    }
 }
