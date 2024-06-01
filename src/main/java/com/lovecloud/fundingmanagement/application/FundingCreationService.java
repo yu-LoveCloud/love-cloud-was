@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class FundingCreateService {
+public class FundingCreationService {
 
     private final FundingRepository fundingRepository;
     private final ProductOptionsRepository productOptionsRepository;

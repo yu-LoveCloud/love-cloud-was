@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import java.io.IOException;
  * 각 요청당 한번만 실행하기를 보장하는 OncePerRequestFilter를 상속
  * JWT를 검증한 후 인증된 Authentication 객체를 SecurityContext에 저장
  **/
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -36,8 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtTokenProvider.resolveToken(request);
-
+        log.debug("Resolved Token: {}", token);
         if (token != null && jwtTokenProvider.validateToken(token)) {
+            log.debug("Token is valid");
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(null, token);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -45,6 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+        log.debug("Token is invalid");
         filterChain.doFilter(request, response);
     }
 }

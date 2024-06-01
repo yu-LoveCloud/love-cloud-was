@@ -4,12 +4,13 @@ import com.lovecloud.productmanagement.application.command.CreateProductOptionsC
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record CreateProductOptionsRequest(
-        @NotBlank String color,
-        @NotBlank String modelName,
-        @NotNull @Min(1) Integer price,
+        @NotBlank @Size(max = 100) String color,
+        @NotBlank @Size(max = 100) String modelName,
+        @NotNull @Min(1) Long price,
         @NotNull @Min(0) Integer stockQuantity,
         @NotNull List<String> mainImageNames,
         @NotNull List<String> descriptionImageNames

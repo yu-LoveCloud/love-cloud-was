@@ -21,7 +21,7 @@ public record ProductDetailResponse(
             Long productOptionsId,
             String color,
             String modelName,
-            int price,
+            long price,
             int stockQuantity,
             List<ImageData> mainImages,
             List<ImageData> descriptionImages

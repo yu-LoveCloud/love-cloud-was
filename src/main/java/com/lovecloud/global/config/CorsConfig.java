@@ -16,7 +16,8 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true); // 인증이 필요한 요청에서만 쿠키 허용
-        config.addAllowedOrigin("*"); // 허용할 출처
+//        config.addAllowedOrigin("*"); // 허용할 출처
+        config.addAllowedOriginPattern("*"); // 와일드카드로 모든 도메인 허용
         config.addAllowedHeader("*"); // 허용할 헤더
         config.addAllowedMethod("*"); // 허용할 메소드
 

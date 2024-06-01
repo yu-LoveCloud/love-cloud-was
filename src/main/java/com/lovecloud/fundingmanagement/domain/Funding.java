@@ -38,10 +38,10 @@ public class Funding extends CommonRootEntity<Long> {
     private String message;
 
     @Column(name = "target_amount", nullable = false)
-    private Integer targetAmount;
+    private Long targetAmount;
 
     @Column(name = "current_amount", nullable = false)
-    private Integer currentAmount = 0;
+    private Long currentAmount = 0L;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "funding_status", nullable = false)
@@ -59,7 +59,7 @@ public class Funding extends CommonRootEntity<Long> {
     private Couple couple;
 
     @Builder
-    public Funding(String title, String message, Integer targetAmount, LocalDateTime endDate,
+    public Funding(String title, String message, Long targetAmount, LocalDateTime endDate,
             ProductOptions productOptions, Couple couple) {
         this.title = title;
         this.message = message;
@@ -67,5 +67,9 @@ public class Funding extends CommonRootEntity<Long> {
         this.endDate = endDate;
         this.productOptions = productOptions;
         this.couple = couple;
+    }
+
+    public void increaseCurrentAmount(Long amount) {
+        this.currentAmount += amount;
     }
 }

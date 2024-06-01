@@ -3,7 +3,7 @@ package com.lovecloud.auth.application.command;
 import com.lovecloud.auth.domain.Password;
 import com.lovecloud.usermanagement.domain.*;
 
-public record WeddingSignupCommand(
+public record WeddingSignUpCommand(
     String email,
     String password,
     String name,

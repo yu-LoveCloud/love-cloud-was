@@ -28,7 +28,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
 //    private static final String[] PUBLIC_ENDPOINTS = {
-//            "/**",
+//            "/auth/wedding-user/sign-up",
+//            "/auth/wedding-user/sign-in",
 //    };
 
 
@@ -59,7 +60,7 @@ public class SecurityConfig {
 
 //                .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-//                        .anyRequest().authenticated());
+//                        .anyRequest().authenticated())
 
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll())  // 모든 요청을 허용
