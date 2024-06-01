@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GuestFundingRepository extends JpaRepository<GuestFunding, Long> {
 
-    List<GuestFunding> findByFundingIdAndParticipationStatus(Long fundingId, ParticipationStatus participationStatus);
+    List<GuestFunding> findByFundingIdAndParticipationStatus(Long fundingId,
+            ParticipationStatus participationStatus);
 
     default GuestFunding findByIdOrThrow(Long id) {
         return findById(id).orElseThrow(NotFoundGuestFundingException::new);
