@@ -29,7 +29,6 @@ public class ProductQueryService {
     private final MainImageRepository mainImageRepository;
     private final DescriptionImageRepository descriptionImageRepository;
 
-
     public List<ProductListResponse> findAllByCategoryId(Long categoryId) {
         List<Product> products = categoryId == null
                 ? productRepository.findAll()
