@@ -133,6 +133,23 @@ public class JwtTokenProvider {
     }
 
     /**
+     * 주어진 토큰에서 사용자 역할을 추출하는 메서드
+     *
+     * @param token 추출할 사용자 역할이 포함된 토큰 문자열
+     * @return 추출된 사용자 역할
+     */
+    public UserRole getUserRole(String token) {
+        String role = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userRole", String.class);
+        return UserRole.valueOf(role);
+    }
+
+
+    /**
      * 주어진 email과 UserRole 기반으로 RefreshToken을 생성하는 메서드
      *
      * @param username RefreshToken을 발급받을 사용자의 email
@@ -161,7 +178,9 @@ public class JwtTokenProvider {
     public String reCreateAccessToken(String refreshToken) {
 
         String username = getUsername(refreshToken);
-        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUsername(username);
+        UserRole userRole = getUserRole(refreshToken);
+
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUsername(username, userRole);
 
         if (existingToken.isPresent()) {
             String existRefreshToken = existingToken.get().getRefreshToken();
@@ -172,7 +191,7 @@ public class JwtTokenProvider {
         } else {
             throw new RefreshTokenNotFoundException();
         }
-        return createAccessToken(username);
+        return createAccessToken(username, userRole);
     }
 
     public boolean validateToken(String token) {
