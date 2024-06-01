@@ -4,6 +4,7 @@ import com.lovecloud.auth.application.AuthService;
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
 import com.lovecloud.global.jwt.refresh.RefreshTokenService;
+import com.lovecloud.usermanagement.domain.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,8 @@ public class AuthController {
             @RequestHeader("Authorization") String refreshTokenHeader) {
 
         String refreshToken = refreshTokenHeader.substring(7).trim();
+        String username = jwtTokenProvider.getUsername(refreshToken);
+        UserRole userType = jwtTokenProvider.getUserRole(refreshToken);
 
         String newAccessToken = refreshTokenService.reCreateAccessTokenByRefreshToken(refreshToken);
         String newRefreshToken = refreshTokenService.reCreateRefreshTokenByRefreshToken(refreshToken);
@@ -42,9 +45,9 @@ public class AuthController {
                 .refreshToken(newRefreshToken)
                 .build();
 
-        refreshTokenService.createRefreshToken(jwtTokenDto, jwtTokenProvider.getUsername(refreshToken));
+        refreshTokenService.createRefreshToken(jwtTokenDto, username, userType);
 
-        log.info("토큰이 재생성 되었습니다. {}", jwtTokenProvider.getUsername(refreshToken));
+        log.info("토큰이 재생성 되었습니다. {} , {}", jwtTokenProvider.getUsername(refreshToken), jwtTokenProvider.getUserRole(refreshToken));
         return ResponseEntity.ok(jwtTokenDto);
     }
 
