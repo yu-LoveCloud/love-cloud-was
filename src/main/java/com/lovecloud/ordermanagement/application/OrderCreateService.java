@@ -8,6 +8,9 @@ import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
 import com.lovecloud.ordermanagement.domain.Delivery;
 import com.lovecloud.ordermanagement.domain.DeliveryStatus;
 import com.lovecloud.ordermanagement.domain.Order;
+import com.lovecloud.ordermanagement.domain.OrderDetails;
+import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
+import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
 import com.lovecloud.ordermanagement.exception.FundingNotCompletedException;
 import com.lovecloud.ordermanagement.exception.MismatchedCoupleException;
@@ -27,6 +30,8 @@ public class OrderCreateService {
     private final OrderRepository orderRepository;
     private final CoupleRepository coupleRepository;
     private final FundingRepository fundingRepository;
+    private final OrderDetailsRepository orderDetailsRepository;
+    private final DeliveryRepository deliveryRepository;
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
         List<Funding> fundings = fundingRepository.findAllById(command.fundingIds());
@@ -34,9 +39,24 @@ public class OrderCreateService {
         validateFundings(fundings, couple);
 
         Delivery delivery = createDelivery(command);
-        Order order = createOrder(command, couple, delivery);
+        delivery = deliveryRepository.save(delivery);
 
-        return orderRepository.save(order).getId();
+        Order order = createOrder(command, couple, delivery);
+        order = orderRepository.save(order);
+
+        List<OrderDetails> orderDetails = createOrderDetails(order, fundings);
+        orderDetailsRepository.saveAll(orderDetails);
+
+        return order.getId();
+    }
+
+    private List<OrderDetails> createOrderDetails(Order order, List<Funding> fundings) {
+        return fundings.stream()
+                .map(funding -> OrderDetails.builder()
+                        .order(order)
+                        .funding(funding)
+                        .build())
+                .toList();
     }
 
     private static Order createOrder(CreateOrderCommand command, Couple couple, Delivery delivery) {
