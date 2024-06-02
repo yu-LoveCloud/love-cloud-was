@@ -59,13 +59,12 @@ public class Order extends CommonRootEntity<Long> {
     private Delivery delivery;
 
     @Builder
-    public Order(String ordererName, String ordererPhoneNumber, String ordererMemo, String orderNumber, LocalDateTime orderDateTime, OrderStatus orderStatus, Couple couple, Delivery delivery) {
+    public Order(String ordererName, String ordererPhoneNumber, String ordererMemo, String orderNumber, LocalDateTime orderDateTime, Couple couple, Delivery delivery) {
         this.ordererName = ordererName;
         this.ordererPhoneNumber = ordererPhoneNumber;
         this.ordererMemo = ordererMemo;
         this.orderNumber = orderNumber;
         this.orderDateTime = orderDateTime;
-        this.orderStatus = orderStatus;
         this.couple = couple;
         this.delivery = delivery;
     }

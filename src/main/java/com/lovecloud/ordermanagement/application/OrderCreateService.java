@@ -12,6 +12,7 @@ import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
+import com.lovecloud.ordermanagement.exception.DuplicateOrderFundingException;
 import com.lovecloud.ordermanagement.exception.FundingNotCompletedException;
 import com.lovecloud.ordermanagement.exception.MismatchedCoupleException;
 import com.lovecloud.ordermanagement.exception.NoAvailableFundingsException;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -59,13 +61,14 @@ public class OrderCreateService {
                 .toList();
     }
 
-    private static Order createOrder(CreateOrderCommand command, Couple couple, Delivery delivery) {
+    private Order createOrder(CreateOrderCommand command, Couple couple, Delivery delivery) {
         return Order.builder()
                 .orderNumber(DateUuidGenerator.generateDateUuid())
                 .couple(couple)
                 .ordererName(command.ordererName())
                 .ordererPhoneNumber(command.ordererPhoneNumber())
                 .ordererMemo(command.ordererMemo())
+                .orderDateTime(LocalDateTime.now())
                 .delivery(delivery)
                 .build();
     }
@@ -79,28 +82,35 @@ public class OrderCreateService {
                 .address(command.address())
                 .detailAddress(command.detailAddress())
                 .deliveryMemo(command.deliveryMemo())
-                .deliveryStatus(DeliveryStatus.PENDING)
                 .build();
     }
 
-    private static void validateFundings(List<Funding> fundings, Couple couple) {
+    private void validateFundings(List<Funding> fundings, Couple couple) {
         if(fundings.isEmpty()){
             throw new NoAvailableFundingsException();
         }
         for (Funding funding : fundings) {
             validateFundingStatus(funding);
             validateFundingCouple(funding, couple);
+            validateDuplicateOrderDetails(funding);
         }
 
     }
 
-    private static void validateFundingStatus(Funding funding) {
+    private void validateDuplicateOrderDetails(Funding funding) {
+        //이미 주문된 펀딩인지 확인
+        if (orderDetailsRepository.existsByFundingId(funding.getId())) {
+            throw new DuplicateOrderFundingException();
+        }
+    }
+
+    private void validateFundingStatus(Funding funding) {
         if (!funding.getStatus().equals(FundingStatus.COMPLETED)) {
             throw new FundingNotCompletedException();
         }
     }
 
-    private static void validateFundingCouple(Funding funding, Couple couple) {
+    private void validateFundingCouple(Funding funding, Couple couple) {
         if (!funding.getCouple().equals(couple)) {
             throw new MismatchedCoupleException();
         }

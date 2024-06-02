@@ -48,12 +48,11 @@ public class Delivery extends CommonRootEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery_status", nullable = false, length = 100)
-    private DeliveryStatus deliveryStatus;
+    private DeliveryStatus deliveryStatus = DeliveryStatus.PENDING;
 
     @Builder
     public Delivery(String deliveryName, String receiverName, String receiverPhoneNumber,
-            String zipCode, String address, String detailAddress, String deliveryMemo,
-            DeliveryStatus deliveryStatus) {
+            String zipCode, String address, String detailAddress, String deliveryMemo) {
         this.deliveryName = deliveryName;
         this.receiverName = receiverName;
         this.receiverPhoneNumber = receiverPhoneNumber;
@@ -61,6 +60,5 @@ public class Delivery extends CommonRootEntity<Long> {
         this.address = address;
         this.detailAddress = detailAddress;
         this.deliveryMemo = deliveryMemo;
-        this.deliveryStatus = deliveryStatus;
     }
 }
