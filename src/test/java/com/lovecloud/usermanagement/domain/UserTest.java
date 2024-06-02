@@ -3,6 +3,7 @@ package com.lovecloud.usermanagement.domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.lovecloud.auth.domain.Password;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class UserTest {
                 .name("guest")
                 .userRole(UserRole.GUEST)
                 .phoneNumber("010-1234-5678")
-                .password("password")
+                .password(new Password("password"))
                 .build();
 
         assertNotNull(guest);
@@ -35,7 +36,7 @@ class UserTest {
                 .name("wedding")
                 .userRole(UserRole.WEDDING_USER)
                 .phoneNumber("010-1234-5678")
-                .password("password")
+                .password(new Password("password"))
                 .accountStatus(AccountStatus.ACTIVE)
                 .weddingRole(WeddingRole.BRIDE)
                 .oauthId("oauthId")

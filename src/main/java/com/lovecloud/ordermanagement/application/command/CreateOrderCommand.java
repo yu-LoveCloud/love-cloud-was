@@ -1,7 +1,10 @@
 package com.lovecloud.ordermanagement.application.command;
 
+import lombok.Builder;
+
 import java.util.List;
 
+@Builder
 public record CreateOrderCommand(
         Long userId,
         List<Long> fundingIds,
