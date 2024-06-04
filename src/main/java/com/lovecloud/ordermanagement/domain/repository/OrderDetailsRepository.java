@@ -11,4 +11,5 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long
     List<OrderDetails> findAllByOrderId(Long id);
 
     boolean existsByFundingId(Long id);
+
 }
