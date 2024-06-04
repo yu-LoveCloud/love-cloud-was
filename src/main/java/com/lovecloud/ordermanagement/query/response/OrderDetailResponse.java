@@ -1,7 +1,6 @@
 package com.lovecloud.ordermanagement.query.response;
 
 import com.lovecloud.ordermanagement.domain.Order;
-import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.productmanagement.domain.MainImage;
 import lombok.Builder;
 
@@ -37,12 +36,12 @@ public record OrderDetailResponse(
 
     ) {
     }
-    public static OrderDetailResponse from(Order order, List<OrderDetails> orderDetails) {
+    public static OrderDetailResponse from(Order order) {
         return OrderDetailResponse.builder()
                 .orderId(order.getId())
                 .orderNumber(order.getOrderNumber())
                 .orderDateTime(order.getOrderDateTime())
-                .orderProducts(orderDetails.stream().map(orderDetail -> orderProduct.builder()
+                .orderProducts(order.getOrderDetails().stream().map(orderDetail -> orderProduct.builder()
                         .productId(orderDetail.getFunding().getProductOptions().getId())
                         .productName(orderDetail.getFunding().getProductOptions().getProduct().getProductName())
                         .price(orderDetail.getFunding().getProductOptions().getPrice())
