@@ -5,11 +5,16 @@ import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.productmanagement.domain.MainImage;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
 public record OrderDetailResponse(
         Long orderId,
+
+        String orderNumber,
+
+        LocalDateTime orderDateTime,
 
         List<orderProduct> orderProducts,
         String receiverName,
@@ -35,6 +40,8 @@ public record OrderDetailResponse(
     public static OrderDetailResponse from(Order order, List<OrderDetails> orderDetails) {
         return OrderDetailResponse.builder()
                 .orderId(order.getId())
+                .orderNumber(order.getOrderNumber())
+                .orderDateTime(order.getOrderDateTime())
                 .orderProducts(orderDetails.stream().map(orderDetail -> orderProduct.builder()
                         .productId(orderDetail.getFunding().getProductOptions().getId())
                         .productName(orderDetail.getFunding().getProductOptions().getProduct().getProductName())
