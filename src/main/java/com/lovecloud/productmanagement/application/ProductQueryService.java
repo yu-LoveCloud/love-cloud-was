@@ -12,7 +12,6 @@ import com.lovecloud.productmanagement.query.response.ProductDetailResponse;
 import com.lovecloud.productmanagement.query.response.ProductDetailResponseMapper;
 import com.lovecloud.productmanagement.query.response.ProductListResponse;
 import com.lovecloud.productmanagement.query.response.ProductListResponseMapper;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ public class ProductQueryService {
     private final ProductOptionsRepository productOptionsRepository;
     private final MainImageRepository mainImageRepository;
     private final DescriptionImageRepository descriptionImageRepository;
-
 
     public List<ProductListResponse> findAllByCategoryId(Long categoryId) {
         List<Product> products = categoryId == null
@@ -58,14 +56,10 @@ public class ProductQueryService {
         if (validOptions.isEmpty()) {
             return null;
         }
-        ProductOptions selectedOption = validOptions.get(0);
-        List<MainImage> selectedOptionMainImages = mainImageRepository.findByProductOptionsId(
-                selectedOption.getId());
-        List<ProductOptions> otherOptions = validOptions.size() > 1
-                ? validOptions.subList(1, validOptions.size())
-                : Collections.emptyList();
-        return ProductListResponseMapper
-                .mapProductToProductListResponse(product, selectedOption, selectedOptionMainImages,
-                        otherOptions);
+        return ProductListResponseMapper.mapProductToProductListResponse(
+                product,
+                validOptions,
+                mainImageRepository
+        );
     }
 }
