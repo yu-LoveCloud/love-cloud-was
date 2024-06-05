@@ -1,6 +1,9 @@
 package com.lovecloud.global.usermanager;
 
+import com.lovecloud.usermanagement.domain.AccountStatus;
+import com.lovecloud.usermanagement.domain.Guest;
 import com.lovecloud.usermanagement.domain.User;
+import com.lovecloud.usermanagement.domain.WeddingUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,11 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-public class SecurityUser implements UserDetails {
-
-    private final User user;
-
-    public SecurityUser(User user) {this.user = user;}
+public record SecurityUser(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -26,32 +25,33 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
-    //TODO: 보안 점검 후 구현 예정
-    @Override
-    public String getPassword() {
-        return null;
-    }
 
     @Override
     public String getUsername() {
         return user.getEmail();
     }
 
-    //TODO: 이하 메서드 User 엔티티 메서드 구현 후 수정 예정
+    @Override
+    public String getPassword() { return null; }
+
     /*
     계정의 만료 여부 리턴
    */
     @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
+    public boolean isAccountNonExpired() { return false; }
 
     /*
     계정의 잠김 여부 리턴
     */
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+
+        if (user instanceof WeddingUser) {
+            return ((WeddingUser) user).getAccountStatus() != AccountStatus.LOCKED;
+        } else if (user instanceof Guest) {
+            return true;
+        }
+        return true;
     }
 
     @Override
@@ -61,6 +61,12 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+
+        if (user instanceof WeddingUser) {
+            return ((WeddingUser) user).getAccountStatus() == AccountStatus.ACTIVE;
+        } else if (user instanceof Guest) {
+            return true;
+        }
+        return true;
     }
 }
