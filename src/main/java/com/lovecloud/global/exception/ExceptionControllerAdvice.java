@@ -24,4 +24,14 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(ErrorCode.INTERNAL_SERVER_ERROR_CODE);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorCode> handleRuntimeException(RuntimeException e) {
+        log.error("런타임 예외 발생", e);
+
+        ErrorCode errorCode = SpringSecurityErrorCode.getErrorCode(e);
+
+        return ResponseEntity.status(errorCode.status())
+                .body(errorCode);
+    }
 }
