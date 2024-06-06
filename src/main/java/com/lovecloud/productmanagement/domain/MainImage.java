@@ -38,4 +38,18 @@ public class MainImage extends CommonRootEntity<Long> {
         this.mainImageName = mainImageName;
         this.productOptions = productOptions;
     }
+
+    public static MainImage createMainImage(String mainImageName, ProductOptions productOptions) {
+        return MainImage.builder()
+                .mainImageName(mainImageName)
+                .productOptions(productOptions)
+                .build();
+    }
+
+    public void setProductOptions(ProductOptions productOptions) {
+        this.productOptions = productOptions;
+        if (!productOptions.getMainImages().contains(this)) {
+            productOptions.getMainImages().add(this);
+        }
+    }
 }
