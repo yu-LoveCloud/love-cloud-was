@@ -20,8 +20,11 @@ public class ProductOptionsCreationService {
     public Long addProductOptions(CreateProductOptionsCommand command) {
         Product product = productRepository.findByIdOrThrow(command.productId());
         ProductOptions options = command.toProductOptions(product);
+        product.addProductOptions(options);
         command.toMainImages(options).forEach(options::addMainImage);
         command.toDescriptionImages(options).forEach(options::addDescriptionImage);
-        return productOptionsRepository.save(options).getId();
+        ProductOptions savedOptions = productOptionsRepository.save(options);
+        productRepository.save(product);
+        return savedOptions.getId();
     }
 }

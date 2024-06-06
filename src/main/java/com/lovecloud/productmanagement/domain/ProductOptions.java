@@ -56,6 +56,13 @@ public class ProductOptions extends CommonRootEntity<Long> {
         this.product = product;
     }
 
+    public void setProduct(Product product) {
+        this.product = product;
+        if (!product.getProductOptions().contains(this)) {
+            product.getProductOptions().add(this);
+        }
+    }
+
     public void addMainImage(MainImage mainImage) {
         mainImages.add(mainImage);
         if (mainImage.getProductOptions() != this) {
