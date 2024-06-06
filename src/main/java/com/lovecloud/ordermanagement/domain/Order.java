@@ -2,19 +2,11 @@ package com.lovecloud.ordermanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
 import com.lovecloud.usermanagement.domain.Couple;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +49,9 @@ public class Order extends CommonRootEntity<Long> {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", nullable = false)
     private Delivery delivery;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderDetails> orderDetails;
 
     @Builder
     public Order(String ordererName, String ordererPhoneNumber, String ordererMemo, String orderNumber, LocalDateTime orderDateTime, Couple couple, Delivery delivery) {

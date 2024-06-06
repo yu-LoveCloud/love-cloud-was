@@ -24,27 +24,27 @@ public record CreateOrderRequest(
         @NotBlank
         String deliveryName,
         @NotBlank
-        String receiverZipCode,
+        String zipcode,
         @NotBlank
-        String receiverAddress,
-        String receiverAddressDetail,
+        String address,
+        String detailAddress,
         String deliveryMemo
 
 ) {
     public CreateOrderCommand toCommand(Long userId) {
-        return new CreateOrderCommand(
-                userId,
-                fundingIds,
-                ordererName,
-                ordererPhoneNumber,
-                ordererMemo,
-                deliveryName,
-                receiverName,
-                receiverPhoneNumber,
-                receiverZipCode,
-                receiverAddress,
-                receiverAddressDetail,
-                deliveryMemo
-        );
+        return CreateOrderCommand.builder()
+                .userId(userId)
+                .fundingIds(fundingIds())
+                .ordererName(ordererName())
+                .ordererPhoneNumber(ordererPhoneNumber())
+                .ordererMemo(ordererMemo())
+                .receiverName(receiverName())
+                .receiverPhoneNumber(receiverPhoneNumber())
+                .deliveryName(deliveryName())
+                .zipCode(zipcode())
+                .address(address())
+                .detailAddress(detailAddress())
+                .deliveryMemo(deliveryMemo())
+                .build();
     }
 }
