@@ -8,13 +8,6 @@ public record ProductListResponse(
         List<ProductOptionSummary> options
 ) {
 
-    public static record CategoryData(
-            Long categoryId,
-            String categoryName
-    ) {
-
-    }
-
     public static record ProductOptionSummary(
             Long productOptionsId,
             String color,
