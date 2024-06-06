@@ -20,7 +20,7 @@ public class FundingCreationController {
     public ResponseEntity<Long> createFunding(
             @Valid @RequestBody CreateFundingRequest request
     ) {
-        Long memberId = 1L; // TODO: memberId는 @Auth로 받는다고 가정
+        Long memberId = 3L; // TODO: memberId는 @Auth로 받는다고 가정
         final Long fundingId = fundingCreationService.createFunding(request.toCommand(memberId));
         return ResponseEntity.created(URI.create("/fundings/" + fundingId)).build();
     }

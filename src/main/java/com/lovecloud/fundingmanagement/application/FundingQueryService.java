@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class FundingQueryService {
 
-    private final MainImageRepository mainImageRepository;
     private final FundingRepository fundingRepository;
     private final CoupleRepository coupleRepository;
     private final GuestFundingRepository guestFundingRepository;
@@ -35,19 +34,18 @@ public class FundingQueryService {
             return List.of();
         }
         return fundings.stream()
-                .map(funding -> FundingListResponseMapper.mapFundingToFundingListResponse(
-                        funding,
-                        mainImageRepository.findByProductOptionsId(
-                                funding.getProductOptions().getId())
-                ))
+                .map(funding -> FundingListResponseMapper.map(funding,
+                        guestFundingRepository.countByFundingIdAndParticipationStatus(
+                                funding.getId(), ParticipationStatus.PAID)))
                 .collect(Collectors.toList());
     }
 
     public FundingDetailResponse findById(Long fundingId) {
         Funding funding = fundingRepository.findByIdOrThrow(fundingId);
-        return FundingDetailResponseMapper.mapFundingToFundingDetailResponse(
-                funding,
-                mainImageRepository.findByProductOptionsId(funding.getProductOptions().getId())
+        int participantCount = guestFundingRepository.countByFundingIdAndParticipationStatus(
+                fundingId, ParticipationStatus.PAID);
+        return FundingDetailResponseMapper.map(
+                funding, participantCount
         );
     }
 
@@ -55,7 +53,7 @@ public class FundingQueryService {
         Funding funding = fundingRepository.findByIdOrThrow(fundingId);
         return guestFundingRepository.findByFundingIdAndParticipationStatus(fundingId,
                         ParticipationStatus.PAID).stream()
-                .map(GuestFundingListResponseMapper::mapGuestFundingToGuestFundingListResponse)
+                .map(GuestFundingListResponseMapper::map)
                 .collect(Collectors.toList());
     }
 }

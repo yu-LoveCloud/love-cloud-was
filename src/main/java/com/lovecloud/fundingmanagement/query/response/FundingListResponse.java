@@ -11,8 +11,8 @@ public record FundingListResponse(
         long currentAmount,
         FundingStatus status,
         LocalDateTime endDate,
-        ProductOptionsSummary productOptions,
-        CoupleSummary couple
+        int participantCount,
+        ProductOptionsSummary productOptions
 ) {
 
     public static record ProductOptionsSummary(
@@ -26,11 +26,5 @@ public record FundingListResponse(
         ) {
 
         }
-    }
-
-    public static record CoupleSummary(
-            Long coupleId
-    ) {
-
     }
 }
