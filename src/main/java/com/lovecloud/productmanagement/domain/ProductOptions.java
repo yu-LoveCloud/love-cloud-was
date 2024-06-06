@@ -42,6 +42,9 @@ public class ProductOptions extends CommonRootEntity<Long> {
     @OneToMany(mappedBy = "productOptions", fetch = FetchType.LAZY)
     private List<MainImage> mainImages;
 
+    @OneToMany(mappedBy = "productOptions", fetch = FetchType.LAZY)
+    private List<DescriptionImage> descriptionImages;
+
     @Builder
     public ProductOptions(String color, String modelName, Long price, Integer stockQuantity,
             Product product) {
