@@ -10,62 +10,48 @@ import java.util.stream.Collectors;
 
 public class ProductDetailResponseMapper {
 
-    public static ProductDetailResponse mapProductOptionsToProductDetailResponse(
-            ProductOptions selectedOption,
-            List<MainImage> mainImages,
-            List<DescriptionImage> descriptionImages,
-            List<ProductOptions> otherOptions
-    ) {
+    public static ProductDetailResponse map(ProductOptions selectedOption, List<ProductOptions> otherOptions) {
         return new ProductDetailResponse(
                 selectedOption.getProduct().getId(),
                 selectedOption.getProduct().getProductName(),
-                new ProductDetailResponse.CategoryData(
-                        selectedOption.getProduct().getCategory().getId(),
-                        selectedOption.getProduct().getCategory().getCategoryName()
-                ),
-                mapSelectedOptionDetail(selectedOption, mainImages, descriptionImages),
+                mapSelectedOptionDetail(selectedOption),
                 mapOtherOptions(otherOptions)
         );
     }
 
-    private static ProductOptionDetail mapSelectedOptionDetail(
-            ProductOptions option,
-            List<MainImage> mainImages,
-            List<DescriptionImage> descriptionImages
-    ) {
-        return new ProductDetailResponse.ProductOptionDetail(
+    private static ProductOptionDetail mapSelectedOptionDetail(ProductOptions option) {
+        return new ProductOptionDetail(
                 option.getId(),
                 option.getColor(),
                 option.getModelName(),
                 option.getPrice(),
                 option.getStockQuantity(),
-                mapMainImages(mainImages),
-                mapDescriptionImages(descriptionImages)
+                mapMainImages(option.getMainImages()),
+                mapDescriptionImages(option.getDescriptionImages())
         );
     }
 
     private static List<OtherOptionData> mapOtherOptions(List<ProductOptions> otherOptions) {
         return otherOptions.stream()
-                .map(option -> new ProductDetailResponse.OtherOptionData(
+                .map(option -> new OtherOptionData(
                         option.getId(),
                         option.getColor(),
                         option.getStockQuantity()))
                 .collect(Collectors.toList());
     }
 
-    private static List<ProductDetailResponse.ImageData> mapMainImages(List<MainImage> images) {
+    private static List<ProductOptionDetail.ImageData> mapMainImages(List<MainImage> images) {
         return images.stream()
-                .map(image -> new ProductDetailResponse.ImageData(
+                .map(image -> new ProductOptionDetail.ImageData(
                         image.getId(),
                         image.getMainImageName()
                 ))
                 .collect(Collectors.toList());
     }
 
-    private static List<ProductDetailResponse.ImageData> mapDescriptionImages(
-            List<DescriptionImage> images) {
+    private static List<ProductOptionDetail.ImageData> mapDescriptionImages(List<DescriptionImage> images) {
         return images.stream()
-                .map(image -> new ProductDetailResponse.ImageData(
+                .map(image -> new ProductOptionDetail.ImageData(
                         image.getId(),
                         image.getDescriptionImageName()
                 ))
