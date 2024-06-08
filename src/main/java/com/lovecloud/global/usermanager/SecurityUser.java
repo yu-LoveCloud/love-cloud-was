@@ -1,6 +1,7 @@
 package com.lovecloud.global.usermanager;
 
 import com.lovecloud.usermanagement.domain.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 public class SecurityUser implements UserDetails {
 
     private final User user;
@@ -19,7 +21,7 @@ public class SecurityUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> authorities = new ArrayList<>(2);
-        authorities.add(new SimpleGrantedAuthority(user.getUserRole().name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name()));
 
         return authorities;
     }

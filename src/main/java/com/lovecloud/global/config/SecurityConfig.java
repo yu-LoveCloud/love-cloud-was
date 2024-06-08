@@ -2,14 +2,17 @@ package com.lovecloud.global.config;
 
 import com.lovecloud.global.crypto.BCryptCustomPasswordEncoder;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
+import com.lovecloud.global.jwt.handler.JwtAccessDeniedHandler;
 import com.lovecloud.global.jwt.JwtAuthenticationFilter;
 import com.lovecloud.global.jwt.JwtAuthenticationProvider;
 import com.lovecloud.global.jwt.JwtTokenProvider;
+import com.lovecloud.global.jwt.handler.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -22,15 +25,22 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
-//    private static final String[] PUBLIC_ENDPOINTS = {
-//            "/auth/wedding-user/sign-up",
-//            "/auth/wedding-user/sign-in",
-//    };
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    private static final String[] PUBLIC_ENDPOINTS = {
+            "/auth/wedding-user/sign-up",
+            "/auth/wedding-user/sign-in",
+            "/auth/guest/sign-up",
+            "/auth/guest/sign-in",
+
+    };
 
 
     @Bean
@@ -58,12 +68,17 @@ public class SecurityConfig {
 
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-//                        .anyRequest().authenticated())
-
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll())  // 모든 요청을 허용
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
+
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(jwtAccessDeniedHandler) //권한 문제 발생
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)) //인증 문제 발생
+
+
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll())  // 모든 요청을  허용
 
                 .addFilterBefore(jwtAuthenticationFilter(authenticationManager(httpSecurity)),
                     UsernamePasswordAuthenticationFilter.class);

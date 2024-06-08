@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ public class FundingCreationController {
 
     private final FundingCreationService fundingCreationService;
 
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
     @PostMapping("/fundings")
     public ResponseEntity<Long> createFunding(
             @Valid @RequestBody CreateFundingRequest request
