@@ -21,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -31,8 +32,6 @@ public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     private static final String[] PUBLIC_ENDPOINTS = {
             "/auth/wedding-user/sign-up",
@@ -72,16 +71,12 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
 
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(jwtAccessDeniedHandler) //권한 문제 발생
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)) //인증 문제 발생
-
-
 //                .authorizeHttpRequests(auth -> auth
 //                        .anyRequest().permitAll())  // 모든 요청을  허용
 
                 .addFilterBefore(jwtAuthenticationFilter(authenticationManager(httpSecurity)),
                     UsernamePasswordAuthenticationFilter.class);
+
 
 
     }
