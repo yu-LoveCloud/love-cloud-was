@@ -21,9 +21,8 @@ public interface OrderableFundingRepository extends JpaRepository<Funding, Long>
      * @return 특정 부부의 주문 가능한 펀딩 목록을 반환합니다.
      */
     @Query("SELECT f FROM Funding f " +
-            "LEFT JOIN OrderDetails od ON f.id = od.funding.id " +
-            "LEFT JOIN Order o ON od.order.id = o.id " +
             "WHERE f.couple.id = :coupleId AND f.status = 'COMPLETED' AND " +
-            "(o IS NULL OR o.orderStatus = 'CANCEL_COMPLETED')")
+            "NOT EXISTS (SELECT od FROM OrderDetails od JOIN Order o ON od.order.id = o.id " +
+            "WHERE od.funding.id = f.id AND o.orderStatus <> 'CANCEL_COMPLETED')")
     List<Funding> findOrderableFundingsByCoupleId(@Param("coupleId") Long coupleId);
 }
