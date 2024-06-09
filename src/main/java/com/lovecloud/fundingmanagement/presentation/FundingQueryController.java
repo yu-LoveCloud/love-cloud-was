@@ -4,6 +4,7 @@ import com.lovecloud.fundingmanagement.application.FundingQueryService;
 import com.lovecloud.fundingmanagement.query.response.FundingDetailResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponse;
 import com.lovecloud.fundingmanagement.query.response.GuestFundingListResponse;
+import com.lovecloud.fundingmanagement.query.response.OrderableFundingResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +41,12 @@ public class FundingQueryController {
         final List<GuestFundingListResponse> guestFundings =
                 fundingQueryService.findAllGuestFundingsByFundingId(fundingId);
         return ResponseEntity.ok(guestFundings);
+    }
+
+    @GetMapping("/orderable-fundings")
+    public ResponseEntity<List<OrderableFundingResponse>> listOrderableFundings() {
+        Long memberId = 3L; // TODO: memberId는 @Auth로 받는다고 가정
+        final List<OrderableFundingResponse> orderableFundings = fundingQueryService.findOrderableFundingsByUserId(memberId);
+        return ResponseEntity.ok(orderableFundings);
     }
 }
