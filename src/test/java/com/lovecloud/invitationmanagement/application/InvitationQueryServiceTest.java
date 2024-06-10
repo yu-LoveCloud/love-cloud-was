@@ -118,7 +118,7 @@ class InvitationQueryServiceTest {
             assertEquals(invitationDetailResponse.groomName(),couple.getGroom().getName());
             assertEquals(invitationDetailResponse.brideName(),couple.getBride().getName());
             assertEquals(invitationDetailResponse.coupleId(),couple.getId());
-            
+
         }
     }
 }
