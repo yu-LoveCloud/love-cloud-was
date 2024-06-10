@@ -28,5 +28,7 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     default Couple findByIdOrThrow(Long coupleId) {
         return findById(coupleId).orElseThrow(NotFoundCoupleException::new);
     }
+
+    boolean existsByGroomOrBride(WeddingUser user);
 }
 
