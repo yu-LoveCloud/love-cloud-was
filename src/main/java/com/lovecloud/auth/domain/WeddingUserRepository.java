@@ -1,6 +1,7 @@
 package com.lovecloud.auth.domain;
 
 import com.lovecloud.auth.exception.NotFoundUserException;
+import com.lovecloud.auth.exception.NotFoundWeddingUserException;
 import com.lovecloud.usermanagement.domain.WeddingUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,10 @@ public interface WeddingUserRepository extends JpaRepository<WeddingUser, Long>{
     }
 
     Optional<WeddingUser> findByEmail(String email);
+
+    Optional<WeddingUser> findByInvitationCode(String invitationCode);
+
+    default WeddingUser findByInvitationCodeOrThrow(String invitationCode) {
+        return findByInvitationCode(invitationCode).orElseThrow(NotFoundWeddingUserException::new);
+    }
 }

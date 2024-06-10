@@ -1,11 +1,11 @@
 package com.lovecloud.usermanagement.application;
 
+import com.lovecloud.auth.domain.WeddingUserRepository;
 import com.lovecloud.auth.domain.WeddingUserValidator;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.WeddingRole;
 import com.lovecloud.usermanagement.domain.WeddingUser;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
-import com.lovecloud.usermanagement.domain.repository.WeddingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
