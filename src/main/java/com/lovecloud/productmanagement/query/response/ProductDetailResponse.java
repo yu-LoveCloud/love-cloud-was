@@ -5,17 +5,9 @@ import java.util.List;
 public record ProductDetailResponse(
         Long productId,
         String productName,
-        CategoryData category,
         ProductOptionDetail selectedOption,
         List<OtherOptionData> otherOptions
 ) {
-
-    public static record CategoryData(
-            Long categoryId,
-            String categoryName
-    ) {
-
-    }
 
     public static record ProductOptionDetail(
             Long productOptionsId,
@@ -26,20 +18,18 @@ public record ProductDetailResponse(
             List<ImageData> mainImages,
             List<ImageData> descriptionImages
     ) {
+        public static record ImageData(
+                Long imageId,
+                String imageName
+        ) {
 
+        }
     }
 
     public static record OtherOptionData(
             Long productOptionsId,
             String color,
             int stockQuantity
-    ) {
-
-    }
-
-    public static record ImageData(
-            Long imageId,
-            String imageName
     ) {
 
     }

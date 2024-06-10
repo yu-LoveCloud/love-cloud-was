@@ -13,6 +13,7 @@ public record FundingDetailResponse(
         long currentAmount,
         FundingStatus status,
         LocalDateTime endDate,
+        int participantCount,
         ProductOptionsSummary productOptions,
         CoupleSummary couple
 ) {

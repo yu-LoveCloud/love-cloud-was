@@ -1,11 +1,7 @@
 package com.lovecloud.productmanagement.application;
 
-import com.lovecloud.productmanagement.domain.DescriptionImage;
-import com.lovecloud.productmanagement.domain.MainImage;
 import com.lovecloud.productmanagement.domain.Product;
 import com.lovecloud.productmanagement.domain.ProductOptions;
-import com.lovecloud.productmanagement.domain.repository.DescriptionImageRepository;
-import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.productmanagement.domain.repository.ProductRepository;
 import com.lovecloud.productmanagement.query.response.ProductDetailResponse;
@@ -25,41 +21,21 @@ public class ProductQueryService {
 
     private final ProductRepository productRepository;
     private final ProductOptionsRepository productOptionsRepository;
-    private final MainImageRepository mainImageRepository;
-    private final DescriptionImageRepository descriptionImageRepository;
 
     public List<ProductListResponse> findAllByCategoryId(Long categoryId) {
         List<Product> products = categoryId == null
                 ? productRepository.findAll()
                 : productRepository.findByCategoryId(categoryId);
         return products.stream()
-                .map(this::mapProductToProductListResponse)
+                .map(ProductListResponseMapper::map)
                 .collect(Collectors.toList());
     }
 
     public ProductDetailResponse findById(Long productOptionsId) {
         ProductOptions selectedOption = productOptionsRepository.findByIdAndIsDeletedOrThrow(
                 productOptionsId, false);
-        List<MainImage> mainImages = mainImageRepository.findByProductOptionsId(
-                selectedOption.getId());
-        List<DescriptionImage> descriptionImages = descriptionImageRepository.findByProductOptionsId(
-                selectedOption.getId());
         List<ProductOptions> otherOptions = productOptionsRepository.findOthersByProductId(
                 selectedOption.getProduct().getId(), selectedOption.getId());
-        return ProductDetailResponseMapper.mapProductOptionsToProductDetailResponse(selectedOption,
-                mainImages, descriptionImages, otherOptions);
-    }
-
-    private ProductListResponse mapProductToProductListResponse(Product product) {
-        List<ProductOptions> validOptions = productOptionsRepository
-                .findByProductIdAndIsDeleted(product.getId(), false);
-        if (validOptions.isEmpty()) {
-            return null;
-        }
-        return ProductListResponseMapper.mapProductToProductListResponse(
-                product,
-                validOptions,
-                mainImageRepository
-        );
+        return ProductDetailResponseMapper.map(selectedOption, otherOptions);
     }
 }

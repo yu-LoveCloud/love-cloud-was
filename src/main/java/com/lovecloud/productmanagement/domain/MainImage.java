@@ -38,4 +38,11 @@ public class MainImage extends CommonRootEntity<Long> {
         this.mainImageName = mainImageName;
         this.productOptions = productOptions;
     }
+
+    public void setProductOptions(ProductOptions productOptions) {
+        this.productOptions = productOptions;
+        if (!productOptions.getMainImages().contains(this)) {
+            productOptions.getMainImages().add(this);
+        }
+    }
 }

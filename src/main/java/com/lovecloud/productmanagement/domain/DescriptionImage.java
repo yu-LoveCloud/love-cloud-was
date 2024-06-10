@@ -38,4 +38,11 @@ public class DescriptionImage extends CommonRootEntity<Long> {
         this.descriptionImageName = descriptionImageName;
         this.productOptions = productOptions;
     }
+
+    public void setProductOptions(ProductOptions productOptions) {
+        this.productOptions = productOptions;
+        if (!productOptions.getDescriptionImages().contains(this)) {
+            productOptions.getDescriptionImages().add(this);
+        }
+    }
 }
