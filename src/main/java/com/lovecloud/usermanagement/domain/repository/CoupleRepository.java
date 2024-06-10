@@ -1,6 +1,7 @@
 package com.lovecloud.usermanagement.domain.repository;
 
 import com.lovecloud.usermanagement.domain.Couple;
+import com.lovecloud.usermanagement.domain.WeddingUser;
 import com.lovecloud.usermanagement.exception.NotFoundCoupleException;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,5 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     default Couple findByIdOrThrow(Long coupleId) {
         return findById(coupleId).orElseThrow(NotFoundCoupleException::new);
     }
-
 }
+
