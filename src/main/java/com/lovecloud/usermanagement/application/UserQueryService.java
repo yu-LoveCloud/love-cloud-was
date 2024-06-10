@@ -6,6 +6,7 @@ import com.lovecloud.usermanagement.domain.WeddingUser;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import com.lovecloud.usermanagement.query.response.UserInfoResponse;
 import com.lovecloud.usermanagement.query.response.UserInfoResponseMapper;
+import com.lovecloud.usermanagement.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,15 @@ import org.springframework.stereotype.Service;
 public class UserQueryService {
 
     private final CoupleRepository coupleRepository;
+    private final UserValidator userValidator;
 
     public UserInfoResponse getUserInfo(User user){
+        userValidator.validatorUserExists(user);
 
         Couple couple = null;
         if(user instanceof WeddingUser){
             WeddingUser weddingUser = (WeddingUser) user;
+            userValidator.validatorWeddingUserExists(weddingUser);
             couple = coupleRepository.findByMemberIdOrThrow(weddingUser.getId());
 
         }
