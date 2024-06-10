@@ -1,6 +1,7 @@
 package com.lovecloud.auth.application.command;
 
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.usermanagement.domain.*;
 
 public record WeddingSignUpCommand(
@@ -14,6 +15,7 @@ public record WeddingSignUpCommand(
     public WeddingUser toWeddingUser(Password password) {
 
         final var userRole = UserRole.WEDDING_USER;
+        String invitationCode = DateUuidGenerator.generateDateUuid();
 
         return WeddingUser.builder()
                 .email(email)
@@ -25,7 +27,7 @@ public record WeddingSignUpCommand(
                 .weddingRole(weddingRole)
                 .oauthId(null)
                 .oauth(null)
-                .invitationCode(null)
+                .invitationCode(invitationCode)
                 .build();
 
     }
