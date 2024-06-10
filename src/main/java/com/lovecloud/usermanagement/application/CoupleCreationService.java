@@ -23,9 +23,9 @@ public class CoupleCreationService {
 
         WeddingUser existingUser = weddingUserRepository.findByInvitationCodeOrThrow(invitationCode);
 
-        weddingUserValidator.validateDuplicateGender(newUser, existingUser);
         weddingUserValidator.validateDuplicatePartner(existingUser);
         weddingUserValidator.validateDuplicatePartner(newUser);
+        weddingUserValidator.validateDuplicateGender(newUser, existingUser);
 
         Couple couple = Couple.builder()
                 .groom(newUser.getWeddingRole() == WeddingRole.GROOM ? newUser : existingUser)
