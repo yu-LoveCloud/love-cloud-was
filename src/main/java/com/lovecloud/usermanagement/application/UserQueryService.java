@@ -24,7 +24,7 @@ public class UserQueryService {
         if(user instanceof WeddingUser){
             WeddingUser weddingUser = (WeddingUser) user;
             userValidator.validatorWeddingUserExists(weddingUser);
-            couple = coupleRepository.findByMemberIdOrThrow(weddingUser.getId());
+            couple = coupleRepository.findByMemberId(weddingUser.getId()).orElse(null);
 
         }
 
