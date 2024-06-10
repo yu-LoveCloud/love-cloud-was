@@ -1,5 +1,6 @@
 package com.lovecloud.usermanagement.application;
 
+import com.lovecloud.auth.domain.WeddingUserValidator;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.WeddingRole;
 import com.lovecloud.usermanagement.domain.WeddingUser;
@@ -14,13 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CoupleCreationService {
 
-    private WeddingUserRepository weddingUserRepository;
-    private CoupleRepository coupleRepository;
+    private final WeddingUserRepository weddingUserRepository;
+    private final WeddingUserValidator weddingUserValidator;
+    private final CoupleRepository coupleRepository;
 
     public void createCouple(WeddingUser newUser, String invitationCode) {
 
         WeddingUser existingUser = weddingUserRepository.findByInvitationCodeOrThrow(invitationCode);
 
+        weddingUserValidator.validateDuplicateGender(newUser, existingUser);
         Couple couple = Couple.builder()
                 .groom(newUser.getWeddingRole() == WeddingRole.GROOM ? newUser : existingUser)
                 .bride(newUser.getWeddingRole() == WeddingRole.BRIDE ? newUser : existingUser)
