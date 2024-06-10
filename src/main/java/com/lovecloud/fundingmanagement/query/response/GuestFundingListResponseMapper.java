@@ -4,7 +4,7 @@ import com.lovecloud.fundingmanagement.domain.GuestFunding;
 
 public class GuestFundingListResponseMapper {
 
-    public static GuestFundingListResponse mapGuestFundingToGuestFundingListResponse(
+    public static GuestFundingListResponse map(
             GuestFunding guestFunding) {
         return new GuestFundingListResponse(
                 guestFunding.getId(),

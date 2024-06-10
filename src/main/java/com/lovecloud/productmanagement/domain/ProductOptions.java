@@ -2,6 +2,7 @@ package com.lovecloud.productmanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,8 +40,11 @@ public class ProductOptions extends CommonRootEntity<Long> {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "productOptions", fetch = FetchType.LAZY)
-    private List<MainImage> mainImages;
+    @OneToMany(mappedBy = "productOptions", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<MainImage> mainImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "productOptions", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DescriptionImage> descriptionImages = new ArrayList<>();
 
     @Builder
     public ProductOptions(String color, String modelName, Long price, Integer stockQuantity,
@@ -50,5 +54,26 @@ public class ProductOptions extends CommonRootEntity<Long> {
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.product = product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+        if (!product.getProductOptions().contains(this)) {
+            product.getProductOptions().add(this);
+        }
+    }
+
+    public void addMainImage(MainImage mainImage) {
+        mainImages.add(mainImage);
+        if (mainImage.getProductOptions() != this) {
+            mainImage.setProductOptions(this);
+        }
+    }
+
+    public void addDescriptionImage(DescriptionImage descriptionImage) {
+        descriptionImages.add(descriptionImage);
+        if (descriptionImage.getProductOptions() != this) {
+            descriptionImage.setProductOptions(this);
+        }
     }
 }

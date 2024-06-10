@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Docker files ###
+docker-compose.yml
+Dockerfile
+.docker-compose.yml
+.Dockerfile
+
