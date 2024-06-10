@@ -8,10 +8,9 @@ import java.util.stream.Collectors;
 
 public class FundingDetailResponseMapper {
 
-    public static FundingDetailResponse mapFundingToFundingDetailResponse(Funding funding,
-            List<MainImage> mainImages) {
+    public static FundingDetailResponse map(Funding funding, int participantCount) {
         FundingDetailResponse.ProductOptionsSummary productOptionsSummary = mapToProductOptionsSummary(
-                funding.getProductOptions().getId(), mainImages);
+                funding.getProductOptions().getId(), funding.getProductOptions().getMainImages());
 
         FundingDetailResponse.CoupleSummary coupleSummary = mapToCoupleSummary(funding);
 
@@ -23,6 +22,7 @@ public class FundingDetailResponseMapper {
                 funding.getCurrentAmount(),
                 funding.getStatus(),
                 funding.getEndDate(),
+                participantCount,
                 productOptionsSummary,
                 coupleSummary
         );

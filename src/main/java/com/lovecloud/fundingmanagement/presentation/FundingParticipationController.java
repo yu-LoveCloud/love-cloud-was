@@ -26,7 +26,7 @@ public class FundingParticipationController {
             @PathVariable Long fundingId,
             @Valid @RequestBody ParticipateFundingRequest request
     ) {
-        Long memberId = 3L; // TODO: memberId는 @Auth로 받는다고 가정
+        Long memberId = 5L; // TODO: memberId는 @Auth로 받는다고 가정
         ParticipateFundingResponse response = fundingParticipationService.participateInFunding(
                 request.toCommand(fundingId, memberId));
         return ResponseEntity.ok(response);

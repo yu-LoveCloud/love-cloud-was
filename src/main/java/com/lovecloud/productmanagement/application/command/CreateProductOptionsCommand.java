@@ -31,8 +31,8 @@ public record CreateProductOptionsCommand(
     public List<MainImage> toMainImages(ProductOptions productOptions) {
         return mainImageNames.stream()
                 .map(mainImageName -> MainImage.builder()
-                        .productOptions(productOptions)
                         .mainImageName(mainImageName)
+                        .productOptions(productOptions)
                         .build())
                 .toList();
     }
@@ -40,8 +40,8 @@ public record CreateProductOptionsCommand(
     public List<DescriptionImage> toDescriptionImages(ProductOptions productOptions) {
         return descriptionImageNames.stream()
                 .map(descriptionImageName -> DescriptionImage.builder()
-                        .productOptions(productOptions)
                         .descriptionImageName(descriptionImageName)
+                        .productOptions(productOptions)
                         .build())
                 .toList();
     }

@@ -1,22 +1,18 @@
 package com.lovecloud.productmanagement.query.response;
 
-import com.lovecloud.productmanagement.domain.MainImage;
 import com.lovecloud.productmanagement.domain.Product;
 import com.lovecloud.productmanagement.domain.ProductOptions;
-import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 public class ProductListResponseMapper {
 
-    public static ProductListResponse mapProductToProductListResponse(
-            Product product,
-            List<ProductOptions> options,
-            MainImageRepository mainImageRepository
-    ) {
-        List<ProductListResponse.ProductOptionSummary> optionSummaries = options.stream()
-                .map(option -> mapProductOptionToProductOptionSummary(option, mainImageRepository))
+    public static ProductListResponse map(Product product) {
+        List<ProductListResponse.ProductOptionSummary> optionSummaries = product.getProductOptions()
+                .stream()
+                .filter(option -> !option.getIsDeleted())
+                .map(ProductListResponseMapper::mapProductOptionToProductOptionSummary)
                 .collect(Collectors.toList());
 
         return new ProductListResponse(
@@ -27,11 +23,9 @@ public class ProductListResponseMapper {
     }
 
     private static ProductListResponse.ProductOptionSummary mapProductOptionToProductOptionSummary(
-            ProductOptions option,
-            MainImageRepository mainImageRepository
-    ) {
-        List<MainImage> mainImages = mainImageRepository.findByProductOptionsId(option.getId());
-        List<ProductListResponse.ProductOptionSummary.ImageData> imageDatas = mainImages.stream()
+            ProductOptions option) {
+        List<ProductListResponse.ProductOptionSummary.ImageData> imageDatas = option.getMainImages()
+                .stream()
                 .map(image -> new ProductListResponse.ProductOptionSummary.ImageData(
                         image.getId(),
                         image.getMainImageName()
