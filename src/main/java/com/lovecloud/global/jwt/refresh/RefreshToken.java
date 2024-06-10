@@ -24,7 +24,7 @@ public class RefreshToken {
     @Column(nullable = false)
     private UserRole userRole;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 512)
     private String refreshToken;
 
     @Builder
