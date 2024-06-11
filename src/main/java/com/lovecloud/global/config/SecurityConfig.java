@@ -39,6 +39,11 @@ public class SecurityConfig {
             "/auth/guest/sign-up",
             "/auth/guest/sign-in",
 
+            "/categories",
+            "/products",
+            "/items/**",
+            "/invitations/**",
+            "/fundings/**",
     };
 
 
