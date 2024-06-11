@@ -29,7 +29,7 @@ public class Order extends CommonRootEntity<Long> {
     @Column(name = "orderer_phone_number", nullable = false, length = 100)
     private String ordererPhoneNumber;
 
-    @Column(name = "orderer_memo", nullable = false, length = 100)
+    @Column(name = "orderer_memo", length = 100)
     private String ordererMemo;
 
     @Column(name = "order_number", nullable = false, length = 100)
