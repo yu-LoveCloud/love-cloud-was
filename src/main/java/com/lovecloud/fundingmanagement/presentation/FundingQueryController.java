@@ -5,9 +5,12 @@ import com.lovecloud.fundingmanagement.query.response.FundingDetailResponse;
 import com.lovecloud.fundingmanagement.query.response.FundingListResponse;
 import com.lovecloud.fundingmanagement.query.response.GuestFundingListResponse;
 import com.lovecloud.fundingmanagement.query.response.OrderableFundingResponse;
+import com.lovecloud.global.usermanager.SecurityUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,10 +46,13 @@ public class FundingQueryController {
         return ResponseEntity.ok(guestFundings);
     }
 
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
     @GetMapping("/orderable-fundings")
-    public ResponseEntity<List<OrderableFundingResponse>> listOrderableFundings() {
-        Long memberId = 3L; // TODO: memberId는 @Auth로 받는다고 가정
-        final List<OrderableFundingResponse> orderableFundings = fundingQueryService.findOrderableFundingsByUserId(memberId);
+    public ResponseEntity<List<OrderableFundingResponse>> listOrderableFundings(
+            @AuthenticationPrincipal SecurityUser securityUser
+    ) {
+        final Long userId = securityUser.user().getId();
+        final List<OrderableFundingResponse> orderableFundings = fundingQueryService.findOrderableFundingsByUserId(userId);
         return ResponseEntity.ok(orderableFundings);
     }
 }
