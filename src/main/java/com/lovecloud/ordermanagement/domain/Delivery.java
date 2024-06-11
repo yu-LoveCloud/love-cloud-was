@@ -43,7 +43,7 @@ public class Delivery extends CommonRootEntity<Long> {
     @Column(name = "detail_address", nullable = false, length = 100)
     private String detailAddress;
 
-    @Column(name = "delivery_memo", nullable = false, length = 100)
+    @Column(name = "delivery_memo", length = 100)
     private String deliveryMemo;
 
     @Enumerated(EnumType.STRING)
