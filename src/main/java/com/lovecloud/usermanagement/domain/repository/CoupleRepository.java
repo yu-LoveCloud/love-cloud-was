@@ -28,5 +28,9 @@ public interface CoupleRepository extends JpaRepository<Couple, Long> {
     default Couple findByIdOrThrow(Long coupleId) {
         return findById(coupleId).orElseThrow(NotFoundCoupleException::new);
     }
+
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Couple c WHERE c.groom = :user OR c.bride = :user")
+    boolean existsByGroomOrBride(@Param("user") WeddingUser user);
+
 }
 
