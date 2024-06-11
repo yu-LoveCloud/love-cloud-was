@@ -1,14 +1,15 @@
 package com.lovecloud.ordermanagement.presentation;
 
+import com.lovecloud.global.usermanager.SecurityUser;
 import com.lovecloud.ordermanagement.application.OrderCreateService;
 import com.lovecloud.ordermanagement.presentation.request.CreateOrderRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -19,9 +20,11 @@ public class OrderController {
     private final OrderCreateService orderCreateService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
     public ResponseEntity<Long> createOrder(@Valid @RequestBody CreateOrderRequest request,
-                                            Long userId) {
-        final Long orderId = orderCreateService.createOrder(request.toCommand(userId));
+                                            @AuthenticationPrincipal SecurityUser securityUser) {
+        final Long orderId = orderCreateService.createOrder(request.toCommand(securityUser.user().getId()));
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 }

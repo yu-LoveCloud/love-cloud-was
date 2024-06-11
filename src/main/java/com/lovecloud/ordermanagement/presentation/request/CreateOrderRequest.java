@@ -27,6 +27,8 @@ public record CreateOrderRequest(
         String zipcode,
         @NotBlank
         String address,
+
+        @NotBlank
         String detailAddress,
         String deliveryMemo
 

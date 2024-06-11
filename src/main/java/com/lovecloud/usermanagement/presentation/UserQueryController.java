@@ -17,8 +17,8 @@ public class UserQueryController {
 
     @GetMapping("/user/me")
     public ResponseEntity<UserInfoResponse> getCurrentUserInfo(
-            @AuthenticationPrincipal SecurityUser securityUser
-    ){
+            @AuthenticationPrincipal SecurityUser securityUser){
+
         final UserInfoResponse userInfoResponse = userQueryService.getUserInfo(securityUser.user());
 
         return ResponseEntity.ok(userInfoResponse);
