@@ -2,6 +2,7 @@ package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.Password;
 import com.lovecloud.auth.domain.WeddingUserValidator;
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +14,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "wedding_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WeddingUser extends User {
+public class WeddingUser extends User{
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;

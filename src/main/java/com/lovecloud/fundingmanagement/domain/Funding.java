@@ -1,19 +1,11 @@
 package com.lovecloud.fundingmanagement.domain;
 
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.global.domain.CommonRootEntity;
 import com.lovecloud.productmanagement.domain.ProductOptions;
 import com.lovecloud.usermanagement.domain.Couple;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,6 +22,10 @@ public class Funding extends CommonRootEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "funding_id")
     private Long id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
 
     @Column(name = "title", nullable = false, length = 100)
     private String title;
