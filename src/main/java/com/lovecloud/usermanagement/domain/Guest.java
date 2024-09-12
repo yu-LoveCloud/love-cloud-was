@@ -2,11 +2,9 @@ package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +15,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "guest")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Guest extends User {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
