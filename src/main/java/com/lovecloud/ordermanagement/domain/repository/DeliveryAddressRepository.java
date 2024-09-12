@@ -12,5 +12,5 @@ public interface DeliveryAddressRepository extends JpaRepository<DeliveryAddress
         return findById(id).orElseThrow(DeliveryAddressNotFoundException::new);
     }
 
-    List<DeliveryAddress> findAllByUserId(Long userId);
+    List<DeliveryAddress> findAllByCoupleId(Long coupleId);
 }

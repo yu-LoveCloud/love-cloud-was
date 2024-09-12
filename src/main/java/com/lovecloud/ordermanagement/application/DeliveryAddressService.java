@@ -24,7 +24,7 @@ public class DeliveryAddressService {
         Couple couple = coupleRepository.findByMemberIdOrThrow(userId);
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findByIdOrThrow(deliveryAddressId);
         validateOwner(deliveryAddress, couple);
-        updateDefaultDeliveryAddress(userId, deliveryAddressId);
+        updateDefaultDeliveryAddress(couple.getId(), deliveryAddressId);
     }
 
     public Long createDeliveryAddress(CreateDeliveryAddressCommand command) {
@@ -33,7 +33,7 @@ public class DeliveryAddressService {
 
         DeliveryAddress savedDeliveryAddress = deliveryAddressRepository.save(deliveryAddress);
         if (command.isDefault()) {
-            updateDefaultDeliveryAddress(command.userId(), savedDeliveryAddress.getId());
+            updateDefaultDeliveryAddress(couple.getId(), savedDeliveryAddress.getId());
         }
         return savedDeliveryAddress.getId();
     }
@@ -48,7 +48,7 @@ public class DeliveryAddressService {
 
         deliveryAddress.update(command);
         if(command.isDefault()){
-            updateDefaultDeliveryAddress(command.userId(), command.deliveryAddressId());
+            updateDefaultDeliveryAddress(couple.getId(), command.deliveryAddressId());
         }
 
         return deliveryAddress.getId();
@@ -64,10 +64,10 @@ public class DeliveryAddressService {
         deliveryAddressRepository.delete(deliveryAddress);
     }
 
-    private void updateDefaultDeliveryAddress(Long userId, Long deliveryAddressId) {
+    private void updateDefaultDeliveryAddress(Long coupleId, Long deliveryAddressId) {
 
         // 1. 해당 사용자의 모든 배송지를 가져옴
-        List<DeliveryAddress> userAddresses = deliveryAddressRepository.findAllByUserId(userId);
+        List<DeliveryAddress> userAddresses = deliveryAddressRepository.findAllByCoupleId(coupleId);
 
         // 2. 새로운 기본 배송지를 찾아 기본으로 설정하고, 나머지는 일반 배송지로 설정
         for (DeliveryAddress address : userAddresses) {
