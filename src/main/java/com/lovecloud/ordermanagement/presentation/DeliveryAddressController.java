@@ -44,4 +44,16 @@ public class DeliveryAddressController {
         Long id = deliveryAddressService.updateDeliveryAddress(request.toCommand(userId, deliveryAddressId));
         return ResponseEntity.ok().build();
     }
+
+    //내 배송지 삭제
+    @DeleteMapping("/{deliveryAddressId}")
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
+    public ResponseEntity<Void> deleteDeliveryAddress(
+            @AuthenticationPrincipal SecurityUser securityUser,
+            @PathVariable Long deliveryAddressId
+    ) {
+        final Long userId = securityUser.user().getId();
+        deliveryAddressService.deleteDeliveryAddress(userId, deliveryAddressId);
+        return ResponseEntity.noContent().build();
+    }
 }

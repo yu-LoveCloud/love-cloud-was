@@ -33,9 +33,20 @@ public class DeliveryAddressService {
         return deliveryAddress.getId();
     }
 
+    public void deleteDeliveryAddress(Long userId, Long deliveryAddressId) {
+        Couple couple = coupleRepository.findByMemberIdOrThrow(userId);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findByIdOrThrow(deliveryAddressId);
+
+        //본인의 배송지인지 검증
+        validateOwner(deliveryAddress, couple);
+
+        deliveryAddressRepository.delete(deliveryAddress);
+    }
+
     private static void validateOwner(DeliveryAddress deliveryAddress, Couple couple) {
         if (!deliveryAddress.getCouple().getId().equals(couple.getId())) {
             throw new UnauthorizedDeliveryAddressException();
         }
     }
+
 }
