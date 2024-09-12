@@ -1,6 +1,7 @@
 package com.lovecloud.ordermanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
+import com.lovecloud.ordermanagement.application.command.UpdateDeliveryAddressCommand;
 import com.lovecloud.usermanagement.domain.Couple;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -64,5 +65,13 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
         this.detailAddress = detailAddress;
         this.deliveryMemo = deliveryMemo;
         this.couple = couple;
+    }
+
+    public void update(UpdateDeliveryAddressCommand command) {
+        this.deliveryName = command.deliveryName();
+        this.zipCode = command.zipCode();
+        this.address = command.address();
+        this.detailAddress = command.detailAddress();
+        this.deliveryMemo = command.deliveryMemo();
     }
 }
