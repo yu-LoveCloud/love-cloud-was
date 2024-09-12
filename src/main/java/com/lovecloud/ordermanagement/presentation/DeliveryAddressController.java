@@ -56,4 +56,16 @@ public class DeliveryAddressController {
         deliveryAddressService.deleteDeliveryAddress(userId, deliveryAddressId);
         return ResponseEntity.noContent().build();
     }
+
+    //기본 배송지 설정
+    @PutMapping("/{deliveryAddressId}/default")
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
+    public ResponseEntity<Void> setDefaultDeliveryAddress(
+            @AuthenticationPrincipal SecurityUser securityUser,
+            @PathVariable Long deliveryAddressId
+    ) {
+        final Long userId = securityUser.user().getId();
+        deliveryAddressService.setDefaultDeliveryAddress(userId, deliveryAddressId);
+        return ResponseEntity.ok().build();
+    }
 }

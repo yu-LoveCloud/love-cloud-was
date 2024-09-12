@@ -9,14 +9,23 @@ import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class DeliveryAddressService {
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final CoupleRepository coupleRepository;
+
+    public void setDefaultDeliveryAddress(Long userId, Long deliveryAddressId) {
+        Couple couple = coupleRepository.findByMemberIdOrThrow(userId);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findByIdOrThrow(deliveryAddressId);
+        validateOwner(deliveryAddress, couple);
+        updateDefaultDeliveryAddress(userId, deliveryAddressId);
+    }
 
     public Long createDeliveryAddress(CreateDeliveryAddressCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
@@ -24,7 +33,7 @@ public class DeliveryAddressService {
 
         DeliveryAddress savedDeliveryAddress = deliveryAddressRepository.save(deliveryAddress);
         if (command.isDefault()) {
-            setDefaultDeliveryAddress(command.userId(), savedDeliveryAddress.getId());
+            updateDefaultDeliveryAddress(command.userId(), savedDeliveryAddress.getId());
         }
         return savedDeliveryAddress.getId();
     }
@@ -39,7 +48,7 @@ public class DeliveryAddressService {
 
         deliveryAddress.update(command);
         if(command.isDefault()){
-            setDefaultDeliveryAddress(command.userId(), command.deliveryAddressId());
+            updateDefaultDeliveryAddress(command.userId(), command.deliveryAddressId());
         }
 
         return deliveryAddress.getId();
@@ -55,7 +64,7 @@ public class DeliveryAddressService {
         deliveryAddressRepository.delete(deliveryAddress);
     }
 
-    private void setDefaultDeliveryAddress(Long userId, Long deliveryAddressId) {
+    private void updateDefaultDeliveryAddress(Long userId, Long deliveryAddressId) {
 
         // 1. 해당 사용자의 모든 배송지를 가져옴
         List<DeliveryAddress> userAddresses = deliveryAddressRepository.findAllByUserId(userId);
