@@ -12,7 +12,14 @@ public record CreateDeliveryAddressRequest(
         String address,
         @NotBlank
         String detailAddress,
-        String deliveryMemo
+        String deliveryMemo,
+        @NotBlank
+        String receiverName,
+        @NotBlank
+        String receiverPhoneNumber,
+        @NotBlank
+        boolean isDefault
+
 ) {
         public CreateDeliveryAddressCommand toCommand(Long userId) {
                 return CreateDeliveryAddressCommand.builder()
@@ -22,6 +29,9 @@ public record CreateDeliveryAddressRequest(
                         .address(address())
                         .detailAddress(detailAddress())
                         .deliveryMemo(deliveryMemo())
+                        .receiverName(receiverName())
+                        .receiverPhoneNumber(receiverPhoneNumber())
+                        .isDefault(isDefault())
                         .build();
         }
 

@@ -11,7 +11,10 @@ public record CreateDeliveryAddressCommand(
         String zipCode,
         String address,
         String detailAddress,
-        String deliveryMemo
+        String deliveryMemo,
+        String receiverName,
+        String receiverPhoneNumber,
+        boolean isDefault
 ) {
     public DeliveryAddress toDeliveryAddress(Couple couple) {
         return DeliveryAddress.builder()
@@ -21,6 +24,8 @@ public record CreateDeliveryAddressCommand(
                 .detailAddress(detailAddress())
                 .deliveryMemo(deliveryMemo())
                 .couple(couple)
+                .receiverName(receiverName())
+                .receiverPhoneNumber(receiverPhoneNumber())
                 .build();
     }
 }

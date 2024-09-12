@@ -76,6 +76,8 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
         this.address = command.address();
         this.detailAddress = command.detailAddress();
         this.deliveryMemo = command.deliveryMemo();
+        this.receiverName = command.receiverName();
+        this.receiverPhoneNumber = command.receiverPhoneNumber();
     }
 
     public void setDefault(boolean isDefault) {

@@ -10,6 +10,9 @@ public record UpdateDeliveryAddressCommand(
         String zipCode,
         String address,
         String detailAddress,
-        String deliveryMemo
+        String deliveryMemo,
+        String receiverName,
+        String receiverPhoneNumber,
+        boolean isDefault
 ) {
 }

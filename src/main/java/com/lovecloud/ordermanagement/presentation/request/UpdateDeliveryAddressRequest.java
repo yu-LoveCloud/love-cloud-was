@@ -4,15 +4,29 @@ import com.lovecloud.ordermanagement.application.command.UpdateDeliveryAddressCo
 import jakarta.validation.constraints.NotBlank;
 
 public record UpdateDeliveryAddressRequest(
-        @NotBlank String deliveryName,
+        @NotBlank
+        String deliveryName,
 
-        @NotBlank String zipCode,
+        @NotBlank
+        String zipCode,
 
-        @NotBlank String address,
+        @NotBlank
+        String address,
 
-        @NotBlank String detailAddress,
+        @NotBlank
+        String detailAddress,
 
-        String deliveryMemo) {
+        String deliveryMemo,
+
+        @NotBlank
+        String receiverName,
+
+        @NotBlank
+        String receiverPhoneNumber,
+
+        @NotBlank
+        boolean isDefault
+) {
     public UpdateDeliveryAddressCommand toCommand(Long userId, Long deliveryAddressId) {
         return UpdateDeliveryAddressCommand.builder()
                 .userId(userId)
@@ -22,6 +36,9 @@ public record UpdateDeliveryAddressRequest(
                 .address(address())
                 .detailAddress(detailAddress())
                 .deliveryMemo(deliveryMemo())
+                .receiverName(receiverName())
+                .receiverPhoneNumber(receiverPhoneNumber())
+                .isDefault(isDefault())
                 .build();
     }
 }
