@@ -1,0 +1,36 @@
+package com.lovecloud.ordermanagement.presentation;
+
+import com.lovecloud.global.usermanager.SecurityUser;
+import com.lovecloud.ordermanagement.application.DeliveryAddressService;
+import com.lovecloud.ordermanagement.presentation.request.CreateDeliveryAddressRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/delivery-addresses")
+public class DeliveryAddressController {
+
+    private final DeliveryAddressService deliveryAddressService;
+
+    //내 배송지 저장
+    @PostMapping
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
+    public ResponseEntity<Long> createDeliveryAddress(
+            @AuthenticationPrincipal SecurityUser securityUser,
+            @Valid @RequestBody CreateDeliveryAddressRequest request
+    ) {
+        final Long userId = securityUser.user().getId();
+        Long deliveryAddressId = deliveryAddressService.createDeliveryAddress(request.toCommand(userId));
+        return ResponseEntity.created(URI.create("/delivery-addresses/" + deliveryAddressId)).build();
+    }
+}
