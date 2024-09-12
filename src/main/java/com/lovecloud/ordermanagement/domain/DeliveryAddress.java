@@ -49,6 +49,9 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
     @Column(name = "delivery_memo", nullable = false, length = 100)
     private String deliveryMemo;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean isDefault;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_id", nullable = false)
     private Couple couple;
@@ -74,4 +77,9 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
         this.detailAddress = command.detailAddress();
         this.deliveryMemo = command.deliveryMemo();
     }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
 }
