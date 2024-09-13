@@ -28,4 +28,15 @@ public class DeliveryAddressQueryService {
     }
 
 
+    public DeliveryAddressResponse findDeliveryAddressByDeliveryAddressIdAndUserId(Long userId, Long deliveryAddressId) {
+        Couple couple = coupleRepository.findByMemberIdOrThrow(userId);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findByIdAndCoupleIdOrThrow(deliveryAddressId,couple.getId());
+        return DeliveryAddressResponse.from(deliveryAddress);
+    }
+
+    public DeliveryAddressResponse findDefaultDeliveryAddressByUserId(Long id) {
+        Couple couple = coupleRepository.findByMemberIdOrThrow(id);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findDefaultAddressByCoupleIdOrThrow(couple.getId());
+        return DeliveryAddressResponse.from(deliveryAddress);
+    }
 }
