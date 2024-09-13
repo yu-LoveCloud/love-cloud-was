@@ -2,6 +2,8 @@ package com.lovecloud.ordermanagement.presentation.request;
 
 import com.lovecloud.ordermanagement.application.command.CreateDeliveryAddressCommand;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record CreateDeliveryAddressRequest(
         @NotBlank
@@ -17,8 +19,8 @@ public record CreateDeliveryAddressRequest(
         String receiverName,
         @NotBlank
         String receiverPhoneNumber,
-        @NotBlank
-        boolean isDefault
+        @NotNull
+        Boolean isDefault
 
 ) {
         public CreateDeliveryAddressCommand toCommand(Long userId) {

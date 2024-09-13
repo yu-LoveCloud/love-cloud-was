@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class DeliveryAddressQueryController {
     // 배송지 상세 조회
     @GetMapping("/{deliveryAddressId}")
     @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
-    public ResponseEntity<DeliveryAddressResponse> detailDeliveryAddress(@AuthenticationPrincipal SecurityUser securityUser, @RequestParam Long deliveryAddressId) {
+    public ResponseEntity<DeliveryAddressResponse> detailDeliveryAddress(@AuthenticationPrincipal SecurityUser securityUser, @PathVariable Long deliveryAddressId) {
         DeliveryAddressResponse deliveryAddress = deliveryAddressQueryService.findDeliveryAddressByDeliveryAddressIdAndUserId(securityUser.user().getId(), deliveryAddressId);
         return ResponseEntity.ok(deliveryAddress);
     }

@@ -2,6 +2,8 @@ package com.lovecloud.ordermanagement.presentation.request;
 
 import com.lovecloud.ordermanagement.application.command.UpdateDeliveryAddressCommand;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record UpdateDeliveryAddressRequest(
         @NotBlank
@@ -24,8 +26,8 @@ public record UpdateDeliveryAddressRequest(
         @NotBlank
         String receiverPhoneNumber,
 
-        @NotBlank
-        boolean isDefault
+        @NotNull
+        Boolean isDefault
 ) {
     public UpdateDeliveryAddressCommand toCommand(Long userId, Long deliveryAddressId) {
         return UpdateDeliveryAddressCommand.builder()
