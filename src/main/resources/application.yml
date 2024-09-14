@@ -6,7 +6,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -53,3 +53,5 @@ jwt:
   token-expiration-time: 360000000
   issuer: ${JWT_ISSUER}
 
+web3j:
+  private-network: ${WEB3J_PRIVATE_NETWORK}
