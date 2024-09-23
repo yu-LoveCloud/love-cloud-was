@@ -10,6 +10,6 @@ public class Web3jConfig {
 
     @Bean
     public Web3j web3j() {
-        return Web3j.build(new HttpService("${web3j.private_network}"));
+        return Web3j.build(new HttpService("${web3j.private-network}"));
     }
 }
