@@ -53,3 +53,5 @@ jwt:
   token-expiration-time: 360000000
   issuer: ${JWT_ISSUER}
 
+web3j:
+  private-network: ${WEB3J_PRIVATE_NETWORK}
