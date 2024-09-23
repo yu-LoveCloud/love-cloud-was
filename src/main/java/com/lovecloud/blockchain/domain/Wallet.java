@@ -18,9 +18,6 @@ public class Wallet extends CommonRootEntity<Long> {
     @Column(name = "wallet_id")
     private Long id;
 
-    @Column(name = "private_key", nullable = false)
-    private String privateKey; //지갑 비밀키
-
     @Column(name = "address", nullable = false)
     private String address; //지갑 공개 주소
 
@@ -33,8 +30,7 @@ public class Wallet extends CommonRootEntity<Long> {
 
 
     @Builder
-    public Wallet(String address, String keyfile, String keyfilePassword, String privateKey) {
-        this.privateKey =  privateKey;
+    public Wallet(String address, String keyfile, String keyfilePassword) {
         this.address = address;
         this.keyfile = keyfile;
         this.keyfilePassword = keyfilePassword;

@@ -68,7 +68,6 @@ public class WalletCreationService {
         Credentials account = walletVerifyService.verifyWallet(keyfile); //지갑의 Credentials 객체 (비밀 키, 공개 키, 주소 등의 정보를 포함)
 
         return walletRepository.save(Wallet.builder()
-                .privateKey(account.getEcKeyPair().getPrivateKey().toString(16))
                 .address(account.getAddress())
                 .keyfile(keyfile)
                 .keyfilePassword(keyFilePassword) //TODO: 시스템 공통이므로 DB에 저장 필요 여부 확인
