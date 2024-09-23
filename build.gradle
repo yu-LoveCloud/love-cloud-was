@@ -55,6 +55,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    implementation 'org.web3j:core:4.12.1'
+
 }
 
 tasks.named('test') {
