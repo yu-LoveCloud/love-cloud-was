@@ -1,6 +1,7 @@
 package com.lovecloud.ordermanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
+import com.lovecloud.ordermanagement.application.command.UpdateDeliveryAddressCommand;
 import com.lovecloud.usermanagement.domain.Couple;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +49,9 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
     @Column(name = "delivery_memo", nullable = false, length = 100)
     private String deliveryMemo;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean isDefault;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "couple_id", nullable = false)
     private Couple couple;
@@ -65,4 +69,19 @@ public class DeliveryAddress extends CommonRootEntity<Long> {
         this.deliveryMemo = deliveryMemo;
         this.couple = couple;
     }
+
+    public void update(UpdateDeliveryAddressCommand command) {
+        this.deliveryName = command.deliveryName();
+        this.zipCode = command.zipCode();
+        this.address = command.address();
+        this.detailAddress = command.detailAddress();
+        this.deliveryMemo = command.deliveryMemo();
+        this.receiverName = command.receiverName();
+        this.receiverPhoneNumber = command.receiverPhoneNumber();
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
 }
