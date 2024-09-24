@@ -34,7 +34,7 @@ public class WalletCreationService {
      * @throws FailCreateKeyPairException 키 페어 생성에 실패한 경우 발생
      * @throws FailCreateWalletException 지갑 파일 생성에 실패한 경우 발생
      */
-    public String creatWallet() {
+    public String createWallet() {
 
         ECKeyPair ecKeyPair = null;
 
@@ -64,7 +64,7 @@ public class WalletCreationService {
      */
     public Wallet saveWallet(){
 
-        String keyfile = creatWallet();
+        String keyfile = createWallet();
         Credentials account = walletVerifyService.verifyWallet(keyfile); //지갑의 Credentials 객체 (비밀 키, 공개 키, 주소 등의 정보를 포함)
 
         return walletRepository.save(Wallet.builder()
