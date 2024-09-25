@@ -23,10 +23,6 @@ public class Funding extends CommonRootEntity<Long> {
     @Column(name = "funding_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id", nullable = false)
-    private Wallet wallet;
-
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 

@@ -1,5 +1,6 @@
 package com.lovecloud.usermanagement.domain;
 
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.global.domain.CommonRootEntity;
 import com.lovecloud.invitationmanagement.domain.Invitation;
 import jakarta.persistence.Column;
@@ -44,6 +45,10 @@ public class Couple extends CommonRootEntity<Long> {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invitation_id")
     private Invitation invitation;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
 
     @Builder
     public Couple(WeddingUser groom, WeddingUser bride, String refundAccount, String refundBankName,

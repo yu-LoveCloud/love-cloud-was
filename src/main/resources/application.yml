@@ -55,3 +55,4 @@ jwt:
 
 web3j:
   private-network: ${WEB3J_PRIVATE_NETWORK}
+  keyfile-password: ${WEB3J_KEYFILE_PASSWORD}
