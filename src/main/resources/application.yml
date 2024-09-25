@@ -55,3 +55,7 @@ jwt:
 
 web3j:
   private-network: ${WEB3J_PRIVATE_NETWORK}
+  chain-id: ${WEB3J_CHAIN_ID}
+  token-contract-address: ${WEB3J_TOKEN_CONTRACT_ADDRESS}
+
+
