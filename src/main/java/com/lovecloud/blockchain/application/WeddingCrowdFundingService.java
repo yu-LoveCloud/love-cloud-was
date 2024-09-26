@@ -1,6 +1,7 @@
 package com.lovecloud.blockchain.application;
 
 import com.lovecloud.blockchain.domain.LCToken;
+import com.lovecloud.blockchain.domain.WeddingCrowdFunding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,19 +20,18 @@ import java.math.BigInteger;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class LCTokenService {
+public class WeddingCrowdFundingService {
     private final Web3j web3j;
     @Value("${web3j.chain-id}")
     private BigInteger chainId;
-    @Value("${web3j.token-contract-address}")
-    private String tokenContractAddress;
-    @Value("${web3j.keyfile-password}")
-    private String password;
     @Value("${web3j.funding-contract-address}")
     private String fundingContractAddress;
+    @Value("${web3j.keyfile-password}")
+    private String password;
 
-    // LCToken 사용을 승인하는 메서드
-    public String approveTokens(String walletFilePath, String password, BigInteger amount) throws Exception {
+
+    //펀딩 기여 메서드
+    public String contributeToFunding(String walletFilePath, BigInteger fundingId, BigInteger amount) throws Exception {
 
         // 사용자 지갑 정보를 가져옴
         Credentials credentials = WalletUtils.loadCredentials(password, new File(walletFilePath));
@@ -39,11 +39,11 @@ public class LCTokenService {
         // 트랜잭션 매니저 생성 (chainId 포함)
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, chainId.intValue());
 
-        // LCToken 스마트 계약 로드
-        LCToken tokenContract = LCToken.load(tokenContractAddress, web3j, transactionManager, new DefaultGasProvider());
+        // 펀딩 스마트 계약 로드
+        WeddingCrowdFunding fundingContract = WeddingCrowdFunding.load(fundingContractAddress, web3j, transactionManager, new DefaultGasProvider());
 
-        // 승인 트랜잭션 전송
-        TransactionReceipt receipt = tokenContract.approve(fundingContractAddress, amount).send();
+        // 펀딩 트랜잭션 전송
+        TransactionReceipt receipt = fundingContract.contribute(fundingId, amount).send();
 
         // 트랜잭션 해시 반환
         return receipt.getTransactionHash();
