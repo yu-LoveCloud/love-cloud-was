@@ -16,9 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class WeddingUser extends User{
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id", nullable = false)
-    private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)
     private String phoneNumber;
