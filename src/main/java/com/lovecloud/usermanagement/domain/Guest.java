@@ -47,7 +47,7 @@ public class Guest extends User {
     }
 
     public void assignWallet(Wallet wallet){
-        if(this.wallet != null){
+        if(this.wallet != null){ //TODO: 예외 추가
             throw new IllegalStateException("이미 지갑이 할당되어 있습니다.");
         }
         this.wallet = wallet;

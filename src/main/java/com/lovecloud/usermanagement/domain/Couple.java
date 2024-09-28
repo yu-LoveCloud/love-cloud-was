@@ -63,4 +63,11 @@ public class Couple extends CommonRootEntity<Long> {
     public void setInvitation(Invitation invitation) {
         this.invitation = invitation;
     }
+
+    public void assignWallet(Wallet wallet) {
+        if(this.wallet != null){ //TODO: 예외 추가
+            throw new IllegalStateException("이미 지갑이 할당되어 있습니다.");
+        }
+        this.wallet = wallet;
+    }
 }
