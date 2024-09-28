@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Guest extends User {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id", nullable = false)
+    @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)
@@ -44,5 +44,12 @@ public class Guest extends User {
 
     public void signIn(String rawPassword, CustomPasswordEncoder passwordEncoder){
         this.password.validatePassword(rawPassword, passwordEncoder);
+    }
+
+    public void assignWallet(Wallet wallet){
+        if(this.wallet != null){
+            throw new IllegalStateException("이미 지갑이 할당되어 있습니다.");
+        }
+        this.wallet = wallet;
     }
 }
