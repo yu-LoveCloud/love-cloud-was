@@ -44,14 +44,12 @@ public class SecurityConfig {
             "/items/**",
             "/invitations/**",
             "/fundings/**",
-<<<<<<< HEAD
             "/wallet/**",
-=======
 
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html"
->>>>>>> 112a3f8e45cc76b4f5f3115eebb044d6ad61c2cd
+
     };
 
 
