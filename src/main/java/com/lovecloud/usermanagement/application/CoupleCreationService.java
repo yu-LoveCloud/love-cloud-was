@@ -2,6 +2,8 @@ package com.lovecloud.usermanagement.application;
 
 import com.lovecloud.auth.domain.WeddingUserRepository;
 import com.lovecloud.auth.domain.WeddingUserValidator;
+import com.lovecloud.blockchain.application.WalletCreationService;
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.WeddingRole;
 import com.lovecloud.usermanagement.domain.WeddingUser;
@@ -18,6 +20,7 @@ public class CoupleCreationService {
     private final WeddingUserRepository weddingUserRepository;
     private final WeddingUserValidator weddingUserValidator;
     private final CoupleRepository coupleRepository;
+    private final WalletCreationService walletCreationService;
 
     public void createCouple(WeddingUser newUser, String invitationCode) {
 
@@ -31,6 +34,11 @@ public class CoupleCreationService {
                 .groom(newUser.getWeddingRole() == WeddingRole.GROOM ? newUser : existingUser)
                 .bride(newUser.getWeddingRole() == WeddingRole.BRIDE ? newUser : existingUser)
                 .build();
+
+        coupleRepository.save(couple);
+
+        Wallet wallet = walletCreationService.saveWallet();
+        couple.assignWallet(wallet);
 
         coupleRepository.save(couple);
     }

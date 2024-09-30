@@ -5,6 +5,8 @@ import com.lovecloud.auth.domain.GuestRepository;
 import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
 import com.lovecloud.auth.presentation.request.GuestSignInRequest;
+import com.lovecloud.blockchain.application.WalletCreationService;
+import com.lovecloud.blockchain.domain.Wallet;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import com.lovecloud.global.jwt.JwtTokenProvider;
 import com.lovecloud.global.jwt.dto.JwtTokenDto;
@@ -23,6 +25,7 @@ public class GuestAuthService {
     private final CustomPasswordEncoder passwordEncoder;
     private final RefreshTokenServiceImpl refreshTokenService;
     private final AuthService authService;
+    private final WalletCreationService walletCreationService;
 
     /**
      * GuestSignupCommand를 기반으로 회원을 생성하고, 토큰을 발급하는 메서드
@@ -37,6 +40,11 @@ public class GuestAuthService {
         Password password = passwordEncoder.encode(command.password());
         Guest user = command.toGuest(password);
         user.signUp(validator);
+
+        guestRepository.save(user);
+
+        Wallet wallet = walletCreationService.saveWallet();
+        user.assignWallet(wallet);
 
         guestRepository.save(user);
 
