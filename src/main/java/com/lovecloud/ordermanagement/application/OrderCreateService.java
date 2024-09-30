@@ -49,6 +49,11 @@ public class OrderCreateService {
         List<OrderDetails> orderDetails = createOrderDetails(order, fundings);
         orderDetailsRepository.saveAll(orderDetails);
 
+        // 주문한 상품들의 재고를 감소시키는 로직
+        fundings.forEach(funding -> funding.getProductOptions().decreaseStockQuantity());
+
+        //TODO: 블록체인 연동
+
         return order.getId();
     }
 
