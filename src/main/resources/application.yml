@@ -55,7 +55,10 @@ jwt:
 
 web3j:
   private-network: ${WEB3J_PRIVATE_NETWORK}
+  chain-id: ${WEB3J_CHAIN_ID}
+  token-contract-address: ${WEB3J_TOKEN_CONTRACT_ADDRESS}
+  funding-contract-address: ${WEB3J_FUNDING_CONTRACT_ADDRESS}
   keyfile-password: ${WEB3J_KEYFILE_PASSWORD}
   admin-keyfile-path: ${WEB3J_ADMIN_KEYFILE_PATH}
   admin-wallet-password: ${WEB3J_ADMIN_WALLET_PASSWORD}
-  chain-id: ${WEB3J_CHAIN_ID}
+
