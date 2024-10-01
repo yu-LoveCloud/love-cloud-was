@@ -27,6 +27,7 @@ import java.time.ZoneOffset;
 public class WeddingCrowdFundingService {
 
     private Web3j web3j;
+    private final LCTokenService lcTokenService;
 
     @Value("${web3j.private-network}")
     private String privateNetworkUrl;
@@ -48,6 +49,20 @@ public class WeddingCrowdFundingService {
         this.web3j = Web3j.build(new HttpService(privateNetworkUrl));
     }
 
+    public String approveAndContribute(BigInteger fundingId, BigInteger amount) throws Exception {
+
+        // 토큰 사용 승인
+        String approvalTxHash = lcTokenService.approveTokens(walletFilePath, keyfilePassword, amount);
+
+        // 승인 결과 검증
+        if (approvalTxHash == null || approvalTxHash.isEmpty()) {
+            throw new IllegalStateException("토큰 사용 승인에 실패하였습니다.");
+        }
+
+        // 펀딩 기여
+        return contributeToFunding(fundingId, amount);
+    }
+
     /**
      * 펀딩 기여 메서드
      *
@@ -56,7 +71,7 @@ public class WeddingCrowdFundingService {
      * @return 트랜잭션 해시
      * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
      */
-    public String contributeToFunding(BigInteger fundingId, BigInteger amount) throws Exception {
+    private String contributeToFunding(BigInteger fundingId, BigInteger amount) throws Exception {
 
         // 펀딩 스마트 계약 로드
         WeddingCrowdFunding fundingContract = loadContract();
