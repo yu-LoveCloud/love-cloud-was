@@ -11,6 +11,7 @@ import com.lovecloud.fundingmanagement.domain.GuestFunding;
 import com.lovecloud.fundingmanagement.domain.ParticipationStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
 import com.lovecloud.fundingmanagement.domain.repository.GuestFundingRepository;
+import com.lovecloud.fundingmanagement.exception.DuplicateParticipationException;
 import com.lovecloud.fundingmanagement.query.response.ParticipateFundingResponse;
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.payment.domain.Payment;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,6 +46,13 @@ public class FundingParticipationService {
         // 유효성 검사
         fundingValidator.validateFundingStatus(funding);
         fundingValidator.validateTargetAmountNotExceeded(funding, command.fundingAmount());
+
+        // 중복 참여 검사
+        List<ParticipationStatus> statuses = Arrays.asList(ParticipationStatus.PENDING, ParticipationStatus.PAID);
+        boolean hasAlreadyParticipated = guestFundingRepository.existsByGuestAndFundingWithStatuses(guest, funding, statuses);
+        if (hasAlreadyParticipated) {
+            throw new DuplicateParticipationException();
+        }
 
         // 펀딩 참여 정보 생성 및 저장
         String merchantUid = DateUuidGenerator.generateDateUuid();
