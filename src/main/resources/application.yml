@@ -59,3 +59,5 @@ web3j:
   token-contract-address: ${WEB3J_TOKEN_CONTRACT_ADDRESS}
   funding-contract-address: ${WEB3J_FUNDING_CONTRACT_ADDRESS}
   keyfile-password: ${WEB3J_KEYFILE_PASSWORD}
+  wallet:
+    file-path: ${WEB3J_WALLET_FILE_PATH}
