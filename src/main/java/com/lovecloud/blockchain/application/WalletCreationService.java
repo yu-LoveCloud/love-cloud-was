@@ -6,6 +6,7 @@ import com.lovecloud.blockchain.domain.repository.WalletRepository;
 import com.lovecloud.blockchain.exception.FailCreateKeyPairException;
 import com.lovecloud.blockchain.exception.FailCreateWalletException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
@@ -18,7 +19,9 @@ import java.io.File;
 @RequiredArgsConstructor
 public class WalletCreationService {
 
-    private final String keyFilePassword = "${web3j.keyfile-password}"; //사용자 마다 달라야 하지만 일단 시스템에서 통일
+    @Value("${web3j.keyfile-password}")
+    private String keyFilePassword;
+
     private final WalletRepository walletRepository;
     private final WalletVerifyService walletVerifyService;
     private final EtherTransferService etherTransferService;
