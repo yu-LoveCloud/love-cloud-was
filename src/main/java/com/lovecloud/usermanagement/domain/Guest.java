@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Guest extends User {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)

@@ -47,7 +47,7 @@ public class Couple extends CommonRootEntity<Long> {
     private Invitation invitation;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
 
     @Builder
