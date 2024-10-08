@@ -41,8 +41,6 @@ public class GuestAuthService {
         Guest user = command.toGuest(password);
         user.signUp(validator);
 
-        guestRepository.save(user);
-
         Wallet wallet = walletCreationService.saveWallet();
         user.assignWallet(wallet);
 
