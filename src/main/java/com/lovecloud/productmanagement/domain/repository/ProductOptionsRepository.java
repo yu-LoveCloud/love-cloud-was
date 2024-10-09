@@ -4,7 +4,10 @@ import com.lovecloud.productmanagement.domain.ProductOptions;
 import com.lovecloud.productmanagement.exception.NotFoundProductOptionsException;
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +29,13 @@ public interface ProductOptionsRepository extends JpaRepository<ProductOptions, 
         return findByIdAndIsDeleted(id, isDeleted).orElseThrow(
                 NotFoundProductOptionsException::new);
     }
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM ProductOptions p WHERE p.id = :id")
+    Optional<ProductOptions> findByIdWithLock(Long id);
+
+    default ProductOptions findByIdWithLockOrThrow(Long id) {
+        return findByIdWithLock(id).orElseThrow(NotFoundProductOptionsException::new);
+    }
+
 }
