@@ -1,6 +1,7 @@
 package com.lovecloud.fundingmanagement.application;
 
 import com.lovecloud.auth.domain.GuestRepository;
+import com.lovecloud.blockchain.application.WalletPathResolver;
 import com.lovecloud.blockchain.application.WeddingCrowdFundingService;
 import com.lovecloud.blockchain.exception.FundingBlockchainException;
 import com.lovecloud.fundingmanagement.application.command.CompleteParticipationCommand;
@@ -75,11 +76,13 @@ public class FundingParticipationService {
         fundingValidator.validateMatchingAmounts(guestFunding.getFundingAmount(), payment.getAmount());
 
         try {
+            String walletFilePath = WalletPathResolver.resolveWalletPath(guestFunding.getGuest().getWallet().getKeyfile());
 
             // 블록체인 연동 - 토큰 사용 승인 및 펀딩 참여
             String transactionHash = weddingCrowdFundingService.approveAndContribute(
                     BigInteger.valueOf(funding.getId()),
-                    BigInteger.valueOf(payment.getAmount())
+                    BigInteger.valueOf(payment.getAmount()),
+                    walletFilePath
             );
 
             log.info("블록체인 트랜잭션 해시: {}", transactionHash);
