@@ -16,6 +16,7 @@ import com.lovecloud.ordermanagement.exception.DuplicateOrderFundingException;
 import com.lovecloud.ordermanagement.exception.FundingNotCompletedException;
 import com.lovecloud.ordermanagement.exception.MismatchedCoupleException;
 import com.lovecloud.ordermanagement.exception.NoAvailableFundingsException;
+import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,8 @@ public class OrderCreateService {
     private final FundingRepository fundingRepository;
     private final OrderDetailsRepository orderDetailsRepository;
     private final DeliveryRepository deliveryRepository;
+    private final ProductOptionsRepository productOptionsRepository;
+
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
         List<Funding> fundings = fundingRepository.findAllById(command.fundingIds());
@@ -48,6 +51,12 @@ public class OrderCreateService {
 
         List<OrderDetails> orderDetails = createOrderDetails(order, fundings);
         orderDetailsRepository.saveAll(orderDetails);
+
+        // 주문한 상품들의 재고를 감소시키는 로직
+        fundings.forEach(funding ->
+                productOptionsRepository.findByIdWithLockOrThrow(funding.getProductOptions().getId()).decreaseStockQuantity());
+
+        //TODO: 블록체인 연동
 
         return order.getId();
     }
@@ -73,20 +82,8 @@ public class OrderCreateService {
                 .build();
     }
 
-    private static Delivery createDelivery(CreateOrderCommand command) {
-        return Delivery.builder()
-                .deliveryName(command.deliveryName())
-                .receiverName(command.receiverName())
-                .receiverPhoneNumber(command.receiverPhoneNumber())
-                .zipCode(command.zipCode())
-                .address(command.address())
-                .detailAddress(command.detailAddress())
-                .deliveryMemo(command.deliveryMemo())
-                .build();
-    }
-
     private void validateFundings(List<Funding> fundings, Couple couple) {
-        if(fundings.isEmpty()){
+        if (fundings.isEmpty()) {
             throw new NoAvailableFundingsException();
         }
         for (Funding funding : fundings) {
@@ -114,5 +111,17 @@ public class OrderCreateService {
         if (!funding.getCouple().equals(couple)) {
             throw new MismatchedCoupleException();
         }
+    }
+
+    private static Delivery createDelivery(CreateOrderCommand command) {
+        return Delivery.builder()
+                .deliveryName(command.deliveryName())
+                .receiverName(command.receiverName())
+                .receiverPhoneNumber(command.receiverPhoneNumber())
+                .zipCode(command.zipCode())
+                .address(command.address())
+                .detailAddress(command.detailAddress())
+                .deliveryMemo(command.deliveryMemo())
+                .build();
     }
 }

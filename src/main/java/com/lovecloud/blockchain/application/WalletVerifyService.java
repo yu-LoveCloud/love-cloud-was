@@ -3,6 +3,7 @@ package com.lovecloud.blockchain.application;
 
 import com.lovecloud.blockchain.exception.FailVerifyWalletException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -11,9 +12,8 @@ import org.web3j.crypto.WalletUtils;
 @RequiredArgsConstructor
 public class WalletVerifyService {
 
-
-    private final String keyFilePassword = "${web3j.keyfile-password}"; //사용자 마다 달라야 하지만 일단 시스템에서 통일
-
+    @Value("${web3j.keyfile-password}")
+    private String keyFilePassword;
 
     /**
      * 주어진 지갑 파일 이름을 통해 지갑을 검증하고, 해당 지갑의 Credentials(자격 증명)을 반환하는 함수

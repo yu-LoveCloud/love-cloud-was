@@ -1,6 +1,7 @@
 package com.lovecloud.productmanagement.domain;
 
 import com.lovecloud.global.domain.CommonRootEntity;
+import com.lovecloud.productmanagement.exception.OutOfStockException;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import lombok.AccessLevel;
@@ -75,5 +76,12 @@ public class ProductOptions extends CommonRootEntity<Long> {
         if (descriptionImage.getProductOptions() != this) {
             descriptionImage.setProductOptions(this);
         }
+    }
+
+    public void decreaseStockQuantity() {
+        if(stockQuantity <= 0) {
+            throw new OutOfStockException();
+        }
+        stockQuantity--;
     }
 }

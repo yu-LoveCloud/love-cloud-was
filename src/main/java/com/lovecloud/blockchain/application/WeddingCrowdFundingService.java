@@ -27,10 +27,8 @@ import java.time.ZoneOffset;
 public class WeddingCrowdFundingService {
 
     private Web3j web3j;
-    private final LCTokenService lcTokenService;
 
-    @Value("${web3j.private-network}")
-    private String privateNetworkUrl;
+    private final LCTokenService lcTokenService;
 
     @Value("${web3j.chain-id}")
     private BigInteger chainId;
@@ -41,15 +39,16 @@ public class WeddingCrowdFundingService {
     @Value("${web3j.keyfile-password}")
     private String keyfilePassword;
 
-    @Value("${web3j.wallet.file-path}")
-    private String walletFilePath;
-
-    @PostConstruct
-    public void init() {
-        this.web3j = Web3j.build(new HttpService(privateNetworkUrl));
-    }
-
-    public String approveAndContribute(BigInteger fundingId, BigInteger amount) throws Exception {
+    /**
+     * 토큰 사용 승인 후 펀딩에 기여하는 메서드
+     *
+     * @param fundingId      기여할 펀딩 ID
+     * @param amount         기여 금액
+     * @param walletFilePath 사용자의 지갑 파일 경로
+     * @return 트랜잭션 해시
+     * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
+     */
+    public String approveAndContribute(BigInteger fundingId, BigInteger amount, String walletFilePath) throws Exception {
 
         // 토큰 사용 승인
         String approvalTxHash = lcTokenService.approveTokens(walletFilePath, keyfilePassword, amount);
@@ -60,21 +59,22 @@ public class WeddingCrowdFundingService {
         }
 
         // 펀딩 기여
-        return contributeToFunding(fundingId, amount);
+        return contributeToFunding(fundingId, amount, walletFilePath);
     }
 
     /**
      * 펀딩 기여 메서드
      *
-     * @param fundingId 기여할 펀딩 ID
-     * @param amount 기여 금액
+     * @param fundingId      기여할 펀딩 ID
+     * @param amount         기여 금액
+     * @param walletFilePath 사용자의 지갑 파일 경로
      * @return 트랜잭션 해시
      * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
      */
-    private String contributeToFunding(BigInteger fundingId, BigInteger amount) throws Exception {
+    public String contributeToFunding(BigInteger fundingId, BigInteger amount, String walletFilePath) throws Exception {
 
         // 펀딩 스마트 계약 로드
-        WeddingCrowdFunding fundingContract = loadContract();
+        WeddingCrowdFunding fundingContract = loadContract(walletFilePath);
 
         // 펀딩 트랜잭션 전송
         TransactionReceipt receipt = fundingContract.contribute(fundingId, amount).send();
@@ -86,14 +86,15 @@ public class WeddingCrowdFundingService {
     /**
      * 블록체인에 펀딩을 생성하는 메서드
      *
-     * @param funding 생성할 펀딩 도메인 객체
+     * @param funding        생성할 펀딩 도메인 객체
+     * @param walletFilePath 사용자의 지갑 파일 경로
      * @return 트랜잭션 해시
      * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
      */
-    public String createCrowdfundingOnBlockchain(Funding funding) throws Exception {
+    public String createCrowdfundingOnBlockchain(Funding funding, String walletFilePath) throws Exception {
 
         // 펀딩 스마트 계약 로드
-        WeddingCrowdFunding fundingContract = loadContract();
+        WeddingCrowdFunding fundingContract = loadContract(walletFilePath);
 
         BigInteger goal = BigInteger.valueOf(funding.getTargetAmount());
 
@@ -116,10 +117,11 @@ public class WeddingCrowdFundingService {
     /**
      * 지갑 정보를 로드하고 트랜잭션 매니저를 생성한 후, 스마트 컨트랙트를 로드하는 메서드
      *
+     * @param walletFilePath 사용자의 지갑 파일 경로
      * @return WeddingCrowdFunding 스마트 컨트랙트 인스턴스
      * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
      */
-    private WeddingCrowdFunding loadContract() throws Exception {
+    private WeddingCrowdFunding loadContract(String walletFilePath) throws Exception {
 
         // 사용자 지갑 정보 로드
         Credentials credentials = WalletUtils.loadCredentials(keyfilePassword, new File(walletFilePath));
