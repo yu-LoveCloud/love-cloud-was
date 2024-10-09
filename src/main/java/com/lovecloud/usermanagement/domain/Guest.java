@@ -3,6 +3,7 @@ package com.lovecloud.usermanagement.domain;
 import com.lovecloud.auth.domain.GuestValidator;
 import com.lovecloud.auth.domain.Password;
 import com.lovecloud.blockchain.domain.Wallet;
+import com.lovecloud.blockchain.exception.WalletAlreadyAssignedException;
 import com.lovecloud.global.crypto.CustomPasswordEncoder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Guest extends User {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
 
     @Column(name = "phone_number", nullable = false, length = 100)
@@ -47,8 +48,8 @@ public class Guest extends User {
     }
 
     public void assignWallet(Wallet wallet){
-        if(this.wallet != null){ //TODO: 예외 추가
-            throw new IllegalStateException("이미 지갑이 할당되어 있습니다.");
+        if(this.wallet != null){
+            throw new WalletAlreadyAssignedException();
         }
         this.wallet = wallet;
     }

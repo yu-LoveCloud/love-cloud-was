@@ -13,8 +13,7 @@ import org.web3j.crypto.WalletUtils;
 public class WalletVerifyService {
 
     @Value("${web3j.keyfile-password}")
-    private String keyFilePassword; //사용자 마다 달라야 하지만 일단 시스템에서 통일
-
+    private String keyFilePassword;
 
     /**
      * 주어진 지갑 파일 이름을 통해 지갑을 검증하고, 해당 지갑의 Credentials(자격 증명)을 반환하는 함수

@@ -1,6 +1,7 @@
 package com.lovecloud.usermanagement.domain;
 
 import com.lovecloud.blockchain.domain.Wallet;
+import com.lovecloud.blockchain.exception.WalletAlreadyAssignedException;
 import com.lovecloud.global.domain.CommonRootEntity;
 import com.lovecloud.invitationmanagement.domain.Invitation;
 import jakarta.persistence.Column;
@@ -47,7 +48,7 @@ public class Couple extends CommonRootEntity<Long> {
     private Invitation invitation;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
 
     @Builder
@@ -65,8 +66,8 @@ public class Couple extends CommonRootEntity<Long> {
     }
 
     public void assignWallet(Wallet wallet) {
-        if(this.wallet != null){ //TODO: 예외 추가
-            throw new IllegalStateException("이미 지갑이 할당되어 있습니다.");
+        if(this.wallet != null){
+            throw new WalletAlreadyAssignedException();
         }
         this.wallet = wallet;
     }

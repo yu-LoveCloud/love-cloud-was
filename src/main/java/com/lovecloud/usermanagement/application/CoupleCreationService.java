@@ -35,8 +35,6 @@ public class CoupleCreationService {
                 .bride(newUser.getWeddingRole() == WeddingRole.BRIDE ? newUser : existingUser)
                 .build();
 
-        coupleRepository.save(couple);
-
         Wallet wallet = walletCreationService.saveWallet();
         couple.assignWallet(wallet);
 

@@ -20,7 +20,8 @@ import java.io.File;
 public class WalletCreationService {
 
     @Value("${web3j.keyfile-password}")
-    private String keyFilePassword; //사용자 마다 달라야 하지만 일단 시스템에서 통일
+    private String keyFilePassword;
+
     private final WalletRepository walletRepository;
     private final WalletVerifyService walletVerifyService;
     private final EtherTransferService etherTransferService;
