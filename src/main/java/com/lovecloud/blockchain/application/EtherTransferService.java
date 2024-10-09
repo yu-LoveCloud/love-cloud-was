@@ -32,7 +32,7 @@ public class EtherTransferService {
             BigInteger nonce = web3j.ethGetTransactionCount(adminCredentials.getAddress(), DefaultBlockParameterName.LATEST).send().getTransactionCount();
             BigInteger gasPrice = BigInteger.valueOf(1000000000L); //TODO: gasPrice, gasLimit, value 설정 추후 협의 필
             BigInteger gasLimit = BigInteger.valueOf(300000L);
-            BigInteger value = Convert.toWei(BigDecimal.valueOf(0.01), Convert.Unit.ETHER).toBigInteger();
+            BigInteger value = Convert.toWei(BigDecimal.valueOf(0.05), Convert.Unit.ETHER).toBigInteger();
 
             RawTransaction rawTransaction = RawTransaction.createEtherTransaction(nonce, gasPrice, gasLimit, toAddress, value);
 
