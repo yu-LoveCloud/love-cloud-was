@@ -1,5 +1,6 @@
 package com.lovecloud.ordermanagement.application;
 
+import com.lovecloud.blockchain.application.WeddingCrowdFundingService;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
@@ -36,6 +37,7 @@ public class OrderCreateService {
     private final OrderDetailsRepository orderDetailsRepository;
     private final DeliveryRepository deliveryRepository;
     private final ProductOptionsRepository productOptionsRepository;
+    private final WeddingCrowdFundingService weddingCrowdFundingService;
 
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
@@ -56,7 +58,11 @@ public class OrderCreateService {
         fundings.forEach(funding ->
                 productOptionsRepository.findByIdWithLockOrThrow(funding.getProductOptions().getId()).decreaseStockQuantity());
 
-        //TODO: 블록체인 연동
+        /**
+         * TODO: 블록체인 연동
+         * fundingBlockchainId가 정의되어야 함
+         * */
+        //fundings.forEach(funding -> weddingCrowdFundingService.completeOrder(couple.getWallet().getKeyfile(), fundingBlockchainId) );
 
         return order.getId();
     }
