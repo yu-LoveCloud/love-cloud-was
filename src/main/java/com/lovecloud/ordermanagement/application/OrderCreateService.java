@@ -1,13 +1,14 @@
 package com.lovecloud.ordermanagement.application;
 
+import com.lovecloud.blockchain.application.WalletPathResolver;
 import com.lovecloud.blockchain.application.WeddingCrowdFundingService;
+import com.lovecloud.blockchain.exception.FundingBlockchainException;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
 import com.lovecloud.ordermanagement.domain.Delivery;
-import com.lovecloud.ordermanagement.domain.DeliveryStatus;
 import com.lovecloud.ordermanagement.domain.Order;
 import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
@@ -21,12 +22,13 @@ import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepositor
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -38,6 +40,18 @@ public class OrderCreateService {
     private final DeliveryRepository deliveryRepository;
     private final ProductOptionsRepository productOptionsRepository;
     private final WeddingCrowdFundingService weddingCrowdFundingService;
+
+    private static Delivery createDelivery(CreateOrderCommand command) {
+        return Delivery.builder()
+                .deliveryName(command.deliveryName())
+                .receiverName(command.receiverName())
+                .receiverPhoneNumber(command.receiverPhoneNumber())
+                .zipCode(command.zipCode())
+                .address(command.address())
+                .detailAddress(command.detailAddress())
+                .deliveryMemo(command.deliveryMemo())
+                .build();
+    }
 
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
@@ -62,8 +76,16 @@ public class OrderCreateService {
          * TODO: 블록체인 연동
          * fundingBlockchainId가 정의되어야 함
          * */
-        //fundings.forEach(funding -> weddingCrowdFundingService.completeOrder(couple.getWallet().getKeyfile(), fundingBlockchainId) );
-
+//        try {
+//            String walletFilePath = WalletPathResolver.resolveWalletPath(couple.getWallet().getKeyfile());
+//            // 블록체인 연동 - 주문 완료
+//            for (Funding funding : fundings) {
+//                String transactionHash = weddingCrowdFundingService.completeOrder(walletFilePath, funding.getBlockcainId());
+//                log.info("블록체인 트랜잭션 해시: {}", transactionHash);
+//            }
+//        } catch (Exception e) {
+//            throw new FundingBlockchainException("블록체인 연동 중 오류가 발생하였습니다.");
+//        }
         return order.getId();
     }
 
@@ -117,17 +139,5 @@ public class OrderCreateService {
         if (!funding.getCouple().equals(couple)) {
             throw new MismatchedCoupleException();
         }
-    }
-
-    private static Delivery createDelivery(CreateOrderCommand command) {
-        return Delivery.builder()
-                .deliveryName(command.deliveryName())
-                .receiverName(command.receiverName())
-                .receiverPhoneNumber(command.receiverPhoneNumber())
-                .zipCode(command.zipCode())
-                .address(command.address())
-                .detailAddress(command.detailAddress())
-                .deliveryMemo(command.deliveryMemo())
-                .build();
     }
 }
