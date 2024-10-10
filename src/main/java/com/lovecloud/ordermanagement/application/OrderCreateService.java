@@ -41,18 +41,6 @@ public class OrderCreateService {
     private final ProductOptionsRepository productOptionsRepository;
     private final WeddingCrowdFundingService weddingCrowdFundingService;
 
-    private static Delivery createDelivery(CreateOrderCommand command) {
-        return Delivery.builder()
-                .deliveryName(command.deliveryName())
-                .receiverName(command.receiverName())
-                .receiverPhoneNumber(command.receiverPhoneNumber())
-                .zipCode(command.zipCode())
-                .address(command.address())
-                .detailAddress(command.detailAddress())
-                .deliveryMemo(command.deliveryMemo())
-                .build();
-    }
-
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
         List<Funding> fundings = fundingRepository.findAllById(command.fundingIds());
@@ -139,5 +127,17 @@ public class OrderCreateService {
         if (!funding.getCouple().equals(couple)) {
             throw new MismatchedCoupleException();
         }
+    }
+
+    private static Delivery createDelivery(CreateOrderCommand command) {
+        return Delivery.builder()
+                .deliveryName(command.deliveryName())
+                .receiverName(command.receiverName())
+                .receiverPhoneNumber(command.receiverPhoneNumber())
+                .zipCode(command.zipCode())
+                .address(command.address())
+                .detailAddress(command.detailAddress())
+                .deliveryMemo(command.deliveryMemo())
+                .build();
     }
 }
