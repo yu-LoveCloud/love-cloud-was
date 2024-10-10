@@ -44,6 +44,8 @@ public class SecurityConfig {
             "/items/**",
             "/invitations/**",
             "/fundings/**",
+            "/payments/**",
+            "/participations/**",
 
             "/wallet/**",
 

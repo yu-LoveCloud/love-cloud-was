@@ -27,7 +27,6 @@ public class FundingCreationService {
     private final ProductOptionsRepository productOptionsRepository;
     private final CoupleRepository coupleRepository;
     private final WeddingCrowdFundingService weddingCrowdFundingService;
-    private final WalletPathResolver walletPathResolver;
 
     public Long createFunding(CreateFundingCommand command) {
 
@@ -47,7 +46,7 @@ public class FundingCreationService {
 
         try {
             log.info("블록체인에 펀딩 등록 시도 중. 펀딩 ID: {}", funding.getId());
-            String fullWalletPath = walletPathResolver.resolveWalletPath(wallet.getKeyfile());
+            String fullWalletPath = WalletPathResolver.resolveWalletPath(wallet.getKeyfile());
             log.info("블록체인에 펀딩 등록 시도 중. 펀딩 ID: {}, 지갑 파일 경로: {}", funding.getId(), fullWalletPath);
             weddingCrowdFundingService.createCrowdfundingOnBlockchain(funding, fullWalletPath);
             log.info("블록체인에 펀딩이 성공적으로 등록되었습니다. 펀딩 ID: {}", funding.getId());
