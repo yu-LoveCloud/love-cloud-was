@@ -40,7 +40,7 @@ public class SecurityConfig {
             "/auth/guest/sign-in",
 
             "/categories",
-            "/products",
+            "/products/**",
             "/items/**",
             "/invitations/**",
             "/fundings/**",
@@ -49,8 +49,10 @@ public class SecurityConfig {
 
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/swagger-ui.html"
+            "/swagger-ui.html",
 
+            "/storage/presigned-urls",
+            "/admin/**"
     };
 
 
