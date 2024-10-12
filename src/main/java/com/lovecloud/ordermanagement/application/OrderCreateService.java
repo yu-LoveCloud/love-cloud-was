@@ -8,16 +8,11 @@ import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
-import com.lovecloud.ordermanagement.domain.Delivery;
-import com.lovecloud.ordermanagement.domain.Order;
-import com.lovecloud.ordermanagement.domain.OrderDetails;
+import com.lovecloud.ordermanagement.domain.*;
 import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
-import com.lovecloud.ordermanagement.exception.DuplicateOrderFundingException;
-import com.lovecloud.ordermanagement.exception.FundingNotCompletedException;
-import com.lovecloud.ordermanagement.exception.MismatchedCoupleException;
-import com.lovecloud.ordermanagement.exception.NoAvailableFundingsException;
+import com.lovecloud.ordermanagement.exception.*;
 import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
@@ -75,6 +70,37 @@ public class OrderCreateService {
 //            throw new FundingBlockchainException("블록체인 연동 중 오류가 발생하였습니다.");
 //        }
         return order.getId();
+    }
+
+    public void cancelOrder(Long orderId, Long id) {
+        //주문 조회
+        Order order = orderRepository.findByIdOrThrow(orderId);
+
+        //주문한 사용자와 주문한 커플이 일치하는지 검증
+        if (!order.getCouple().getId().equals(id)) {
+            throw new UnauthorizedOrderAccessException();
+        }
+
+        //이미 취소된 주문인지 검증
+        if (order.getOrderStatus().equals(OrderStatus.CANCEL_REQUESTED) || order.getOrderStatus().equals(OrderStatus.CANCEL_COMPLETED)){
+            throw new OrderAlreadyCancelledException();
+        }
+
+        //배송시작 전인지 검증
+        if (!order.getDelivery().getDeliveryStatus().equals(DeliveryStatus.PENDING)){
+            throw new DeliveryAlreadyStartedException();
+        }
+
+        //주문 취소. 주문 취소시 주문 상태를 취소요청으로 변경
+        order.cancel();
+
+        //재고 수량 복구
+        order.getOrderDetails().forEach(orderDetails -> {
+            orderDetails.getFunding().getProductOptions().increaseStockQuantity();
+        });
+
+        // TODO: 블록체인 연동
+
     }
 
     private List<OrderDetails> createOrderDetails(Order order, List<Funding> fundings) {

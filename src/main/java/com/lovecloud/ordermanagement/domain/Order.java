@@ -63,4 +63,8 @@ public class Order extends CommonRootEntity<Long> {
         this.couple = couple;
         this.delivery = delivery;
     }
+
+    public void cancel() {
+        this.orderStatus = OrderStatus.CANCEL_REQUESTED;
+    }
 }

@@ -27,4 +27,13 @@ public class OrderController {
         final Long orderId = orderCreateService.createOrder(request.toCommand(securityUser.user().getId()));
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
+
+    //주문 취소
+    @PatchMapping("/{orderId}/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
+    public void cancelOrder(@PathVariable Long orderId, @AuthenticationPrincipal SecurityUser securityUser) {
+        orderCreateService.cancelOrder(orderId, securityUser.user().getId());
+    }
+
 }
