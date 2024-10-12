@@ -1,5 +1,6 @@
 package com.lovecloud.ordermanagement.application;
 
+import com.lovecloud.ordermanagement.application.validator.OrderValidator;
 import com.lovecloud.ordermanagement.domain.Order;
 import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
@@ -8,6 +9,8 @@ import com.lovecloud.ordermanagement.exception.UnauthorizedOrderAccessException;
 import com.lovecloud.ordermanagement.query.response.OrderDetailResponse;
 import com.lovecloud.ordermanagement.query.response.OrderListResponse;
 import com.lovecloud.productmanagement.domain.repository.MainImageRepository;
+import com.lovecloud.usermanagement.domain.Couple;
+import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderQueryService {
     private final OrderRepository orderRepository;
-    private final OrderDetailsRepository orderDetailsRepository;
+    private final OrderValidator orderValidator;
+    private final CoupleRepository coupleRepository;
+
     public OrderDetailResponse findById(Long orderId, Long userId) {
         Order order = orderRepository.findByIdOrThrow(orderId);
-
-        //주문 작성자와 user가 같은지 확인하는 메서드
-        validateOrderer(order, userId);
+        Couple couple = coupleRepository.findByMemberIdOrThrow(userId);
+        //주문 작성자 검증
+        orderValidator.validateOrderOwnership(order, couple);
 
         //주문한 상품들의 정보, 주문 정보를 OrderDetailResponse로 변환
         return OrderDetailResponse.from(order);
@@ -35,11 +40,6 @@ public class OrderQueryService {
         List<Order> orders = orderRepository.findAllByUserId(userId);
 
         return OrderListResponse.from(orders);
-    }
-    private void validateOrderer(Order order, Long userId) {
-        if(!(order.getCouple().getBride().getId().equals(userId) || order.getCouple().getGroom().getId().equals(userId))){
-            throw new UnauthorizedOrderAccessException();
-        }
     }
 
 }
