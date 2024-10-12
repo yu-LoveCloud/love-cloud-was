@@ -33,6 +33,7 @@ cloud:
     s3:
       bucket: ${AWS_BUCKET}
       image-path: "images/"
+      keyfile-path: "keyfiles/"
       presigned-url-expires-minutes: 10
     region:
       static: ${AWS_REGION}
