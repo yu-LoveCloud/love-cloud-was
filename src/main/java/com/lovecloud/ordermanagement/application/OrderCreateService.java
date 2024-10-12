@@ -8,6 +8,7 @@ import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
+import com.lovecloud.ordermanagement.application.validator.OrderValidator;
 import com.lovecloud.ordermanagement.domain.*;
 import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
@@ -34,13 +35,21 @@ public class OrderCreateService {
     private final OrderDetailsRepository orderDetailsRepository;
     private final DeliveryRepository deliveryRepository;
     private final ProductOptionsRepository productOptionsRepository;
+    private final OrderValidator orderValidator;
     private final WeddingCrowdFundingService weddingCrowdFundingService;
 
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
         List<Funding> fundings = fundingRepository.findAllById(command.fundingIds());
 
-        validateFundings(fundings, couple);
+        // 주문할 펀딩이 하나 이상 존재하는지 검증
+        orderValidator.validateFundingsExistence(fundings);
+        // 펀딩들에 대해 중복된 주문이 존재하는지 검증
+        orderValidator.validateNoDuplicatedOrdersForFundings(fundings);
+        // 펀딩들이 모두 완료된 상태인지 검증
+        orderValidator.validateFundingsCompletion(fundings);
+        // 주문자와 펀딩들의 소유자가 일치하는지 검증
+        orderValidator.validateFundingsOwnership(fundings, couple);
 
         Delivery delivery = createDelivery(command);
         delivery = deliveryRepository.save(delivery);
@@ -73,23 +82,15 @@ public class OrderCreateService {
     }
 
     public void cancelOrder(Long orderId, Long id) {
-        //주문 조회
         Order order = orderRepository.findByIdOrThrow(orderId);
+        Couple couple = coupleRepository.findByMemberIdOrThrow(id);
 
         //주문한 사용자와 주문한 커플이 일치하는지 검증
-        if (!order.getCouple().getId().equals(id)) {
-            throw new UnauthorizedOrderAccessException();
-        }
-
-        //이미 취소된 주문인지 검증
-        if (order.getOrderStatus().equals(OrderStatus.CANCEL_REQUESTED) || order.getOrderStatus().equals(OrderStatus.CANCEL_COMPLETED)){
-            throw new OrderAlreadyCancelledException();
-        }
-
+        orderValidator.validateOrderOwnership(order, couple);
+        //취소되지 않은 주문인지 검증
+        orderValidator.validateOrderNotCancelled(order);
         //배송시작 전인지 검증
-        if (!order.getDelivery().getDeliveryStatus().equals(DeliveryStatus.PENDING)){
-            throw new DeliveryAlreadyStartedException();
-        }
+        orderValidator.validateDeliveryNotStarted(order);
 
         //주문 취소. 주문 취소시 주문 상태를 취소요청으로 변경
         order.cancel();
@@ -124,36 +125,9 @@ public class OrderCreateService {
                 .build();
     }
 
-    private void validateFundings(List<Funding> fundings, Couple couple) {
-        if (fundings.isEmpty()) {
-            throw new NoAvailableFundingsException();
-        }
-        for (Funding funding : fundings) {
-            validateFundingStatus(funding);
-            validateFundingCouple(funding, couple);
-            validateDuplicateOrderDetails(funding);
-        }
 
-    }
 
-    private void validateDuplicateOrderDetails(Funding funding) {
-        //이미 주문된 펀딩인지 확인
-        if (orderDetailsRepository.existsByFundingId(funding.getId())) {
-            throw new DuplicateOrderFundingException();
-        }
-    }
 
-    private void validateFundingStatus(Funding funding) {
-        if (!funding.getStatus().equals(FundingStatus.COMPLETED)) {
-            throw new FundingNotCompletedException();
-        }
-    }
-
-    private void validateFundingCouple(Funding funding, Couple couple) {
-        if (!funding.getCouple().equals(couple)) {
-            throw new MismatchedCoupleException();
-        }
-    }
 
     private static Delivery createDelivery(CreateOrderCommand command) {
         return Delivery.builder()
