@@ -12,7 +12,7 @@ public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long
 
     List<OrderDetails> findAllByOrderId(Long id);
 
-    @Query("SELECT od.funding.id FROM OrderDetails od WHERE od.funding.id IN :fundingIds AND od.order.orderStatus != 'ORDER_PLACED'")
+    @Query("SELECT od.funding.id FROM OrderDetails od WHERE od.funding.id IN :fundingIds AND od.order.orderStatus = 'ORDER_PLACED'")
     List<Long> findDuplicatedFundingIds(@Param("fundingIds") List<Long> fundingIds);
 
 
