@@ -1,7 +1,7 @@
 package com.lovecloud.ordermanagement.presentation;
 
 import com.lovecloud.global.usermanager.SecurityUser;
-import com.lovecloud.ordermanagement.application.OrderCreateService;
+import com.lovecloud.ordermanagement.application.OrderService;
 import com.lovecloud.ordermanagement.presentation.request.CreateOrderRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ import java.net.URI;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderCreateService orderCreateService;
+    private final OrderService orderService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
     public ResponseEntity<Long> createOrder(@Valid @RequestBody CreateOrderRequest request,
                                             @AuthenticationPrincipal SecurityUser securityUser) {
-        final Long orderId = orderCreateService.createOrder(request.toCommand(securityUser.user().getId()));
+        final Long orderId = orderService.createOrder(request.toCommand(securityUser.user().getId()));
         return ResponseEntity.created(URI.create("/orders/" + orderId)).build();
     }
 
@@ -33,7 +33,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_WEDDING_USER')")
     public void cancelOrder(@PathVariable Long orderId, @AuthenticationPrincipal SecurityUser securityUser) {
-        orderCreateService.cancelOrder(orderId, securityUser.user().getId());
+        orderService.cancelOrder(orderId, securityUser.user().getId());
     }
 
 }

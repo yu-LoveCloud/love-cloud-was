@@ -5,21 +5,13 @@ import com.lovecloud.auth.domain.WeddingUserRepository;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
-import com.lovecloud.invitationmanagement.application.InvitationCreateService;
-import com.lovecloud.invitationmanagement.application.command.CreateInvitationCommand;
-import com.lovecloud.invitationmanagement.domain.Invitation;
-import com.lovecloud.invitationmanagement.domain.InvitationImage;
-import com.lovecloud.invitationmanagement.domain.repository.InvitationImageRepository;
-import com.lovecloud.invitationmanagement.domain.repository.InvitationRepository;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
 import com.lovecloud.ordermanagement.domain.Order;
 import com.lovecloud.ordermanagement.domain.OrderDetails;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
-import com.lovecloud.ordermanagement.presentation.request.CreateOrderRequest;
 import com.lovecloud.productmanagement.domain.*;
 import com.lovecloud.productmanagement.domain.repository.*;
-import com.lovecloud.usermanagement.application.CoupleService;
 import com.lovecloud.usermanagement.domain.*;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-class OrderCreateServiceTest {
+class OrderServiceTest {
     @Autowired
-    private OrderCreateService orderCreateService;
+    private OrderService orderService;
 
     @Autowired
     private CoupleRepository coupleRepository;
@@ -213,7 +205,7 @@ class OrderCreateServiceTest {
 
 
             // when
-            Long orderId = orderCreateService.createOrder(command);
+            Long orderId = orderService.createOrder(command);
 
             // then
             Order order = orderRepository.findById(orderId).orElseThrow();

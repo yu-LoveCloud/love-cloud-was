@@ -1,10 +1,7 @@
 package com.lovecloud.ordermanagement.application;
 
-import com.lovecloud.blockchain.application.WalletPathResolver;
 import com.lovecloud.blockchain.application.WeddingCrowdFundingService;
-import com.lovecloud.blockchain.exception.FundingBlockchainException;
 import com.lovecloud.fundingmanagement.domain.Funding;
-import com.lovecloud.fundingmanagement.domain.FundingStatus;
 import com.lovecloud.fundingmanagement.domain.repository.FundingRepository;
 import com.lovecloud.global.util.DateUuidGenerator;
 import com.lovecloud.ordermanagement.application.command.CreateOrderCommand;
@@ -13,7 +10,6 @@ import com.lovecloud.ordermanagement.domain.*;
 import com.lovecloud.ordermanagement.domain.repository.DeliveryRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderDetailsRepository;
 import com.lovecloud.ordermanagement.domain.repository.OrderRepository;
-import com.lovecloud.ordermanagement.exception.*;
 import com.lovecloud.productmanagement.domain.repository.ProductOptionsRepository;
 import com.lovecloud.usermanagement.domain.Couple;
 import com.lovecloud.usermanagement.domain.repository.CoupleRepository;
@@ -24,11 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class OrderCreateService {
+public class OrderService {
     private final OrderRepository orderRepository;
     private final CoupleRepository coupleRepository;
     private final FundingRepository fundingRepository;
@@ -37,6 +34,18 @@ public class OrderCreateService {
     private final ProductOptionsRepository productOptionsRepository;
     private final OrderValidator orderValidator;
     private final WeddingCrowdFundingService weddingCrowdFundingService;
+
+    private static Delivery createDelivery(CreateOrderCommand command) {
+        return Delivery.builder()
+                .deliveryName(command.deliveryName())
+                .receiverName(command.receiverName())
+                .receiverPhoneNumber(command.receiverPhoneNumber())
+                .zipCode(command.zipCode())
+                .address(command.address())
+                .detailAddress(command.detailAddress())
+                .deliveryMemo(command.deliveryMemo())
+                .build();
+    }
 
     public Long createOrder(CreateOrderCommand command) {
         Couple couple = coupleRepository.findByMemberIdOrThrow(command.userId());
@@ -122,22 +131,6 @@ public class OrderCreateService {
                 .ordererMemo(command.ordererMemo())
                 .orderDateTime(LocalDateTime.now())
                 .delivery(delivery)
-                .build();
-    }
-
-
-
-
-
-    private static Delivery createDelivery(CreateOrderCommand command) {
-        return Delivery.builder()
-                .deliveryName(command.deliveryName())
-                .receiverName(command.receiverName())
-                .receiverPhoneNumber(command.receiverPhoneNumber())
-                .zipCode(command.zipCode())
-                .address(command.address())
-                .detailAddress(command.detailAddress())
-                .deliveryMemo(command.deliveryMemo())
                 .build();
     }
 }
