@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public record AwsS3Property(
         String bucket,
         String imagePath,
+        String keyfilePath,
         int presignedUrlExpiresMinutes
 ) {
 }
