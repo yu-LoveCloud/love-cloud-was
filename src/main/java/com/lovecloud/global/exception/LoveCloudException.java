@@ -23,4 +23,9 @@ public class LoveCloudException extends RuntimeException {
     public LoveCloudException() {
         this.errorCode = INTERNAL_SERVER_ERROR_CODE;
     }
+
+    public LoveCloudException(ErrorCode errorCode, Throwable cause) {
+        super(errorCode.message(), cause);
+        this.errorCode = errorCode;
+    }
 }

@@ -6,6 +6,7 @@ import com.lovecloud.productmanagement.domain.ProductOptions;
 import com.lovecloud.usermanagement.domain.Couple;
 import jakarta.persistence.*;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -50,6 +51,9 @@ public class Funding extends CommonRootEntity<Long> {
     @JoinColumn(name = "couple_id", nullable = false)
     private Couple couple;
 
+    @Column(name = "blockchain_funding_id", unique = true, nullable = true)
+    private BigInteger blockchainFundingId;
+
     @Builder
     public Funding(String title, String message, Long targetAmount, LocalDateTime endDate,
             ProductOptions productOptions, Couple couple) {
@@ -67,5 +71,12 @@ public class Funding extends CommonRootEntity<Long> {
             this.status = FundingStatus.COMPLETED;
             registerEvent(new FundingCompletedEvent(this.id));
         }
+    }
+
+    public void assignBlockchainFundingId(BigInteger blockchainFundingId) {
+        if (this.blockchainFundingId != null) {
+            throw new IllegalStateException("블록체인 펀딩 ID는 이미 설정되었습니다.");
+        }
+        this.blockchainFundingId = blockchainFundingId;
     }
 }
