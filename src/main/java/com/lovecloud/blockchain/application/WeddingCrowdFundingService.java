@@ -1,6 +1,7 @@
 package com.lovecloud.blockchain.application;
 
 import com.lovecloud.blockchain.domain.WeddingCrowdFunding;
+import com.lovecloud.blockchain.exception.SmartContractFundingNotCompletedException;
 import com.lovecloud.fundingmanagement.domain.Funding;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -90,6 +91,34 @@ public class WeddingCrowdFundingService {
         // 펀딩 기여
         return contributeToFunding(fundingId, amount, walletFilePath);
     }
+
+    /**
+     * 주문 완료 메서드
+     * @param walletFilePath 사용자의 지갑 파일 경로
+     * @param fundingId 주문 완료할 펀딩 ID
+     * @return 트랜잭션 해시
+     * @throws Exception 블록체인 연동 중 오류 발생 시 예외 처리
+     * */
+    public String completeOrder(String walletFilePath, BigInteger fundingId) throws Exception {
+
+        // 펀딩 스마트 계약 로드
+        WeddingCrowdFunding fundingContract = loadContract(walletFilePath);
+
+        // 펀딩 완료 및 주문 트랜잭션 전송
+        TransactionReceipt receipt = null;
+        try {
+            receipt = fundingContract.completeOrder(fundingId).send();
+        } catch (Exception e) {
+            // 펀딩이 종료되지 않은 경우 FundingNotCompletedException 발생
+            if(e.getMessage().contains("ended yet")){
+                throw new SmartContractFundingNotCompletedException();
+            }else{
+                throw new RuntimeException(e);
+            }
+        }
+        return receipt.getTransactionHash();
+    }
+
 
     /**
      * 펀딩 기여 메서드

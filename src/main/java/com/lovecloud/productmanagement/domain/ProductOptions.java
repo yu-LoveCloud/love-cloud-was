@@ -84,4 +84,8 @@ public class ProductOptions extends CommonRootEntity<Long> {
         }
         stockQuantity--;
     }
+
+    public void increaseStockQuantity() {
+        stockQuantity++;
+    }
 }

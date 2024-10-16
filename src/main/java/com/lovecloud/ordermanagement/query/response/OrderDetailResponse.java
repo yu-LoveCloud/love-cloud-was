@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public record OrderDetailResponse(
         Long orderId,
+        String orderStatus,
 
         String orderNumber,
 
@@ -39,6 +40,7 @@ public record OrderDetailResponse(
     public static OrderDetailResponse from(Order order) {
         return OrderDetailResponse.builder()
                 .orderId(order.getId())
+                .orderStatus(order.getOrderStatus().name())
                 .orderNumber(order.getOrderNumber())
                 .orderDateTime(order.getOrderDateTime())
                 .orderProducts(order.getOrderDetails().stream().map(orderDetail -> orderProduct.builder()
